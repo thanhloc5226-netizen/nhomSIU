@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+{% block body_block %}
+{% load humanize %}
+{% load static %}
+<link href="{% static 'css/contract_detail.css' %}" rel="stylesheet">
+<div class="container mt-4">
+
+    <!-- Header -->
+    <div class="contract-header">
+        <div class="header-left">
+            <div class="icon-wrapper">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+            </div>
+            <h2 class="mb-0">Chi tiết hợp đồng</h2>
+        </div>
+        <a href="{% url 'home' %}" class="btn-back">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Quay lại
+        </a>
+    </div>
+
+    <!-- Contract Info Card -->
+    <div class="info-card mb-4">
+        <div class="info-grid">
+            <div class="info-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <div class="info-content">
+                    <span class="info-label">Khách hàng</span>
+                    <span class="info-value">{{ contract.customer.name }}</span>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <div class="info-content">
+                    <span class="info-label">Ngày tạo</span>
+                    <span class="info-value">{{ contract.created_at|date:"d/m/Y" }}</span>
+                </div>
+            </div>
+
+            <div class="info-item full-width">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                <div class="info-content">
+                    <span class="info-label">Loại dịch vụ</span>
+                    <span class="service-badge">{{ contract.get_service_type_display }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- PAYMENT INFO CARD -->
+    <div class="service-card mb-4">
+        <div class="service-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1v22"></path>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            <h5>Thông tin thanh toán</h5>
+        </div>
+
+        <div class="service-content">
+            <div class="detail-grid">
+
+                <div class="detail-item">
+                    <span class="detail-label">Giá trị hợp đồng</span>
+                    <span class="detail-value">
+                    {{ contract.contract_value|default:0|intcomma }} VNĐ
+                </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Hình thức thanh toán</span>
+                    <span class="detail-value">
+                    {{ contract.get_payment_type_display }}
+                </span>
+                </div>
+
+                {% if contract.payment_type == "installment" %}
+                <div class="detail-item">
+                    <span class="detail-label">Số đợt thanh toán</span>
+                    <span class="detail-value">
+                    {{ contract.installment_count }} đợt
+                </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Tiến độ</span>
+                    <span class="detail-value">
+                    {{ contract.paid_installments }}/{{ contract.installment_count }} đợt
+                </span>
+                </div>
+
+                <div class="detail-item full-width">
+                    <span class="detail-label">Trạng thái thanh toán</span>
+                    {% if contract.paid_installments >= contract.installment_count %}
+                    <span class="badge bg-success">Đã thanh toán đủ</span>
+                    {% else %}
+                    <span class="badge bg-warning text-dark">Đang trả góp</span>
+                    {% endif %}
+                </div>
+
+                <div class="detail-item full-width">
+                    <form method="post" style="margin-top:12px">
+                        {% csrf_token %}
+
+                        {% for ins in installments %}
+                        <div style="margin-bottom:8px">
+                            <label style="font-weight:500">
+                                <input type="checkbox"
+                                       name="paid_{{ ins.id }}"
+                                       {% if ins.is_paid %}checked disabled{% endif %}>
+                                Đợt {{ ins.installment_no }} –
+                                {{ ins.amount|intcomma }} VNĐ
+                                {% if ins.is_paid %}
+                                (đã trả {{ ins.paid_date|date:"d/m/Y" }})
+                                {% endif %}
+                            </label>
+                        </div>
+                        {% endfor %}
+
+                        {% if contract.status != "completed" %}
+                        <div class="no-print">
+                            <button type="submit" class="btn-edit-contract mt-2">
+                                Cập nhật thanh toán
+                            </button>
+                        </div>
+                        {% endif %}
+                    </form>
+                </div>
+
+
+                {% else %}
+                <div class="detail-item full-width">
+                    <span class="detail-label">Trạng thái thanh toán</span>
+                    <span class="badge bg-success">Đã thanh toán</span>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Details Card -->
+    <div class="service-card">
+        <div class="service-header">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            <h5>Thông tin dịch vụ</h5>
+        </div>
+
+        <div class="service-content">
+
+            {% if contract.service_type == "nhanhieu" %}
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Chủ đơn</span>
+                            <span class="detail-value">{{ contract.customer.name }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Người nộp đơn</span>
+                            <span class="detail-value">{{ service.applicant }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Địa chỉ</span>
+                            <span class="detail-value">{{ service.address }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">SĐT</span>
+                            <span class="detail-value">{{ service.phone }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Số đơn</span>
+                            <span class="detail-value">{{ service.app_no }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Ngày nộp đơn</span>
+                            <span class="detail-value">{{ service.filing_date }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Phân loại dịch vụ</span>
+                            <span class="detail-value">{{ service.classification }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Ngày công bố</span>
+                            <span class="detail-value">{{ service.publish_date }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Quyết định chấp nhận</span>
+                            <span class="detail-value">{{ service.decision_date }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="image-section">
+                        <div class="image-label">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span>Nhãn hiệu + hình</span>
+                        </div>
+
+                        {% if service.trademark_image %}
+                        <div class="image-wrapper">
+                            <img src="{{ service.trademark_image.url }}"
+                                 alt="Trademark Image"
+                                 class="trademark-image">
+                        </div>
+                        {% else %}
+                        <div class="no-image">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <p>Chưa có hình ảnh</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% elif contract.service_type == "banquyen" %}
+
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Tác phẩm</span>
+                    <span class="detail-value">{{ service.work_name }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Tác giả</span>
+                    <span class="detail-value">{{ service.author }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Chủ sở hữu</span>
+                    <span class="detail-value">{{ service.owner }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Địa chỉ chủ sở hữu</span>
+                    <span class="detail-value">{{ service.owner_address }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Loại hình</span>
+                    <span class="detail-value">{{ service.type }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Số giấy chứng nhận</span>
+                    <span class="detail-value">{{ service.certificate_no }}</span>
+                </div>
+            </div>
+
+            {% elif contract.service_type == "dkkd" %}
+
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Tên công ty</span>
+                    <span class="detail-value">{{ service.company_name }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Loại hình doanh nghiệp</span>
+                    <span class="detail-value">{{ service.business_type }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Mã số thuế</span>
+                    <span class="detail-value">{{ service.tax_code }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Địa chỉ</span>
+                    <span class="detail-value">{{ service.address }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value">{{ service.email }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">SĐT</span>
+                    <span class="detail-value">{{ service.phone }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Người đại diện pháp lý</span>
+                    <span class="detail-value">{{ service.legal_representation }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Chức vụ</span>
+                    <span class="detail-value">{{ service.position }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Vốn điều lệ</span>
+                    <span class="detail-value">{{ service.charter_capital }} VNĐ</span>
+                </div>
+            </div>
+
+            {% elif contract.service_type == "dautu" %}
+
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Mã dự án</span>
+                    <span class="detail-value">{{ service.project_code }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Nhà đầu tư</span>
+                    <span class="detail-value">{{ service.investor }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Tên dự án</span>
+                    <span class="detail-value">{{ service.project_name }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Mục tiêu dự án</span>
+                    <span class="detail-value">{{ service.object }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Địa chỉ dự án</span>
+                    <span class="detail-value">{{ service.address }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Vốn đầu tư</span>
+                    <span class="detail-value">{{ service.total_capital }}</span>
+                </div>
+            </div>
+
+            {% elif contract.service_type == "khac" %}
+
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Người liên hệ</span>
+                    <span class="detail-value">{{ service.legal_representative }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Chức vụ</span>
+                    <span class="detail-value">{{ service.position }}</span>
+                </div>
+
+                <div class="detail-item full-width">
+                    <span class="detail-label">Dịch vụ</span>
+                    <span class="detail-value">{{ service.description }}</span>
+                </div>
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="service-actions">
+            <a href="{% url 'download_certificate' contract.id %}" class="btn-download">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Tải giấy chứng nhận
+            </a>
+        </div>
+    </div>
+
+    <!-- Edit Button -->
+    <div class="bottom-actions">
+        <a href="{% url 'contract_edit' contract.id %}" class="btn-edit-contract">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+            </svg>
+            Sửa hợp đồng
+        </a>
+    </div>
+
+</div>
+
+
+{% endblock %}
