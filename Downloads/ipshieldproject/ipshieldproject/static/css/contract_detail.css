@@ -1,0 +1,415 @@
+/* Header */
+.contract-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 24px 30px;
+    background: linear-gradient(135deg, #BE1E2D 0%, #a01827 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(190, 30, 45, 0.2);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+}
+
+.icon-wrapper svg {
+    color: white;
+}
+
+.contract-header h2 {
+    color: white;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: white;
+    color: #BE1E2D;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background: #f9fafb;
+    transform: translateX(-4px);
+    color: #BE1E2D;
+}
+
+/* Info Card */
+.info-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.info-item svg {
+    color: #BE1E2D;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 15px;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.service-badge {
+    display: inline-flex;
+    padding: 6px 12px;
+    background: #BE1E2D;
+    color: white;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* Service Card */
+.service-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+}
+
+.service-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px;
+    border-bottom: 2px solid #BE1E2D;
+}
+
+.service-header svg {
+    color: #BE1E2D;
+}
+
+.service-header h5 {
+    margin: 0;
+    color: #BE1E2D;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.service-content {
+    padding: 24px;
+}
+
+/* Detail Grid */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.detail-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.detail-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    font-size: 15px;
+    color: #1f2937;
+    font-weight: 500;
+}
+
+/* Image Section */
+.image-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.image-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: #374151;
+    font-size: 15px;
+}
+
+.image-label svg {
+    color: #BE1E2D;
+}
+
+.image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: #f9fafb;
+    border: 2px dashed #e5e7eb;
+    border-radius: 12px;
+}
+
+.trademark-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.no-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    background: #f9fafb;
+    border: 2px dashed #e5e7eb;
+    border-radius: 12px;
+}
+
+.no-image svg {
+    color: #d1d5db;
+    margin-bottom: 12px;
+}
+
+.no-image p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* Service Actions */
+.service-actions {
+    padding: 20px 24px;
+    border-top: 2px solid #f3f4f6;
+}
+
+.btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #10b981;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.btn-download:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    color: white;
+}
+
+/* Bottom Actions */
+.bottom-actions {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.btn-edit-contract {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #BE1E2D;
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(190, 30, 45, 0.3);
+}
+
+.btn-edit-contract:hover {
+    background: #a01827;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(190, 30, 45, 0.4);
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contract-header {
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px;
+    }
+
+    .header-left {
+        width: 100%;
+    }
+
+    .btn-back {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .service-content {
+        padding: 20px;
+    }
+
+    .image-wrapper {
+        padding: 12px;
+    }
+
+    .trademark-image {
+        max-width: 100%;
+    }
+}
+
+@media print {
+    /* 1. Ẩn toàn bộ thành phần thuộc về base.html */
+    .header,
+    .top-bar,
+    .carousel-section,
+    .nav-tabs,
+    .site-footer,
+    #realtime-clock,
+    .language-selector {
+        display: none !important;
+    }
+
+    /* 2. Cấu hình lại khung trang in */
+    body {
+        background-color: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+    }
+
+    /* 3. Ẩn các nút bấm và icon trang trí trong trang chi tiết */
+    .btn-back,
+    .service-actions,
+    .bottom-actions,
+    .btn-edit-contract,
+    .icon-wrapper,
+    form button[type="submit"] {
+        display: none !important;
+    }
+
+    /* 4. Định dạng lại các Card thông tin */
+    .info-card, .service-card {
+        border: 1px solid #eee !important; /* Tạo viền mảnh thay cho bóng đổ */
+        box-shadow: none !important;
+        margin-bottom: 20px !important;
+        padding: 10px !important;
+        page-break-inside: avoid; /* Tránh cắt đôi card khi qua trang mới */
+    }
+
+    /* 5. Chỉnh tiêu đề chính cho trang in chuyên nghiệp */
+    .contract-header {
+        display: block !important;
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 40px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 10px;
+    }
+
+    .contract-header h2 {
+        font-size: 22pt !important;
+        color: black !important;
+        margin: 0 !important;
+        text-transform: uppercase;
+    }
+
+    /* Đảm bảo chữ đen rõ nét trên giấy */
+    .info-label, .detail-label {
+        color: #555 !important;
+        font-weight: bold !important;
+    }
+
+    .info-value, .detail-value {
+        color: #000 !important;
+    }
+
+    /* Hiển thị checkbox khi in */
+    input[type="checkbox"] {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+}

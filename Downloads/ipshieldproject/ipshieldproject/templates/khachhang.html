@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% block body_block %}
+{% load static %}
+<link href="{% static 'css/khachhang.css' %}" rel="stylesheet">
+   <script src="{% static 'js/khachhang.js' %}" defer></script>
+<form method="get">
+    <div class="search-section">
+        <h3>🔍 Tìm Kiếm Khách Hàng</h3>
+
+        <div class="row g-2 mt-2">
+            <div class="col-12 col-md-6 col-lg-8">
+                <input type="text"
+                       name="q"
+                       value="{{ request.GET.q }}"
+                       class="form-control"
+                       placeholder="Nhập mã KH, tên, email, SĐT...">
+            </div>
+
+            <div class="col-6 col-md-3 col-lg-2">
+                <button type="submit" class="btn btn-primary w-100">🔍 Tìm kiếm</button>
+            </div>
+
+            <div class="col-6 col-md-3 col-lg-2">
+                <a href="{% url 'home' %}" class="btn btn-secondary w-100">✖ Xóa</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- ===== NÚT ẨN / HIỆN CỘT - REDESIGNED ===== -->
+<div class="column-control-wrapper mb-3">
+    <button class="btn btn-column-toggle"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#columnToggle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Tùy chỉnh hiển thị cột</span>
+    </button>
+
+    <div id="columnToggle" class="collapse">
+        <div class="column-toggle-grid">
+
+            <div class="column-toggle-item">
+                <input type="checkbox" id="toggle-code" checked onchange="toggleColumn('col-code')">
+                <label for="toggle-code">
+                    <span class="checkbox-custom"></span>
+                    <span class="label-text">Mã KH</span>
+                </label>
+            </div>
+
+            <div class="column-toggle-item">
+                <input type="checkbox" id="toggle-name" checked onchange="toggleColumn('col-name')">
+                <label for="toggle-name">
+                    <span class="checkbox-custom"></span>
+                    <span class="label-text">Tên</span>
+                </label>
+            </div>
+
+            <div class="column-toggle-item">
+                <input type="checkbox" id="toggle-email" checked onchange="toggleColumn('col-email')">
+                <label for="toggle-email">
+                    <span class="checkbox-custom"></span>
+                    <span class="label-text">Email</span>
+                </label>
+            </div>
+
+            <div class="column-toggle-item">
+                <input type="checkbox" id="toggle-phone" checked onchange="toggleColumn('col-phone')">
+                <label for="toggle-phone">
+                    <span class="checkbox-custom"></span>
+                    <span class="label-text">SĐT</span>
+                </label>
+            </div>
+
+            <div class="column-toggle-item">
+                <input type="checkbox" id="toggle-address" checked onchange="toggleColumn('col-address')">
+                <label for="toggle-address">
+                    <span class="checkbox-custom"></span>
+                    <span class="label-text">Địa chỉ</span>
+                </label>
+            </div>
+
+            <div class="column-toggle-item">
+                <input type="checkbox" id="toggle-status" checked onchange="toggleColumn('col-status')">
+                <label for="toggle-status">
+                    <span class="checkbox-custom"></span>
+                    <span class="label-text">Trạng thái</span>
+                </label>
+            </div>
+
+            <div class="column-toggle-item">
+                <input type="checkbox" id="toggle-note" checked onchange="toggleColumn('col-note')">
+                <label for="toggle-note">
+                    <span class="checkbox-custom"></span>
+                    <span class="label-text">Ghi chú</span>
+                </label>
+            </div>
+
+            <div class="column-toggle-item">
+                <input type="checkbox" id="toggle-created" checked onchange="toggleColumn('col-created')">
+                <label for="toggle-created">
+                    <span class="checkbox-custom"></span>
+                    <span class="label-text">Ngày tạo</span>
+                </label>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- ===== TABLE ===== -->
+<div class="table-container">
+<table id="contractTable" class="table table-bordered table-hover">
+<thead>
+<tr>
+    <th>STT</th>
+    <th class="col-code">Mã KH</th>
+    <th class="col-name">Tên</th>
+    <th class="col-email">Email</th>
+    <th class="col-phone">SĐT</th>
+    <th class="col-address">Địa chỉ</th>
+    <th class="col-status">Trạng thái</th>
+    <th class="col-note">Ghi chú</th>
+    <th class="col-created">Ngày tạo</th>
+    <th>Hành động</th>
+</tr>
+</thead>
+
+<tbody>
+{% for c in customers %}
+<tr>
+    <td>{{ forloop.counter }}</td>
+    <td class="col-code">{{ c.customer_code }}</td>
+    <td class="col-name">{{ c.name }}</td>
+    <td class="col-email">{{ c.email }}</td>
+    <td class="col-phone">{{ c.phone }}</td>
+    <td class="col-address">{{ c.address }}</td>
+
+    <!-- ===== STATUS (ĐÃ SỬA - HIỂN THỊ ĐẦY ĐỦ) ===== -->
+    <td class="col-status">
+    {% if c.status == 'approved' %}
+        <span class="badge bg-success">
+            {{ c.get_status_display }}
+        </span>
+
+    {% elif c.status == 'pending' %}
+        <span class="badge bg-warning text-dark">
+            {{ c.get_status_display }}
+        </span>
+
+    {% elif c.status == 'completed' %}
+        <span class="badge bg-primary">
+            {{ c.get_status_display }}
+        </span>
+
+    {% else %}
+        <span class="badge bg-secondary">
+            {{ c.get_status_display }}
+        </span>
+    {% endif %}
+</td>
+
+
+    <!-- ===== NOTE ===== -->
+    <td class="col-note">
+        {{ c.note|default:"—"|truncatechars:30 }}
+    </td>
+
+    <td class="col-created">{{ c.created_at|date:"d/m/Y H:i" }}</td>
+    <td>
+        <a href="{% url 'customer_detail' c.id %}" class="btn btn-sm btn-info">Xem</a>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="10" class="text-center">Chưa có khách hàng nào</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+<h2 class="text-center fw-bold text-danger" data-aos="fade-right">
+    MASCOT
+</h2>
+
+<section class="mascot_body" style="margin-top:-10%">
+
+<div class="carousel_mascot" data-aos="fade-right">
+
+    {% for mascot in mascots %}
+    <div class="card_mascot" data-title="{{ mascot.title }}">
+        <div class="speech_mascot">{{ mascot.speech }}</div>
+        <img src="{{ mascot.image.url }}" alt="{{ mascot.title }}">
+    </div>
+    {% endfor %}
+
+</div>
+</section>
+
+
+
+{% endblock %}
