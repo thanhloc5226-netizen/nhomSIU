@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_block %}
+<link href="{% static 'css/add_customer.css' %}" rel="stylesheet">
+   <script src="{% static 'js/add_customer.js' %}" defer></script>
+<div class="content active">
+
+    <div class="search-section">
+        <h3>➕ Thêm Khách Hàng</h3>
+
+        <!-- HIỂN THỊ THÔNG BÁO -->
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {% if message.tags == 'error' or message.tags == 'danger' %}
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                {% elif message.tags == 'success' %}
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                {% elif message.tags == 'warning' %}
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                {% endif %}
+                <span>{{ message }}</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Phần 1: Thông tin cơ bản (2 cột) -->
+            <div class="form-section">
+                <h5 class="section-title">📋 Thông tin cơ bản</h5>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Loại khách hàng <span class="required">*</span></label>
+                        {{ form.customer_type }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Trạng thái <span class="required">*</span></label>
+                        {{ form.status }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần 2: Định danh (3 cột) -->
+            <div class="form-section">
+                <h5 class="section-title">🔖 Thông tin định danh</h5>
+                <div class="form-grid-3">
+                    <div class="form-group">
+                        <label>Mã khách hàng <span class="required">*</span></label>
+                        {{ form.customer_code }}
+                    </div>
+
+                    <div class="form-group form-group-wide">
+                        <label>Tên khách hàng / Tên công ty <span class="required">*</span></label>
+                        {{ form.name }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần 3: Liên hệ (3 cột) -->
+            <div class="form-section">
+                <h5 class="section-title">📞 Thông tin liên hệ</h5>
+                <div class="form-grid-3">
+                    <div class="form-group">
+                        <label>Email</label>
+                        {{ form.email }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Số điện thoại</label>
+                        {{ form.phone }}
+                    </div>
+
+                    <div class="form-group form-group-full">
+                        <label>Địa chỉ</label>
+                        {{ form.address }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần 4: Giấy tờ (3 cột - Hiện theo loại KH) -->
+            <div class="form-section">
+                <h5 class="section-title">📄 Giấy tờ pháp lý</h5>
+                <div class="form-grid-3">
+                    <!-- CCCD (cá nhân) -->
+                    <div class="form-group" id="cccd_field">
+                        <label>CCCD/CMND</label>
+                        {{ form.cccd }}
+                    </div>
+
+                    <!-- Mã số thuế (doanh nghiệp) -->
+                    <div class="form-group" id="tax_field">
+                        <label>Mã số thuế</label>
+                        {{ form.tax_code }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần 5: Quản lý (2 cột) -->
+            <div class="form-section">
+                <h5 class="section-title">👤 Người phụ trách</h5>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Người phụ trách</label>
+                        {{ form.manager }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Chức danh</label>
+                        {{ form.position }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phần 6: Ghi chú (full width) -->
+            <div class="form-section">
+                <h5 class="section-title">📝 Ghi chú</h5>
+                <div class="form-grid-1">
+                    <div class="form-group">
+                        <label>Ghi chú</label>
+                        {{ form.note }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút hành động -->
+            <div class="button-group">
+                <button type="submit" class="btn btn-success">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Lưu khách hàng
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="showConfirmModalIfNeeded()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Trở về
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<!-- MODAL XÁC NHẬN -->
+<div id="confirmModal" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-content">
+        <div class="modal-header">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <h4>Xác nhận rời trang</h4>
+        </div>
+        <div class="modal-body">
+            <p>Bạn có chắc chắn muốn rời khỏi trang này?</p>
+            <p class="modal-warning">Dữ liệu chưa lưu sẽ bị mất!</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel" onclick="closeConfirmModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Không
+            </button>
+            <a href="{% url 'home' %}" class="btn btn-confirm" id="confirmButton">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Có, rời trang
+            </a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
