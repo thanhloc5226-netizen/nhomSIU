@@ -115,6 +115,13 @@ class CustomerStatusForm(forms.ModelForm):
 # ======================================================
 # CONTRACT FORM  (⚠️ CÓ STATUS – QUAN TRỌNG)
 # ======================================================
+from django import forms
+from .models import Contract
+
+from django import forms
+from .models import Contract
+
+
 class ContractForm(forms.ModelForm):
     class Meta:
         model = Contract
@@ -124,7 +131,7 @@ class ContractForm(forms.ModelForm):
             'contract_no',
             'contract_value',
             'payment_type',
-            'installment_count',
+            'prepaid_amount',
         ]
 
         labels = {
@@ -133,49 +140,76 @@ class ContractForm(forms.ModelForm):
             'contract_no': 'Số hợp đồng',
             'contract_value': 'Giá trị hợp đồng',
             'payment_type': 'Hình thức thanh toán',
-            'installment_count': 'Số đợt thanh toán',
+            'prepaid_amount': 'Số tiền trả trước (VNĐ)',
         }
 
         widgets = {
             'customer': forms.Select(attrs={
                 'class': 'form-control select2'
             }),
-            'service_type': forms.Select(attrs={'class': 'form-control'}),
-            'contract_no': forms.TextInput(attrs={'class': 'form-control'}),
-
+            'service_type': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'contract_no': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'VD: HD-001'
+            }),
             'contract_value': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Nhập giá trị hợp đồng'
+                'placeholder': 'Nhập giá trị hợp đồng',
+                'min': 0
             }),
-
             'payment_type': forms.Select(attrs={
                 'class': 'form-control',
-                'id': 'id_payment_type'  # ✅ Fixed ID
+                'id': 'id_payment_type'
             }),
-
-            'installment_count': forms.Select(attrs={
+            'prepaid_amount': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'id': 'id_installment_count'  # ✅ Fixed ID
+                'placeholder': 'Nhập số tiền trả trước',
+                'min': 0
             }),
         }
 
-
-
-    # 🔐 VALIDATE LOGIC THANH TOÁN
     def clean(self):
         cleaned_data = super().clean()
-        payment_type = cleaned_data.get('payment_type')
-        installment_count = cleaned_data.get('installment_count')
+        contract_value = cleaned_data.get('contract_value') or 0
+        prepaid_amount = cleaned_data.get('prepaid_amount') or 0
 
-        if payment_type == 'installment' and not installment_count:
-            raise forms.ValidationError(
-                'Vui lòng chọn số đợt khi thanh toán trả góp'
-            )
+        # 🔐 VALIDATE: tiền trả trước không được âm
+        if prepaid_amount < 0:
+            raise forms.ValidationError({
+                'prepaid_amount': 'Số tiền trả trước không được nhỏ hơn 0'
+            })
 
-        if payment_type == 'full':
-            cleaned_data['installment_count'] = None
+        # 🔐 VALIDATE: tiền trả trước không được lớn hơn giá trị hợp đồng
+        if prepaid_amount > contract_value:
+            raise forms.ValidationError({
+                'prepaid_amount': 'Số tiền trả trước không được lớn hơn giá trị hợp đồng'
+            })
 
         return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Required fields
+        self.fields['customer'].required = True
+        self.fields['service_type'].required = True
+        self.fields['contract_no'].required = True
+        self.fields['contract_value'].required = True
+        self.fields['payment_type'].required = True
+
+        # prepaid_amount KHÔNG bắt buộc
+        self.fields['prepaid_amount'].required = False
+        
+        # Ẩn trường 
+        self.fields['contract_value'].disabled = True
+        self.fields['payment_type'].disabled = True
+        self.fields['prepaid_amount'].disabled = True
+        self.fields['service_type'].disabled = True
+        self.fields['contract_no'].disabled = True
+        self.fields['customer'].disabled = True
+
 
 # ======================================================
 # 1. NHÃN HIỆU

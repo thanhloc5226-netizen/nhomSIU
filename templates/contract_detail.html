@@ -67,96 +67,86 @@
         </div>
     </div>
     <!-- PAYMENT INFO CARD -->
-    <div class="service-card mb-4">
-        <div class="service-header">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 1v22"></path>
-                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-            </svg>
-            <h5>Thông tin thanh toán</h5>
-        </div>
+    {% for ins in installments %}
+<form method="post" style="margin:0;">
+    {% csrf_token %}
 
-        <div class="service-content">
-            <div class="detail-grid">
+    <div class="installment-item {% if ins.is_paid %}paid{% endif %}"
+            style="padding:12px 16px; margin-bottom:10px; border-radius:8px;
+            border:1px solid {% if ins.is_paid %}#d4edda{% else %}#e0e0e0{% endif %};
+            background:{% if ins.is_paid %}#f8f9fa{% else %}#ffffff{% endif %};">
 
-                <div class="detail-item">
-                    <span class="detail-label">Giá trị hợp đồng</span>
-                    <span class="detail-value">
-                    {{ contract.contract_value|default:0|intcomma }} VNĐ
-                </span>
-                </div>
+        <div style="display:flex; gap:16px; align-items:center;">
 
-                <div class="detail-item">
-                    <span class="detail-label">Hình thức thanh toán</span>
-                    <span class="detail-value">
-                    {{ contract.get_payment_type_display }}
-                </span>
-                </div>
-
-                {% if contract.payment_type == "installment" %}
-                <div class="detail-item">
-                    <span class="detail-label">Số đợt thanh toán</span>
-                    <span class="detail-value">
-                    {{ contract.installment_count }} đợt
-                </span>
-                </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">Tiến độ</span>
-                    <span class="detail-value">
-                    {{ contract.paid_installments }}/{{ contract.installment_count }} đợt
-                </span>
-                </div>
-
-                <div class="detail-item full-width">
-                    <span class="detail-label">Trạng thái thanh toán</span>
-                    {% if contract.paid_installments >= contract.installment_count %}
-                    <span class="badge bg-success">Đã thanh toán đủ</span>
-                    {% else %}
-                    <span class="badge bg-warning text-dark">Đang trả góp</span>
-                    {% endif %}
-                </div>
-
-                <div class="detail-item full-width">
-                    <form method="post" style="margin-top:12px">
-                        {% csrf_token %}
-
-                        {% for ins in installments %}
-                        <div style="margin-bottom:8px">
-                            <label style="font-weight:500">
-                                <input type="checkbox"
-                                       name="paid_{{ ins.id }}"
-                                       {% if ins.is_paid %}checked disabled{% endif %}>
-                                Đợt {{ ins.installment_no }} –
-                                {{ ins.amount|intcomma }} VNĐ
-                                {% if ins.is_paid %}
-                                (đã trả {{ ins.paid_date|date:"d/m/Y" }})
-                                {% endif %}
-                            </label>
-                        </div>
-                        {% endfor %}
-
-                        {% if contract.status != "completed" %}
-                        <div class="no-print">
-                            <button type="submit" class="btn-edit-contract mt-2">
-                                Cập nhật thanh toán
-                            </button>
-                        </div>
-                        {% endif %}
-                    </form>
-                </div>
-
-
-                {% else %}
-                <div class="detail-item full-width">
-                    <span class="detail-label">Trạng thái thanh toán</span>
-                    <span class="badge bg-success">Đã thanh toán</span>
-                </div>
-                {% endif %}
-
+            <!-- INFO ĐỢT -->
+            <div style="font-size:13px; color:#6c757d;">
+                Đã trả: {{ contract.total_paid|intcomma }} VNĐ
             </div>
+
+            {% if contract.remaining_amount > 0 %}
+                <div style="font-size:13px; color:#dc3545;">
+                    Còn thiếu: {{ contract.remaining_amount|intcomma }} VNĐ
+                </div>
+            {% else %}
+                <div style="font-size:13px; color:#28a745;">
+                    ✓ Đã thanh toán đủ
+                </div>
+            {% endif %}
+
+
+            {% if contract.remaining_amount > 0 %}
+                <!-- INPUT -->
+                <input type="number"
+                    name="paid_amount"
+                    class="form-control"
+                    min="1"
+                    step="1"
+                    placeholder="Nhập số tiền"
+                    style="width:180px; text-align:right;"
+                    required>
+
+                <!-- ID -->
+                <input type="hidden" name="installment_id" value="{{ ins.id }}">
+
+                <!-- SUBMIT -->
+                <button type="submit" class="btn btn-sm btn-primary">
+                    💾 Thanh toán
+                </button>
+            {% endif %}
         </div>
     </div>
+</form>
+{% endfor %}
+<div class="mt-5">
+    <h6>📑 NHẬT KÝ GIAO DỊCH CHỈ TIẾT</h6>
+    <div class="table-responsive">
+        <table class="table table-sm table-bordered" style="font-size: 13px;">
+            <thead class="table-success">
+                <tr>
+                    <th>Thời gian</th>
+                    <th>Đợt</th>
+                    <th>Số tiền nộp</th>
+                    <th>Người thu</th> </tr>
+            </thead>
+            <tbody>
+                {% for log in contract.payment_logs.all %}
+                <tr>
+                    <td>{{ log.paid_at|date:"d/m/Y H:i" }}</td>
+                    <td>ID giao dịch: {{ log.installment.id }}</td>
+                    <td class="text-primary fw-bold">+ {{ log.amount_paid|intcomma }} VNĐ</td>
+                    <td>{{ user.username }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Chưa có giao dịch nào được ghi lại.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 
     <!-- Service Details Card -->
     <div class="service-card">
@@ -336,22 +326,28 @@
 
             {% elif contract.service_type == "khac" %}
 
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <span class="detail-label">Người liên hệ</span>
-                    <span class="detail-value">{{ service.legal_representative }}</span>
-                </div>
+            {% for s in service %}
+                <div class="detail-grid">
 
-                <div class="detail-item">
-                    <span class="detail-label">Chức vụ</span>
-                    <span class="detail-value">{{ service.position }}</span>
-                </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Người liên hệ</span>
+                        <span class="detail-value">{{ s.legal_representative }}</span>
+                    </div>
 
-                <div class="detail-item full-width">
-                    <span class="detail-label">Dịch vụ</span>
-                    <span class="detail-value">{{ service.description }}</span>
+                    <div class="detail-item">
+                        <span class="detail-label">Chức vụ</span>
+                        <span class="detail-value">{{ s.position }}</span>
+                    </div>
+
+                    <div class="detail-item full-width">
+                        <span class="detail-label">Dịch vụ</span>
+                        <span class="detail-value">{{ s.description }}</span>
+                    </div>
+
                 </div>
-            </div>
+                {% empty %}
+                <p>❌ Chưa có dịch vụ khác</p>
+                {% endfor %}
 
             {% endif %}
 
@@ -383,3 +379,4 @@
 
 
 {% endblock %}
+không hiển thị số tiền và các trường khác của service='khac'

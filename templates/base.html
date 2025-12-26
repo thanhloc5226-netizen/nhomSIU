@@ -91,15 +91,17 @@
 
 {% if user.is_authenticated %}
 <div class="nav-tabs">
-    <a href="{% url 'home' %}" class="nav-tab">TRANG CHỦ</a>
+    <a href="{% url 'home' %}" class="nav-tab">Khách hàng</a>
+    <a href="" class="nav-tab">Ðăng ký nhãn hiệu</a>
+    <a href="" class="nav-tab">Bản quyền tác giả</a>
+    <a href="" class="nav-tab">Ðăng ký kinh doanh</a>
+    <a href="" class="nav-tab">Ðăng ký đầu tư</a>
+    <a href="" class="nav-tab">Dịch vụ khác</a>
 
-    <a href="{% url 'add_customer' %}" class="nav-tab nav-customer">
-        ➕ THÊM KHÁCH HÀNG
-    </a>
+</a>
+    
 
-    <a href="{% url 'add_contract' %}" class="nav-tab">
-        📄 ➕ THÊM HỢP ĐỒNG
-    </a>
+
 </div>
 {% endif %}
 

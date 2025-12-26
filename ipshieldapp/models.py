@@ -1,11 +1,9 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django.db.models import Sum
 # ============================
 # KHÁCH HÀNG
 # ============================
-from django.db import models
-from django.db import models
-from django.core.validators import RegexValidator
 
 # ============================
 # VALIDATORS (THÔNG BÁO TV)
@@ -123,6 +121,10 @@ class Customer(models.Model):
 # ============================
 # HỢP ĐỒNG
 # ============================
+from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+
 class Contract(models.Model):
 
     SERVICE_TYPE_CHOICES = (
@@ -139,15 +141,12 @@ class Contract(models.Model):
         ('completed', 'Hoàn thành'),
         ('paused', 'Ngưng'),
     )
+    
     PAYMENT_TYPE_CHOICES = (
         ('full', 'Trả dứt điểm'),
-        ('installment', 'Trả góp'),
+        ('installment', 'Trả nhiều đợt'),
     )
 
-    INSTALLMENT_COUNT_CHOICES = (
-        (3, '3 đợt'),
-        (6, '6 đợt'),
-    )
     customer = models.ForeignKey(
         Customer,
         on_delete=models.CASCADE,
@@ -158,8 +157,10 @@ class Contract(models.Model):
         max_length=50,
         choices=SERVICE_TYPE_CHOICES
     )
+    
 
     contract_no = models.CharField(max_length=50, unique=True)
+    
     # 🟢 GIÁ TRỊ HỢP ĐỒNG
     contract_value = models.DecimalField(
         max_digits=15,
@@ -167,34 +168,74 @@ class Contract(models.Model):
         verbose_name='Giá trị hợp đồng'
     )
 
-    # 🟢 TRẢ ĐỨT / TRẢ GÓP
+    # 🟢 TRẢ ĐỨT ĐIỂM / TRẢ NHIỀU ĐỢT
     payment_type = models.CharField(
         max_length=20,
         choices=PAYMENT_TYPE_CHOICES,
         verbose_name='Hình thức thanh toán'
     )
 
-    # 🟢 CHỈ DÙNG KHI TRẢ GÓP
-    installment_count = models.PositiveSmallIntegerField(
-        choices=INSTALLMENT_COUNT_CHOICES,
-        null=True,
-        blank=True,
-        verbose_name='Số đợt thanh toán'
+    # 🟢 SỐ TIỀN TRẢ TRƯỚC
+    prepaid_amount = models.DecimalField(
+        max_digits=15,
+        decimal_places=0,
+        default=0,
+        verbose_name='Số tiền trả trước'
     )
+    
+    
     status = models.CharField(
         max_length=20,
         choices=CONTRACT_STATUS_CHOICES,
         default='pending'
     )
 
-    @property
-    def paid_installments(self):
-        return self.installments.filter(is_paid=True).count()
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = 'Hợp đồng'
+        verbose_name_plural = 'Hợp đồng'
+        indexes = [
+            models.Index(fields=['contract_no']),
+            models.Index(fields=['customer', 'status']),
+            models.Index(fields=['created_at']),
+        ]
+
+    def clean(self):
+        super().clean()
+        
+    
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    @property
+    def total_paid(self):
+        from django.db.models import Sum
+        return self.installments.aggregate(Sum('paid_amount'))['paid_amount__sum'] or 0
+
+    @property
+    def remaining_amount(self):
+        return self.contract_value - self.total_paid
+
+    @property
+    def payment_progress(self):
+        """%x tiến độ thanh toán"""
+        if self.contract_value == 0:
+            return 0
+        return round((self.total_paid / self.contract_value) * 100, 2)
+
+    @property
+    def is_fully_paid(self):
+        """Đã thanh toán đủ chưa"""
+        return self.total_paid >= self.contract_value
+
 
     def __str__(self):
-        return self.contract_no
-# thanh toán hợp đồng
+        return f"{self.contract_no} - {self.get_service_type_display()}"
+
+
 class PaymentInstallment(models.Model):
     contract = models.ForeignKey(
         Contract,
@@ -202,34 +243,105 @@ class PaymentInstallment(models.Model):
         related_name='installments'
     )
 
-    installment_no = models.PositiveSmallIntegerField(
-        verbose_name='Đợt'
-    )
-
+    # TỔNG TRẢ GÓP
     amount = models.DecimalField(
         max_digits=15,
-        decimal_places=0,
-        verbose_name='Số tiền'
+        decimal_places=2,
+        verbose_name='Số tiền đợt thanh toán'
     )
 
-    is_paid = models.BooleanField(
-        default=False,
-        verbose_name='Đã thanh toán'
+    # TIỀN TRẢ TRƯỚC
+    paid_amount = models.DecimalField(
+        max_digits=15,
+        decimal_places=2,
+        default=0,
+        verbose_name='Số tiền đã trả'
     )
 
-    paid_date = models.DateField(
-        null=True,
-        blank=True,
-        verbose_name='Ngày thanh toán'
-    )
+    due_date = models.DateField(null=True, blank=True)
+    is_paid = models.BooleanField(default=False, verbose_name='Đã thanh toán')
+    paid_date = models.DateField(null=True, blank=True)
+
+    notes = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 
     class Meta:
         verbose_name = 'Đợt thanh toán'
         verbose_name_plural = 'Các đợt thanh toán'
-        unique_together = ('contract', 'installment_no')
+        # unique_together = ('contract')
+        ordering = ['contract']
+        indexes = [
+            models.Index(fields=['contract', 'is_paid']),
+            models.Index(fields=['paid_date']),
+            models.Index(fields=['due_date']),
+        ]
 
+    def clean(self):
+        super().clean()
+
+        if self.amount <= 0:
+            raise ValidationError({'amount': 'Số tiền đợt phải > 0'})
+
+        if self.paid_amount < 0:
+            raise ValidationError({'paid_amount': 'Số tiền đã trả không hợp lệ'})
+
+        if self.paid_amount > self.amount:
+            raise ValidationError({'paid_amount': 'Số tiền trả vượt quá số tiền đợt'})
+
+
+
+
+    def save(self, *args, **kwargs):
+        if self.paid_amount >= self.amount:
+            self.is_paid = True
+            if not self.paid_date:
+                self.paid_date = timezone.now().date()
+        else:
+            self.is_paid = False
+            self.paid_date = None
+
+        super().save(*args, **kwargs)
+
+    
+    def add_payment(self, amount, paid_date=None, notes=''):
+        if amount <= 0:
+            raise ValidationError('Số tiền phải lớn hơn 0')
+
+        self.paid_amount += amount
+
+        if self.paid_amount >= self.amount:
+            self.is_paid = True
+            self.paid_date = paid_date or timezone.now().date()
+
+        if notes:
+            self.notes = notes
+
+        self.save()
+
+    
+
+    
     def __str__(self):
-        return f"{self.contract.contract_no} - Đợt {self.installment_no}"
+        status = "✓" if self.is_paid else "✗"
+        return f"{self.contract.contract_no} - Đợt  ({status})"
+    
+    @property
+    def remaining_amount(self):
+        return max(self.amount - self.paid_amount, 0)
+    
+class PaymentLog(models.Model):
+    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='payment_logs')
+    installment = models.ForeignKey(PaymentInstallment, on_delete=models.CASCADE, related_name='logs')
+    amount_paid = models.DecimalField(max_digits=15, decimal_places=0)
+    paid_at = models.DateTimeField(auto_now_add=True) # Tự động lưu ngày giờ lúc bấm nút
+    def __str__(self):
+        return f"Thanh toán {self.amount_paid} cho HĐ {self.contract.id}"
+
+    class Meta:
+        ordering = ['-paid_at'] # Cái mới nhất hiện lên đầu
 
 # ============================
 # 1. NHÃN HIỆU

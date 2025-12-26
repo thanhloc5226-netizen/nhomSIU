@@ -1,10 +1,6 @@
 from django.contrib import admin
-from .models import (
-    Customer, Contract,
-    TrademarkService, CopyrightService,
-    BusinessRegistrationService, InvestmentService, OtherService,
-    ContractHistory,Slider,Mascot
-)
+from .models import *
+
 
 
 # ============================
@@ -67,7 +63,7 @@ class ContractAdmin(admin.ModelAdmin):
     # Hiển thị label tiếng Việt
     fieldsets = (
         ("Thông tin hợp đồng", {
-            "fields": ("customer", "service_type", "contract_no")
+            "fields": ("customer", "service_type", "contract_no","prepaid_amount","contract_value")
         }),
     )
 
@@ -96,3 +92,8 @@ class SliderAdmin(admin.ModelAdmin):
 class MascotAdmin(admin.ModelAdmin):
     list_display = ('title', 'order', 'is_active')
     list_editable = ('order', 'is_active')
+
+@admin.register(PaymentLog)
+class PaymentLogAdmin(admin.ModelAdmin):
+    list_display = ('contract', 'installment', 'amount_paid', 'paid_at')
+    list_filter = ('paid_at',)
