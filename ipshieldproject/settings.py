@@ -1,22 +1,25 @@
 from pathlib import Path
 import os
 
+# =========================
+# BASE
+# =========================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-0f1o%1de=udhg@xz6o$k=&d$t_16^!gr2!p7lcrg(q_p8527l0"
 
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = [
-    "ipshield.vn",
-    "www.ipshield.vn",
-    "*"
-]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://ipshield.vn",
-    "https://www.ipshield.vn",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
 ]
+
+# =========================
+# APPLICATIONS
+# =========================
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -25,11 +28,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    'django.contrib.humanize',
+    "django.contrib.humanize",
     "ipshieldapp",
-
 ]
 
+# =========================
+# MIDDLEWARE
+# =========================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -40,6 +45,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+# =========================
+# URLS / TEMPLATES
+# =========================
 ROOT_URLCONF = "ipshieldproject.urls"
 
 TEMPLATES = [
@@ -61,6 +69,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ipshieldproject.wsgi.application"
 
+# =========================
+# DATABASE
+# =========================
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -68,6 +79,9 @@ DATABASES = {
     }
 }
 
+# =========================
+# PASSWORD VALIDATORS
+# =========================
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -75,30 +89,42 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# =========================
+# LANGUAGE / TIME
+# =========================
+LANGUAGE_CODE = "vi"
+
 TIME_ZONE = "Asia/Ho_Chi_Minh"
 
 USE_I18N = True
 USE_TZ = False
 
+# =========================
+# STATIC FILES
+# =========================
 STATIC_URL = "/static/"
-
 STATICFILES_DIRS = [
-    BASE_DIR / "static"
+    BASE_DIR / "static",
 ]
-# MEDIA FILES (UPLOAD)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# =========================
+# MEDIA FILES
+# =========================
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# =========================
+# AUTH
+# =========================
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "home"
 
-
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_X_FORWARDED_HOST = True
-
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+# =========================
+# SECURITY (DEV)
+# =========================
+SECURE_SSL_REDIRECT = False
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False

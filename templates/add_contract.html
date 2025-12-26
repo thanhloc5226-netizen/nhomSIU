@@ -57,7 +57,7 @@
 
             <!-- THÔNG TIN DỊCH VỤ -->
             <div class="form-section">
-                <div class="section-header">
+                <div class="section-headesr">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
@@ -66,32 +66,77 @@
                 </div>
 
                 <!-- Nhãn hiệu -->
-                <div id="nhanhieu_form" class="service-block">
-                    <div class="service-header">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
-                        </svg>
-                        <h6>Dịch vụ Nhãn hiệu</h6>
-                    </div>
-                    <div class="service-content">
-                        {{ trademark_form.as_p }}
-                    </div>
-                </div>
+             <div id="nhanhieu_form" class="service-block">
+    <div class="service-header">
+        <h6>Dịch vụ Nhãn hiệu</h6>
+        <button type="button" class="btn-add" onclick="addForm('trademark')">
+            ➕ Thêm nhãn hiệu
+        </button>
+    </div>
+
+    {{ trademark_formset.management_form }}
+
+    <div class="service-content" id="trademark-formset">
+        {% for form in trademark_formset %}
+        <div class="formset-item">
+            {{ form.as_p }}
+            {{ form.DELETE }}
+            <button type="button" class="btn-remove" onclick="removeItem(this)">
+                ❌ Xóa
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="trademark-empty-form" style="display:none">
+    <div class="formset-item">
+        {{ trademark_formset.empty_form.as_p }}
+        {{ trademark_formset.empty_form.DELETE }}
+        <button type="button" class="btn-remove" onclick="removeItem(this)">
+            ❌ Xóa
+        </button>
+    </div>
+</div>
+
+
+</div>
+
 
                 <!-- Bản quyền -->
-                <div id="banquyen_form" class="service-block">
-                    <div class="service-header">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M15 9a3 3 0 1 1-6 0"></path>
-                        </svg>
-                        <h6>Dịch vụ Bản quyền</h6>
-                    </div>
-                    <div class="service-content">
-                        {{ copyright_form.as_p }}
-                    </div>
-                </div>
+              <div id="banquyen_form" class="service-block">
+    <div class="service-header">
+        <h6>Dịch vụ Bản quyền</h6>
+        <button type="button" class="btn-add" onclick="addForm('copyright')">
+            ➕ Thêm bản quyền
+        </button>
+    </div>
+
+    {{ copyright_formset.management_form }}
+
+    <div class="service-content" id="copyright-formset">
+        {% for form in copyright_formset %}
+        <div class="formset-item">
+            {{ form.as_p }}
+            {{ form.DELETE }}
+            <button type="button" class="btn-remove" onclick="removeItem(this)">
+                ❌ Xóa
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+
+ <div id="copyright-empty-form" style="display:none">
+    <div class="formset-item">
+        {{ copyright_formset.empty_form.as_p }}
+        {{ copyright_formset.empty_form.DELETE }}
+        <button type="button" class="btn-remove" onclick="removeItem(this)">
+            ❌ Xóa
+        </button>
+    </div>
+</div>
+
+</div>
+
 
                 <!-- ĐKKD -->
                 <div id="dkkd_form" class="service-block">
@@ -166,6 +211,9 @@
 <!-- Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
 
 
 

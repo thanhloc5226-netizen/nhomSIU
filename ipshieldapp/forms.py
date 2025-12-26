@@ -150,14 +150,16 @@ class ContractForm(forms.ModelForm):
 
             'payment_type': forms.Select(attrs={
                 'class': 'form-control',
-                'id': 'payment_type'
+                'id': 'id_payment_type'  # ✅ Fixed ID
             }),
 
             'installment_count': forms.Select(attrs={
                 'class': 'form-control',
-                'id': 'installment_count'
+                'id': 'id_installment_count'  # ✅ Fixed ID
             }),
         }
+
+
 
     # 🔐 VALIDATE LOGIC THANH TOÁN
     def clean(self):
@@ -352,3 +354,19 @@ class PaymentInstallmentForm(forms.ModelForm):
                 'class': 'form-control'
             }),
         }
+from django.forms import modelformset_factory
+
+TrademarkFormSet = modelformset_factory(
+    TrademarkService,
+    form=TrademarkForm,
+    extra=0,
+    can_delete=True
+)
+
+CopyrightFormSet = modelformset_factory(
+    CopyrightService,
+    form=CopyrightForm,
+    extra=0,
+    can_delete=True
+)
+

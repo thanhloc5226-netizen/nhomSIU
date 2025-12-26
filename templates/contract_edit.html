@@ -62,11 +62,59 @@
                         </svg>
                         <h5>Thông tin dịch vụ</h5>
                     </div>
-                    <div class="form-content">
-                        {{ service_form.as_p }}
-                    </div>
-                </div>
-            </div>
+                   <div class="form-content">
+
+    {% if contract.service_type == "nhanhieu" or contract.service_type == "banquyen" %}
+
+{{ service_formset.management_form }}
+
+<div id="service-formset">
+    {% for form in service_formset %}
+    <div class="service-box formset-item">
+        <h6>
+            {% if contract.service_type == "nhanhieu" %}
+                🔖 Nhãn hiệu {{ forloop.counter }}
+            {% else %}
+                📄 Bản quyền {{ forloop.counter }}
+            {% endif %}
+        </h6>
+
+        {{ form.as_p }}
+        {{ form.DELETE }}
+
+        <button type="button" class="btn-remove">
+            ❌ Xóa
+        </button>
+        <hr>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- EMPTY FORM TEMPLATE -->
+<template id="empty-form-template">
+    <div class="service-box formset-item">
+        {{ service_formset.empty_form.as_p }}
+        {{ service_formset.empty_form.DELETE }}
+
+        <button type="button" class="btn-remove">
+            ❌ Xóa
+        </button>
+        <hr>
+    </div>
+</template>
+
+<button type="button"
+        class="btn-add"
+        data-prefix="{{ service_formset.prefix }}">
+    ➕ Thêm
+</button>
+
+{% else %}
+
+{{ service_form.as_p }}
+
+{% endif %}
+
 
             <!-- Action Buttons -->
             <div class="form-actions">

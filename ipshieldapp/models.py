@@ -235,10 +235,10 @@ class PaymentInstallment(models.Model):
 # 1. NHÃN HIỆU
 # ============================
 class TrademarkService(models.Model):
-    contract = models.OneToOneField(
+    contract = models.ForeignKey(
         Contract,
         on_delete=models.CASCADE,
-        related_name='trademark'
+        related_name='trademarks'
     )
 
     applicant = models.CharField(max_length=255)
@@ -254,7 +254,7 @@ class TrademarkService(models.Model):
     filing_date = models.DateField()
     trademark_name = models.CharField(max_length=255)
     trademark_image = models.ImageField(
-        upload_to='static/images/trademark/',
+        upload_to='images/trademark/',
         blank=True,
         null=True
     )
@@ -264,7 +264,7 @@ class TrademarkService(models.Model):
     decision_date = models.DateField(blank=True, null=True)
 
     certificate_file = models.FileField(
-        upload_to='static/images/certificates/',
+        upload_to='images/certificates/',
         blank=True,
         null=True
     )
@@ -274,10 +274,10 @@ class TrademarkService(models.Model):
 # 2. BẢN QUYỀN
 # ============================
 class CopyrightService(models.Model):
-    contract = models.OneToOneField(
+    contract = models.ForeignKey(
         Contract,
         on_delete=models.CASCADE,
-        related_name='copyright'
+        related_name='copyrights'
     )
 
     work_name = models.CharField(max_length=255)
@@ -289,7 +289,7 @@ class CopyrightService(models.Model):
     certificate_no = models.CharField(max_length=50)
 
     certificate_file = models.FileField(
-        upload_to='static/images/certificates/',
+        upload_to='images/certificates/',
         blank=True,
         null=True
     )
@@ -324,7 +324,7 @@ class BusinessRegistrationService(models.Model):
     charter_capital = models.CharField(max_length=100)
 
     certificate_file = models.FileField(
-        upload_to='static/images/certificates/',
+        upload_to='images/certificates/',
         blank=True,
         null=True
     )
@@ -350,7 +350,7 @@ class InvestmentService(models.Model):
     total_capital = models.CharField(max_length=100)
 
     certificate_file = models.FileField(
-        upload_to='static/images/certificates/',
+        upload_to='images/certificates/',
         blank=True,
         null=True
     )
@@ -376,7 +376,7 @@ class OtherService(models.Model):
     )
     email = models.EmailField()
     certificate_file = models.FileField(
-        upload_to='static/images/certificates/',
+        upload_to='images/certificates/',
         blank=True,
         null=True
     )
