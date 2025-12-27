@@ -13,7 +13,7 @@
 
 </head>
 
-<body>
+
     <div class="container">
         <div class="header">
             <div class="header-logo">
@@ -92,13 +92,13 @@
 {% if user.is_authenticated %}
 <div class="nav-tabs">
     <a href="{% url 'home' %}" class="nav-tab">Khách hàng</a>
-    <a href="" class="nav-tab">Ðăng ký nhãn hiệu</a>
-    <a href="" class="nav-tab">Bản quyền tác giả</a>
-    <a href="" class="nav-tab">Ðăng ký kinh doanh</a>
-    <a href="" class="nav-tab">Ðăng ký đầu tư</a>
-    <a href="" class="nav-tab">Dịch vụ khác</a>
+    <a href="{% url 'contract_search' %}" class="nav-tab">Đăng ký nhãn hiệu</a>
 
-</a>
+    <a href="{% url 'contract_copyright_search' %}" class="nav-tab">Bản quyền tác giả</a>
+
+    <a href="{% url 'contract_business_search' %}" class="nav-tab">Ðăng ký kinh doanh</a>
+    <a href="{% url 'contract_investment_search' %}" class="nav-tab">Ðăng ký đầu tư</a>
+    <a href="{% url 'contract_other_service_search' %}" class="nav-tab">Dịch vụ khác</a>
     
 
 

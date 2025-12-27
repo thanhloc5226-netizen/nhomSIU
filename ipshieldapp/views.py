@@ -833,4 +833,125 @@ protect_views(
     search_customer,
 )
 
+# ===============================================
+# CONTRACT SEARCH (NHÃN HIỆU)
+# ===============================================
+from django.db.models import Q
 
+def contract_search(request):
+    q = request.GET.get('q', '').strip()
+
+    # ✅ chỉ hợp đồng đăng ký nhãn hiệu
+    contracts = Contract.objects.filter(
+        service_type='nhanhieu'
+    ).select_related('customer').order_by('-created_at')
+
+    if q:
+        contracts = contracts.filter(
+            Q(contract_no__icontains=q) |                 # mã hợp đồng
+            Q(customer__customer_code__icontains=q) |     # mã KH
+            Q(customer__name__icontains=q)                # tên KH
+        )
+
+    return render(request, 'contract_search.html', {
+        'contracts': contracts,
+        'q': q
+    })
+
+# ===============================================
+# Bản quyền tác giả
+# ===============================================
+from django.db.models import Q
+
+def contract_copyright_search(request):
+    q = request.GET.get('q', '').strip()
+
+    contracts = Contract.objects.filter(
+        service_type='banquyen'
+    )
+
+    if q:
+        contracts = contracts.filter(
+            Q(contract_no__icontains=q) |
+            Q(customer__customer_code__icontains=q) |
+            Q(customer__name__icontains=q)
+        )
+
+    contracts = contracts.order_by('-created_at')
+
+    return render(request, 'contract_copyright_search.html', {
+        'contracts': contracts,
+        'q': q
+    })
+
+# ===============================================
+# dkkq search
+# ===============================================
+
+def contract_business_search(request):
+    q = request.GET.get('q', '').strip()
+
+    contracts = Contract.objects.filter(
+        service_type='dkkd'
+    )
+
+    if q:
+        contracts = contracts.filter(
+            Q(contract_no__icontains=q) |
+            Q(customer__customer_code__icontains=q) |
+            Q(customer__name__icontains=q)
+        )
+
+    contracts = contracts.order_by('-created_at')
+
+    return render(request, 'contract_business_search.html', {
+        'contracts': contracts,
+        'q': q
+    })
+# ===============================================
+# ĐK đầu tư
+# ===============================================
+def contract_investment_search(request):
+    q = request.GET.get('q', '').strip()
+
+    contracts = Contract.objects.filter(
+        service_type='dautu'
+    )
+
+    if q:
+        contracts = contracts.filter(
+            Q(contract_no__icontains=q) |
+            Q(customer__customer_code__icontains=q) |
+            Q(customer__name__icontains=q)
+        )
+
+    contracts = contracts.order_by('-created_at')
+
+    return render(request, 'contract_investment_search.html', {
+        'contracts': contracts,
+        'q': q
+    })
+
+# ===============================================
+# Dịch Vụ Khác
+# ===============================================
+def contract_other_service_search(request):
+    q = request.GET.get('q', '').strip()
+
+    contracts = Contract.objects.filter(
+        service_type='khac'   # ✅ DỊCH VỤ KHÁC
+    )
+
+    if q:
+        contracts = contracts.filter(
+            Q(contract_no__icontains=q) |
+            Q(customer__customer_code__icontains=q) |
+            Q(customer__name__icontains=q)
+        )
+
+    contracts = contracts.order_by('-created_at')
+
+    return render(request, 'contract_other_service_search.html', {
+        'contracts': contracts,
+        'q': q
+    })

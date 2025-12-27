@@ -4,6 +4,12 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
 
+    path("contracts/search/", views.contract_search, name="contract_search"),
+    path('contracts/copyright/search/',views.contract_copyright_search,name='contract_copyright_search'),
+    path('hop-dong/dang-ky-kinh-doanh/', views.contract_business_search, name='contract_business_search'),
+    path('hop-dong/dang-ky-dau-tu/',views.contract_investment_search,name='contract_investment_search'),
+    path('hop-dong/dich-vu-khac/',views.contract_other_service_search,name='contract_other_service_search'),
+
     # CUSTOMER
     path('customer-add/', views.add_customer, name='add_customer'),
     path('customer/<int:id>/', views.customer_detail, name='customer_detail'),
