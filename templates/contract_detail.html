@@ -63,6 +63,10 @@
                     <span class="info-label">Loại dịch vụ</span>
                     <span class="service-badge">{{ contract.get_service_type_display }}</span>
                 </div>
+                <div class="info-content">
+                    <span class="info-label">Tổng giá trị hợp đồng</span>
+                    <span class="service-badge">{{ contract.contract_value|intcomma }} VNĐ</span>
+                </div>
             </div>
         </div>
     </div>

@@ -201,14 +201,6 @@ class ContractForm(forms.ModelForm):
 
         # prepaid_amount KHÔNG bắt buộc
         self.fields['prepaid_amount'].required = False
-        
-        # Ẩn trường 
-        self.fields['contract_value'].disabled = True
-        self.fields['payment_type'].disabled = True
-        self.fields['prepaid_amount'].disabled = True
-        self.fields['service_type'].disabled = True
-        self.fields['contract_no'].disabled = True
-        self.fields['customer'].disabled = True
 
 
 # ======================================================
