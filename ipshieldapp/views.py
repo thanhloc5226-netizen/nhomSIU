@@ -37,15 +37,15 @@ def home(request):
         )
 
     sliders = Slider.objects.filter(is_active=True)
-
     mascots = Mascot.objects.filter(is_active=True)
+    loyal_customers = LoyalCustomer.objects.filter(is_active=True).order_by('order')  # ← THÊM DÒNG NÀY
 
     return render(request, 'khachhang.html', {
         'customers': customers,
         'sliders': sliders,
         'mascots': mascots,
+        'loyal_customers': loyal_customers,
     })
-
 
 # ===============================================
 # CUSTOMER CREATE (ĐÃ SỬA - XỬ LÝ TRÙNG MÃ)
@@ -958,3 +958,5 @@ def contract_other_service_search(request):
         'contracts': contracts,
         'q': q
     })
+
+

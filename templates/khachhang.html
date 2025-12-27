@@ -1,11 +1,21 @@
 {% extends 'base.html' %}
+
 {% block body_block %}
 {% load static %}
 <link href="{% static 'css/khachhang.css' %}" rel="stylesheet">
-   <script src="{% static 'js/khachhang.js' %}" defer></script>
-   <a href="{% url 'add_customer' %}">
-        ➕ THÊM KHÁCH HÀNG
-    </a>
+   <script src="{% static 'js/khachhang.js' %}"></script>
+<a href="{% url 'add_customer' %}" class="btn-add-customer">
+    <span class="btn-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+    </span>
+    <span class="btn-text">Thêm khách hàng</span>
+    <span class="btn-shine"></span>
+</a>
+
+
 <form method="get">
     <div class="search-section">
         <h3>🔍 Tìm Kiếm Khách Hàng</h3>
@@ -189,23 +199,107 @@
 </tbody>
 </table>
 </div>
-<h2 class="text-center fw-bold text-danger" data-aos="fade-right">
-    MASCOT
-</h2>
-
-<section class="mascot_body" style="margin-top:-10%">
-
-<div class="carousel_mascot" data-aos="fade-right">
-
-    {% for mascot in mascots %}
-    <div class="card_mascot" data-title="{{ mascot.title }}">
-        <div class="speech_mascot">{{ mascot.speech }}</div>
-        <img src="{{ mascot.image.url }}" alt="{{ mascot.title }}">
-    </div>
-    {% endfor %}
-
+<div class="mascot-header" data-aos="fade-right">
+    <div class="header-decoration-mascot"></div>
+    <h1 class="mascot-title">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+        </svg>
+        MASCOT
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+        </svg>
+    </h1>
+    <div class="header-decoration-mascot"></div>
 </div>
+
+<section class="mascot_body" style="margin-top:-13%">
+    <div class="carousel_mascot" data-aos="fade-right">
+        {% for mascot in mascots %}
+        <div class="card_mascot" data-title="{{ mascot.title }}">
+            <div class="speech_mascot">{{ mascot.speech }}</div>
+            <img src="{{ mascot.image.url }}" alt="{{ mascot.title }}">
+        </div>
+        {% endfor %}
+    </div>
 </section>
+
+
+
+<div class="khtt-header" style="margin-top:-6%">
+    <div class="header-decoration"></div>
+    <h1 class="khtt-title">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        Khách Hàng Thân Thiết
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+    </h1>
+    <div class="header-decoration"></div>
+</div>
+
+<section class="khtt-section" style="margin-top:10%">
+    <a class="play-pause-btn_khtt" id="playPauseBtn_khtt"></a>
+    <div class="main-container_khtt">
+        <div class="carousel-section_khtt">
+            <div class="carousel-container_khtt">
+                <div class="carousel-track_khtt">
+                    {% for customer in loyal_customers %}
+                    <div class="card_khtt" data-index="{{ forloop.counter0 }}">
+                        <img src="{{ customer.image.url }}" alt="{{ customer.name }}">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-section_khtt">
+            <div class="nav-controls_khtt">
+                <button class="nav-arrow_khtt up_khtt">
+                    <img src="https://ik.imagekit.io/gopichakradhar/icons/top.png" alt="Up">
+                </button>
+                <button class="nav-arrow_khtt down_khtt">
+                    <img src="https://ik.imagekit.io/gopichakradhar/icons/down.png" alt="Down">
+                </button>
+            </div>
+
+            <div class="member-info_khtt">
+                <h2 class="member-name_khtt">{{ loyal_customers.0.name }}</h2>
+                <p class="member-role_khtt">{{ loyal_customers.0.role }}</p>
+            </div>
+
+            <div class="dots_khtt">
+                {% for customer in loyal_customers %}
+                <div class="dot_khtt {% if forloop.first %}active_khtt{% endif %}" data-index="{{ forloop.counter0 }}"></div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<script>
+    const teamMembers_khtt = [
+        {% for customer in loyal_customers %}
+        {
+            name: "{{ customer.name|escapejs }}",
+            role: "{{ customer.role|escapejs }}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+</script>
+
 
 
 
