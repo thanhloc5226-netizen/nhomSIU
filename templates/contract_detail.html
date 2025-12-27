@@ -70,87 +70,88 @@
             </div>
         </div>
     </div>
+
     <!-- PAYMENT INFO CARD -->
     {% for ins in installments %}
-<form method="post" style="margin:0;">
-    {% csrf_token %}
+    <form method="post" style="margin:0;">
+        {% csrf_token %}
 
-    <div class="installment-item {% if ins.is_paid %}paid{% endif %}"
-            style="padding:12px 16px; margin-bottom:10px; border-radius:8px;
-            border:1px solid {% if ins.is_paid %}#d4edda{% else %}#e0e0e0{% endif %};
-            background:{% if ins.is_paid %}#f8f9fa{% else %}#ffffff{% endif %};">
+        <div class="installment-item {% if ins.is_paid %}paid{% endif %}"
+                style="padding:12px 16px; margin-bottom:10px; border-radius:8px;
+                border:1px solid {% if ins.is_paid %}#d4edda{% else %}#e0e0e0{% endif %};
+                background:{% if ins.is_paid %}#f8f9fa{% else %}#ffffff{% endif %};">
 
-        <div style="display:flex; gap:16px; align-items:center;">
+            <div style="display:flex; gap:16px; align-items:center;">
 
-            <!-- INFO ĐỢT -->
-            <div style="font-size:13px; color:#6c757d;">
-                Đã trả: {{ contract.total_paid|intcomma }} VNĐ
+                <!-- INFO ĐỢT -->
+                <div style="font-size:13px; color:#6c757d;">
+                    Đã trả: {{ contract.total_paid|intcomma }} VNĐ
+                </div>
+
+                {% if contract.remaining_amount > 0 %}
+                    <div style="font-size:13px; color:#dc3545;">
+                        Còn thiếu: {{ contract.remaining_amount|intcomma }} VNĐ
+                    </div>
+                {% else %}
+                    <div style="font-size:13px; color:#28a745;">
+                        ✓ Đã thanh toán đủ
+                    </div>
+                {% endif %}
+
+
+                {% if contract.remaining_amount > 0 %}
+                    <!-- INPUT -->
+                    <input type="number"
+                        name="paid_amount"
+                        class="form-control"
+                        min="1"
+                        step="1"
+                        placeholder="Nhập số tiền"
+                        style="width:180px; text-align:right;"
+                        required>
+
+                    <!-- ID -->
+                    <input type="hidden" name="installment_id" value="{{ ins.id }}">
+
+                    <!-- SUBMIT -->
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        💾 Thanh toán
+                    </button>
+                {% endif %}
             </div>
+        </div>
+    </form>
+    {% endfor %}
 
-            {% if contract.remaining_amount > 0 %}
-                <div style="font-size:13px; color:#dc3545;">
-                    Còn thiếu: {{ contract.remaining_amount|intcomma }} VNĐ
-                </div>
-            {% else %}
-                <div style="font-size:13px; color:#28a745;">
-                    ✓ Đã thanh toán đủ
-                </div>
-            {% endif %}
-
-
-            {% if contract.remaining_amount > 0 %}
-                <!-- INPUT -->
-                <input type="number"
-                    name="paid_amount"
-                    class="form-control"
-                    min="1"
-                    step="1"
-                    placeholder="Nhập số tiền"
-                    style="width:180px; text-align:right;"
-                    required>
-
-                <!-- ID -->
-                <input type="hidden" name="installment_id" value="{{ ins.id }}">
-
-                <!-- SUBMIT -->
-                <button type="submit" class="btn btn-sm btn-primary">
-                    💾 Thanh toán
-                </button>
-            {% endif %}
+    <div class="mt-5">
+        <h6>📑 NHẬT KÝ GIAO DỊCH CHI TIẾT</h6>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered" style="font-size: 13px;">
+                <thead class="table-success">
+                    <tr>
+                        <th>Thời gian</th>
+                        <th>Đợt</th>
+                        <th>Số tiền nộp</th>
+                        <th>Người thu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in contract.payment_logs.all %}
+                    <tr>
+                        <td>{{ log.paid_at|date:"d/m/Y H:i" }}</td>
+                        <td>ID giao dịch: {{ log.installment.id }}</td>
+                        <td class="text-primary fw-bold">+ {{ log.amount_paid|intcomma }} VNĐ</td>
+                        <td>{{ user.username }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">Chưa có giao dịch nào được ghi lại.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-</form>
-{% endfor %}
-<div class="mt-5">
-    <h6>📑 NHẬT KÝ GIAO DỊCH CHỈ TIẾT</h6>
-    <div class="table-responsive">
-        <table class="table table-sm table-bordered" style="font-size: 13px;">
-            <thead class="table-success">
-                <tr>
-                    <th>Thời gian</th>
-                    <th>Đợt</th>
-                    <th>Số tiền nộp</th>
-                    <th>Người thu</th> </tr>
-            </thead>
-            <tbody>
-                {% for log in contract.payment_logs.all %}
-                <tr>
-                    <td>{{ log.paid_at|date:"d/m/Y H:i" }}</td>
-                    <td>ID giao dịch: {{ log.installment.id }}</td>
-                    <td class="text-primary fw-bold">+ {{ log.amount_paid|intcomma }} VNĐ</td>
-                    <td>{{ user.username }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center text-muted">Chưa có giao dịch nào được ghi lại.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
 
     <!-- Service Details Card -->
     <div class="service-card">
@@ -165,171 +166,239 @@
         <div class="service-content">
 
             {% if contract.service_type == "nhanhieu" %}
+            <!-- ============================================ -->
+            <!-- NHÃN HIỆU -->
+            <!-- ============================================ -->
+            {% for s in service %}
+            <div class="row mb-4" style="border-bottom:1px dashed #ddd; padding-bottom:16px">
 
-    {% for s in service %}
-    <div class="row mb-4" style="border-bottom:1px dashed #ddd; padding-bottom:16px">
+                <div class="col-md-6">
+                    <div class="detail-grid">
 
-        <div class="col-md-6">
-            <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Chủ đơn</span>
+                            <span class="detail-value">{{ contract.customer.name }}</span>
+                        </div>
 
-                <div class="detail-item">
-                    <span class="detail-label">Chủ đơn</span>
-                    <span class="detail-value">{{ contract.customer.name }}</span>
+                        <div class="detail-item">
+                            <span class="detail-label">Người nộp đơn</span>
+                            <span class="detail-value">{{ s.applicant }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Địa chỉ</span>
+                            <span class="detail-value">{{ s.address }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">SĐT</span>
+                            <span class="detail-value">{{ s.phone }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Số đơn</span>
+                            <span class="detail-value">{{ s.app_no }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Ngày nộp đơn</span>
+                            <span class="detail-value">{{ s.filing_date }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Phân loại dịch vụ</span>
+                            <span class="detail-value">{{ s.classification }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Ngày công bố</span>
+                            <span class="detail-value">{{ s.publish_date }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Quyết định chấp nhận</span>
+                            <span class="detail-value">{{ s.decision_date }}</span>
+                        </div>
+
+                    </div>
                 </div>
 
-                <div class="detail-item">
-                    <span class="detail-label">Người nộp đơn</span>
-                    <span class="detail-value">{{ s.applicant }}</span>
-                </div>
+                <div class="col-md-6">
+                    <div class="image-section">
+                        <div class="image-label">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <span>Nhãn hiệu + hình</span>
+                        </div>
 
-                <div class="detail-item">
-                    <span class="detail-label">Địa chỉ</span>
-                    <span class="detail-value">{{ s.address }}</span>
-                </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">SĐT</span>
-                    <span class="detail-value">{{ s.phone }}</span>
-                </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">Số đơn</span>
-                    <span class="detail-value">{{ s.app_no }}</span>
-                </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">Ngày nộp đơn</span>
-                    <span class="detail-value">{{ s.filing_date }}</span>
-                </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">Phân loại dịch vụ</span>
-                    <span class="detail-value">{{ s.classification }}</span>
-                </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">Ngày công bố</span>
-                    <span class="detail-value">{{ s.publish_date }}</span>
-                </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">Quyết định chấp nhận</span>
-                    <span class="detail-value">{{ s.decision_date }}</span>
+                        {% if s.trademark_image %}
+                        <div class="image-wrapper">
+                            <img src="{{ s.trademark_image.url }}"
+                                 alt="Trademark Image"
+                                 class="trademark-image">
+                        </div>
+                        {% else %}
+                        <div class="no-image">
+                            <p>Chưa có hình ảnh</p>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
 
             </div>
-        </div>
+            {% empty %}
+                <p>❌ Chưa có nhãn hiệu nào</p>
+            {% endfor %}
 
-        <div class="col-md-6">
-            <div class="image-section">
-                <div class="image-label">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                        <polyline points="21 15 16 10 5 21"></polyline>
-                    </svg>
-                    <span>Nhãn hiệu + hình</span>
+            {% elif contract.service_type == "banquyen" %}
+            <!-- ============================================ -->
+            <!-- BẢN QUYỀN -->
+            <!-- ============================================ -->
+            {% for s in service %}
+            <div class="detail-grid mb-4" style="border-bottom:1px dashed #ddd; padding-bottom:16px">
+
+                <div class="detail-item">
+                    <span class="detail-label">Tác phẩm</span>
+                    <span class="detail-value">{{ s.work_name }}</span>
                 </div>
 
-                {% if s.trademark_image %}
-                <div class="image-wrapper">
-                    <img src="{{ s.trademark_image.url }}"
-                         alt="Trademark Image"
-                         class="trademark-image">
+                <div class="detail-item">
+                    <span class="detail-label">Tác giả</span>
+                    <span class="detail-value">{{ s.author }}</span>
                 </div>
-                {% else %}
-                <div class="no-image">
-                    <p>Chưa có hình ảnh</p>
+
+                <div class="detail-item">
+                    <span class="detail-label">Chủ sở hữu</span>
+                    <span class="detail-value">{{ s.owner }}</span>
                 </div>
-                {% endif %}
+
+                <div class="detail-item">
+                    <span class="detail-label">Địa chỉ chủ sở hữu</span>
+                    <span class="detail-value">{{ s.owner_address }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Loại hình</span>
+                    <span class="detail-value">{{ s.type }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Số giấy chứng nhận</span>
+                    <span class="detail-value">{{ s.certificate_no }}</span>
+                </div>
+
             </div>
-        </div>
+            {% empty %}
+                <p>❌ Chưa có bản quyền nào</p>
+            {% endfor %}
 
-    </div>
-    {% empty %}
-        <p>❌ Chưa có nhãn hiệu nào</p>
-    {% endfor %}
+            {% elif contract.service_type == "dkkd" %}
+            <!-- ============================================ -->
+            <!-- 🔥 ĐĂNG KÝ KINH DOANH (ĐÃ THÊM) -->
+            <!-- ============================================ -->
+            {% if service.first %}
+                {% with s=service.first %}
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Tên công ty</span>
+                        <span class="detail-value">{{ s.company_name }}</span>
+                    </div>
 
+                    <div class="detail-item">
+                        <span class="detail-label">Loại hình kinh doanh</span>
+                        <span class="detail-value">{{ s.business_type }}</span>
+                    </div>
 
+                    <div class="detail-item">
+                        <span class="detail-label">Mã số thuế</span>
+                        <span class="detail-value">{{ s.tax_code|default:"Chưa cập nhật" }}</span>
+                    </div>
 
-         {% elif contract.service_type == "banquyen" %}
+                    <div class="detail-item">
+                        <span class="detail-label">Địa chỉ</span>
+                        <span class="detail-value">{{ s.address }}</span>
+                    </div>
 
-    {% for s in service %}
-    <div class="detail-grid mb-4" style="border-bottom:1px dashed #ddd; padding-bottom:16px">
+                    <div class="detail-item">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">{{ s.email }}</span>
+                    </div>
 
-        <div class="detail-item">
-            <span class="detail-label">Tác phẩm</span>
-            <span class="detail-value">{{ s.work_name }}</span>
-        </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Số điện thoại</span>
+                        <span class="detail-value">{{ s.phone }}</span>
+                    </div>
 
-        <div class="detail-item">
-            <span class="detail-label">Tác giả</span>
-            <span class="detail-value">{{ s.author }}</span>
-        </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Người đại diện pháp luật</span>
+                        <span class="detail-value">{{ s.legal_representative }}</span>
+                    </div>
 
-        <div class="detail-item">
-            <span class="detail-label">Chủ sở hữu</span>
-            <span class="detail-value">{{ s.owner }}</span>
-        </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Chức danh</span>
+                        <span class="detail-value">{{ s.position }}</span>
+                    </div>
 
-        <div class="detail-item">
-            <span class="detail-label">Địa chỉ chủ sở hữu</span>
-            <span class="detail-value">{{ s.owner_address }}</span>
-        </div>
-
-        <div class="detail-item">
-            <span class="detail-label">Loại hình</span>
-            <span class="detail-value">{{ s.type }}</span>
-        </div>
-
-        <div class="detail-item">
-            <span class="detail-label">Số giấy chứng nhận</span>
-            <span class="detail-value">{{ s.certificate_no }}</span>
-        </div>
-
-    </div>
-    {% empty %}
-        <p>❌ Chưa có bản quyền nào</p>
-    {% endfor %}
-
+                    <div class="detail-item">
+                        <span class="detail-label">Vốn điều lệ</span>
+                        <span class="detail-value">{{ s.charter_capital }}</span>
+                    </div>
+                </div>
+                {% endwith %}
+            {% else %}
+                <p>❌ Chưa có thông tin đăng ký kinh doanh</p>
+            {% endif %}
 
             {% elif contract.service_type == "dautu" %}
+            <!-- ============================================ -->
+            <!-- 🔥 ĐĂNG KÝ ĐẦU TƯ (ĐÃ SỬA) -->
+            <!-- ============================================ -->
+            {% if service.first %}
+                {% with s=service.first %}
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Mã dự án</span>
+                        <span class="detail-value">{{ s.project_code }}</span>
+                    </div>
 
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <span class="detail-label">Mã dự án</span>
-                    <span class="detail-value">{{ service.project_code }}</span>
-                </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Nhà đầu tư</span>
+                        <span class="detail-value">{{ s.investor }}</span>
+                    </div>
 
-                <div class="detail-item">
-                    <span class="detail-label">Nhà đầu tư</span>
-                    <span class="detail-value">{{ service.investor }}</span>
-                </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Tên dự án</span>
+                        <span class="detail-value">{{ s.project_name }}</span>
+                    </div>
 
-                <div class="detail-item">
-                    <span class="detail-label">Tên dự án</span>
-                    <span class="detail-value">{{ service.project_name }}</span>
-                </div>
+                    <div class="detail-item full-width">
+                        <span class="detail-label">Mục tiêu dự án</span>
+                        <span class="detail-value">{{ s.objective }}</span>
+                    </div>
 
-                <div class="detail-item">
-                    <span class="detail-label">Mục tiêu dự án</span>
-                    <span class="detail-value">{{ service.object }}</span>
-                </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Địa chỉ dự án</span>
+                        <span class="detail-value">{{ s.address }}</span>
+                    </div>
 
-                <div class="detail-item">
-                    <span class="detail-label">Địa chỉ dự án</span>
-                    <span class="detail-value">{{ service.address }}</span>
+                    <div class="detail-item">
+                        <span class="detail-label">Vốn đầu tư</span>
+                        <span class="detail-value">{{ s.total_capital }}</span>
+                    </div>
                 </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">Vốn đầu tư</span>
-                    <span class="detail-value">{{ service.total_capital }}</span>
-                </div>
-            </div>
+                {% endwith %}
+            {% else %}
+                <p>❌ Chưa có thông tin đầu tư</p>
+            {% endif %}
 
             {% elif contract.service_type == "khac" %}
-
+            <!-- ============================================ -->
+            <!-- 🔥 DỊCH VỤ KHÁC (ĐÃ THÊM PHONE & EMAIL) -->
+            <!-- ============================================ -->
             {% for s in service %}
                 <div class="detail-grid">
 
@@ -343,15 +412,25 @@
                         <span class="detail-value">{{ s.position }}</span>
                     </div>
 
+                    <div class="detail-item">
+                        <span class="detail-label">Số điện thoại</span>
+                        <span class="detail-value">{{ s.phone }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">{{ s.email }}</span>
+                    </div>
+
                     <div class="detail-item full-width">
-                        <span class="detail-label">Dịch vụ</span>
+                        <span class="detail-label">Mô tả dịch vụ</span>
                         <span class="detail-value">{{ s.description }}</span>
                     </div>
 
                 </div>
-                {% empty %}
+            {% empty %}
                 <p>❌ Chưa có dịch vụ khác</p>
-                {% endfor %}
+            {% endfor %}
 
             {% endif %}
 
@@ -381,6 +460,4 @@
 
 </div>
 
-
 {% endblock %}
-không hiển thị số tiền và các trường khác của service='khac'

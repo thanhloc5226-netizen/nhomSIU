@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
-       SERVICE TYPE TOGGLE (SAFE FOR DJANGO FORMSET)
+       SERVICE TYPE TOGGLE (FIXED - DISABLE HIDDEN FORMS)
     ===================================================== */
     const serviceTypeSelect = document.getElementById("id_service_type");
 
@@ -19,11 +19,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
             block.style.display = "none";
 
-            // ❌ KHÔNG disable input
-            // ✅ chỉ bỏ required để tránh HTML chặn submit
-            block.querySelectorAll("[required]").forEach(input => {
-                input.dataset.wasRequired = "true";
-                input.removeAttribute("required");
+            // 🔥 FIX: DISABLE tất cả input trong form bị ẩn
+            block.querySelectorAll("input, select, textarea").forEach(input => {
+                // Bỏ qua các input hidden của formset management
+                if (input.type === "hidden" &&
+                    (input.name.includes("TOTAL_FORMS") ||
+                     input.name.includes("INITIAL_FORMS") ||
+                     input.name.includes("MAX_NUM_FORMS"))) {
+                    return;
+                }
+
+                // Lưu trạng thái required cũ
+                if (input.hasAttribute("required")) {
+                    input.dataset.wasRequired = "true";
+                    input.removeAttribute("required");
+                }
+
+                // 🔥 DISABLE input để không submit
+                input.disabled = true;
             });
         });
     }
@@ -36,14 +49,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
         block.style.display = "block";
 
-        // khôi phục required
-        block.querySelectorAll("[data-was-required='true']").forEach(input => {
-            input.setAttribute("required", "required");
+        // 🔥 FIX: ENABLE lại tất cả input trong form được hiện
+        block.querySelectorAll("input, select, textarea").forEach(input => {
+            // Bỏ qua các input hidden của formset management
+            if (input.type === "hidden" &&
+                (input.name.includes("TOTAL_FORMS") ||
+                 input.name.includes("INITIAL_FORMS") ||
+                 input.name.includes("MAX_NUM_FORMS"))) {
+                return;
+            }
+
+            // Khôi phục required
+            if (input.dataset.wasRequired === "true") {
+                input.setAttribute("required", "required");
+                delete input.dataset.wasRequired;
+            }
+
+            // 🔥 ENABLE input
+            input.disabled = false;
         });
     }
 
     if (serviceTypeSelect) {
-        showService(serviceTypeSelect.value);
+        // Khởi tạo: hiện form tương ứng với giá trị đã chọn
+        showService(serviceTypeSelect.value || "nhanhieu");
+
         serviceTypeSelect.addEventListener("change", function () {
             showService(this.value);
         });
@@ -97,12 +127,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 fetch(`/api/search-customer/?q=${encodeURIComponent(query)}`)
                     .then(res => res.json())
                     .then(data => renderSearchResults(data))
-                    .catch(() => {
+                    .catch((error) => {
+                        console.error("Search error:", error);
                         searchResults.innerHTML =
                             "<div class='error'>❌ Lỗi tìm kiếm</div>";
                         searchResults.style.display = "block";
                     });
             }, 300);
+        });
+
+        // Ẩn kết quả khi click bên ngoài
+        document.addEventListener("click", function(e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = "none";
+            }
         });
     }
 
@@ -162,62 +200,126 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (contractForm) {
         contractForm.addEventListener("submit", function (e) {
+            console.log("\n🔍 Form validation started...");
 
+            // Kiểm tra khách hàng
             if (!customerField || !customerField.value) {
                 e.preventDefault();
                 alert("⚠️ Vui lòng chọn khách hàng!");
+                console.error("❌ Validation failed: No customer selected");
                 return false;
             }
+            console.log("✅ Customer selected:", customerField.value);
 
+            // Kiểm tra loại dịch vụ
             if (serviceTypeSelect && !serviceTypeSelect.value) {
                 e.preventDefault();
                 alert("⚠️ Vui lòng chọn loại dịch vụ!");
+                console.error("❌ Validation failed: No service type selected");
                 return false;
             }
+            console.log("✅ Service type:", serviceTypeSelect.value);
 
-            console.log("✅ Form OK – submitting");
+            // 🔥 DEBUG: Log form data trước khi submit
+            const formData = new FormData(contractForm);
+            console.log("\n📋 Form data being submitted:");
+            console.log("=" .repeat(50));
+
+            let hasServiceData = false;
+            for (let [key, value] of formData.entries()) {
+                // Log tất cả các field của service đang được chọn
+                if (key.includes('company_name') || key.includes('business_type') ||
+                    key.includes('address') || key.includes('email') ||
+                    key.includes('phone') || key.includes('legal_representative') ||
+                    key.includes('position') || key.includes('charter_capital') ||
+                    key.includes('tax_code') || key.includes('project_code') ||
+                    key.includes('investor') || key.includes('project_name') ||
+                    key.includes('objective') || key.includes('total_capital') ||
+                    key.includes('description')) {
+                    console.log(`  ${key}: ${value || '(empty)'}`);
+                    if (value) hasServiceData = true;
+                }
+            }
+            console.log("=" .repeat(50));
+
+            if (!hasServiceData && serviceTypeSelect.value !== 'nhanhieu' && serviceTypeSelect.value !== 'banquyen') {
+                console.warn("⚠️ Warning: No service data found!");
+            } else {
+                console.log("✅ Service data found");
+            }
+
+            console.log("✅ Form validation passed – submitting...\n");
+            return true;
         });
     }
 });
 
 /* =====================================================
-   FORMSET ADD
+   FORMSET ADD (NHÃN HIỆU & BẢN QUYỀN)
 ===================================================== */
 window.addForm = function (prefix) {
+    console.log(`➕ Adding new ${prefix} form...`);
+
     const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
     const formset = document.getElementById(`${prefix}-formset`);
     const emptyForm = document.getElementById(`${prefix}-empty-form`);
 
-    if (!totalForms || !formset || !emptyForm) return;
+    if (!totalForms || !formset || !emptyForm) {
+        console.error(`❌ Cannot find formset elements for ${prefix}`);
+        return;
+    }
 
     const index = parseInt(totalForms.value, 10);
     const template = emptyForm.querySelector(".formset-item");
+
+    if (!template) {
+        console.error(`❌ Cannot find template for ${prefix}`);
+        return;
+    }
+
     const newForm = template.cloneNode(true);
 
+    // Replace __prefix__ with actual index
     newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, index);
 
+    // Clear all input values (except hidden)
     newForm.querySelectorAll("input, select, textarea").forEach(field => {
-        if (field.type !== "hidden") field.value = "";
+        if (field.type !== "hidden") {
+            field.value = "";
+        }
     });
 
+    // Append to formset
     formset.appendChild(newForm);
+
+    // Update total forms count
     totalForms.value = index + 1;
+
+    console.log(`✅ Added ${prefix} form #${index}`);
 };
 
 /* =====================================================
-   FORMSET REMOVE
+   FORMSET REMOVE (NHÃN HIỆU & BẢN QUYỀN)
 ===================================================== */
 window.removeItem = function (btn) {
     const item = btn.closest(".formset-item");
-    if (!item) return;
+    if (!item) {
+        console.error("❌ Cannot find formset item to remove");
+        return;
+    }
 
     const delInput = item.querySelector('input[name$="DELETE"]');
+
     if (delInput) {
+        // Mark for deletion (for existing records)
         delInput.checked = true;
         item.style.display = "none";
+        console.log("✅ Marked item for deletion");
     } else {
+        // Remove completely (for new records not yet saved)
         item.remove();
+        console.log("✅ Removed item from DOM");
     }
 };
 
-console.log("✅ add_contract.js (SAFE FOR DJANGO) loaded");
+console.log("✅ add_contract.js (COMPLETE FIXED VERSION) loaded successfully");

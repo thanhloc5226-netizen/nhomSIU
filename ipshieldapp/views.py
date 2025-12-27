@@ -14,9 +14,12 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 
-def lock_payment_fields(contract_form):
-    contract_form.fields['payment_type'].disabled = True
-    contract_form.fields['contract_value'].disabled = True
+def lock_contract_fields(contract_form):
+
+    for field_name, field in contract_form.fields.items():
+        field.disabled = True
+        field.widget.attrs['readonly'] = True
+        field.widget.attrs['class'] = field.widget.attrs.get('class', '') + ' readonly-field'
 
 # ===============================================
 # CUSTOMER LIST + SEARCH
@@ -626,7 +629,7 @@ def contract_edit(request, id):
     # ==========================
     if request.method == "POST":
         contract_form = ContractForm(request.POST, instance=contract)
-        lock_payment_fields(contract_form)
+        lock_contract_fields(contract_form)
 
         if FormSetClass:
             service_formset = FormSetClass(
@@ -669,7 +672,7 @@ def contract_edit(request, id):
     # ==========================
     else:
         contract_form = ContractForm(instance=contract)
-        lock_payment_fields(contract_form)
+        lock_contract_fields(contract_form)
 
         if FormSetClass:
             service_formset = FormSetClass(

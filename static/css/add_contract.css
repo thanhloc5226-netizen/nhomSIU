@@ -449,3 +449,50 @@
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
     background-color: #BE1E2D;
 }
+/* Ẩn checkbox DELETE của Django formset */
+.formset-item input[type="checkbox"][name$="-DELETE"] {
+    display: none;
+}
+
+/* Ẩn label của checkbox DELETE */
+.formset-item label[for$="-DELETE"] {
+    display: none;
+}
+
+/* Style cho nút xóa */
+.btn-remove {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 2px solid #fecaca;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 12px;
+    transition: all 0.2s ease;
+}
+
+.btn-remove:hover {
+    background: #fecaca;
+    border-color: #dc2626;
+}
+
+/* Style cho nút thêm */
+.btn-add {
+    background: #dcfce7;
+    color: #16a34a;
+    border: 2px solid #bbf7d0;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.btn-add:hover {
+    background: #bbf7d0;
+    border-color: #16a34a;
+}
