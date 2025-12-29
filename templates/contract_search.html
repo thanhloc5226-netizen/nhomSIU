@@ -4,7 +4,7 @@
 
 <form method="get">
     <div class="search-section">
-        <h3>🔍 Tìm kiếm hợp đồng</h3>
+        <h3>🔍 Tìm kiếm hợp đồng nhãn hiệu</h3>
 
         <div class="row g-2 mt-2">
             <div class="col-12 col-md-6 col-lg-8">
@@ -25,6 +25,14 @@
         </div>
     </div>
 </form>
+<style>
+
+    .table-responsive {
+    max-height: 420px;      /* ≈ 10 dòng bootstrap */
+    overflow-y: auto;       /* hiện thanh cuộn dọc */
+}
+
+</style>
 {% if contracts %}
 <div class="contracts-card">
     <div class="table-responsive">

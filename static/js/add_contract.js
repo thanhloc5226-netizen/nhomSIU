@@ -1,3 +1,10 @@
+console.log('🚀 Script started loading...');
+
+// ✅ Biến toàn cục - CHỈ KHAI BÁO 1 LẦN
+let formChanged = false;
+let formSubmitting = false;
+let pendingUrl = null;
+
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =====================================================
@@ -116,19 +123,30 @@ document.addEventListener("DOMContentLoaded", function () {
     if (searchInput) {
         searchInput.addEventListener("input", function () {
             const query = this.value.trim();
+            console.log("🔍 Search query:", query); // ✅ Debug
+
             clearTimeout(searchTimeout);
 
             if (query.length < 2) {
+                console.log("❌ Query too short"); // ✅ Debug
                 searchResults.style.display = "none";
                 return;
             }
 
             searchTimeout = setTimeout(() => {
+                console.log("📡 Fetching..."); // ✅ Debug
+
                 fetch(`/api/search-customer/?q=${encodeURIComponent(query)}`)
-                    .then(res => res.json())
-                    .then(data => renderSearchResults(data))
+                    .then(res => {
+                        console.log("📥 Response:", res); // ✅ Debug
+                        return res.json();
+                    })
+                    .then(data => {
+                        console.log("📊 Data received:", data); // ✅ Debug
+                        renderSearchResults(data);
+                    })
                     .catch((error) => {
-                        console.error("Search error:", error);
+                        console.error("❌ Search error:", error);
                         searchResults.innerHTML =
                             "<div class='error'>❌ Lỗi tìm kiếm</div>";
                         searchResults.style.display = "block";
@@ -145,6 +163,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function renderSearchResults(customers) {
+        console.log("🎨 Rendering results:", customers); // ✅ Debug
+
         if (!customers.length) {
             searchResults.innerHTML =
                 "<div class='no-results'>Không tìm thấy khách hàng</div>";
@@ -223,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // 🔥 DEBUG: Log form data trước khi submit
             const formData = new FormData(contractForm);
             console.log("\n📋 Form data being submitted:");
-            console.log("=" .repeat(50));
+            console.log("=".repeat(50));
 
             let hasServiceData = false;
             for (let [key, value] of formData.entries()) {
@@ -240,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (value) hasServiceData = true;
                 }
             }
-            console.log("=" .repeat(50));
+            console.log("=".repeat(50));
 
             if (!hasServiceData && serviceTypeSelect.value !== 'nhanhieu' && serviceTypeSelect.value !== 'banquyen') {
                 console.warn("⚠️ Warning: No service data found!");
@@ -249,9 +269,110 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             console.log("✅ Form validation passed – submitting...\n");
+
+            // ✅ Đánh dấu form đang submit
+            formSubmitting = true;
             return true;
         });
+
+        // ✅ Theo dõi thay đổi form
+        contractForm.addEventListener('input', function(e) {
+            formChanged = true;
+            console.log('📝 Form changed (input):', e.target.name);
+        });
+
+        contractForm.addEventListener('change', function(e) {
+            formChanged = true;
+            console.log('📝 Form changed (change):', e.target.name);
+        });
     }
+
+    /* =====================================================
+       MODAL CONFIRMATION (XỬ LÝ RỜI TRANG)
+    ===================================================== */
+    const cancelBtn = document.getElementById('cancelBtn');
+    const stayBtn = document.getElementById('stayBtn');
+    const leaveBtn = document.getElementById('leaveBtn');
+    const modal = document.getElementById('confirmModal');
+
+    console.log('🔍 Modal elements found:', {
+        cancelBtn: !!cancelBtn,
+        stayBtn: !!stayBtn,
+        leaveBtn: !!leaveBtn,
+        modal: !!modal
+    });
+
+    // Xử lý nút Hủy
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('🔴 Cancel button clicked');
+            showConfirmModal(this.getAttribute('data-home-url') || '/');
+        });
+    }
+
+    // Xử lý nút "Không, ở lại"
+    if (stayBtn) {
+        stayBtn.addEventListener('click', function() {
+            console.log('🟢 Stay button clicked');
+            closeConfirmModal();
+        });
+    }
+
+    // Xử lý nút "Có, rời trang"
+    if (leaveBtn) {
+        leaveBtn.addEventListener('click', function() {
+            console.log('🔴 Leave button clicked');
+            confirmLeave();
+        });
+    }
+
+    // Đóng modal khi click overlay
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target.id === 'confirmModal') {
+                console.log('🖱️ Clicked overlay');
+                closeConfirmModal();
+            }
+        });
+    }
+
+    // Đóng modal khi nhấn ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            console.log('⌨️ ESC pressed');
+            closeConfirmModal();
+        }
+    });
+
+    // Cảnh báo khi rời trang (Back/Refresh/Close)
+    window.addEventListener('beforeunload', function(e) {
+        if (formChanged && !formSubmitting) {
+            console.log('⚠️ beforeunload triggered');
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        }
+    });
+
+    // Xử lý tất cả links
+    const links = document.querySelectorAll('a:not(#cancelBtn)');
+    console.log('🔗 Found', links.length, 'links to monitor');
+
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href && href !== '#' && !href.startsWith('javascript:')) {
+                if (formChanged && !formSubmitting) {
+                    e.preventDefault();
+                    console.log('🔗 Link clicked, showing modal');
+                    showConfirmModal(href);
+                }
+            }
+        });
+    });
+
+    console.log('✅ All event listeners attached');
 });
 
 /* =====================================================
@@ -322,18 +443,9 @@ window.removeItem = function (btn) {
     }
 };
 
-console.log("✅ add_contract.js (COMPLETE FIXED VERSION) loaded successfully");
-
-
-//modal thong bao
-
-console.log('🚀 Script started loading...');
-
-// Biến toàn cục
-let formChanged = false;
-let formSubmitting = false;
-let pendingUrl = null;
-
+/* =====================================================
+   MODAL FUNCTIONS
+===================================================== */
 // Hàm hiển thị modal
 function showConfirmModal(url) {
     console.log('📢 showConfirmModal called with URL:', url);
@@ -376,113 +488,4 @@ function confirmLeave() {
     }
 }
 
-// Khởi tạo khi DOM ready
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM Content Loaded');
-
-    const form = document.querySelector('.contract-form');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const stayBtn = document.getElementById('stayBtn');
-    const leaveBtn = document.getElementById('leaveBtn');
-    const modal = document.getElementById('confirmModal');
-
-    console.log('🔍 Elements found:', {
-        form: !!form,
-        cancelBtn: !!cancelBtn,
-        stayBtn: !!stayBtn,
-        leaveBtn: !!leaveBtn,
-        modal: !!modal
-    });
-
-    // Theo dõi thay đổi form
-    if (form) {
-        form.addEventListener('input', function(e) {
-            formChanged = true;
-            console.log('📝 Form changed (input):', e.target.name);
-        });
-
-        form.addEventListener('change', function(e) {
-            formChanged = true;
-            console.log('📝 Form changed (change):', e.target.name);
-        });
-
-        form.addEventListener('submit', function() {
-            formSubmitting = true;
-            console.log('💾 Form submitting...');
-        });
-    }
-
-    // Xử lý nút Hủy
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('🔴 Cancel button clicked');
-            showConfirmModal('{% url "home" %}');
-        });
-    }
-
-    // Xử lý nút "Không, ở lại"
-    if (stayBtn) {
-        stayBtn.addEventListener('click', function() {
-            console.log('🟢 Stay button clicked');
-            closeConfirmModal();
-        });
-    }
-
-    // Xử lý nút "Có, rời trang"
-    if (leaveBtn) {
-        leaveBtn.addEventListener('click', function() {
-            console.log('🔴 Leave button clicked');
-            confirmLeave();
-        });
-    }
-
-    // Đóng modal khi click overlay
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target.id === 'confirmModal') {
-                console.log('🖱️ Clicked overlay');
-                closeConfirmModal();
-            }
-        });
-    }
-
-    // Đóng modal khi nhấn ESC
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            console.log('⌨️ ESC pressed');
-            closeConfirmModal();
-        }
-    });
-
-    // Cảnh báo khi rời trang (Back/Refresh/Close)
-    window.addEventListener('beforeunload', function(e) {
-        if (formChanged && !formSubmitting) {
-            console.log('⚠️ beforeunload triggered');
-            e.preventDefault();
-            e.returnValue = '';
-            return '';
-        }
-    });
-
-    // Xử lý tất cả links
-    const links = document.querySelectorAll('a:not(#cancelBtn)');
-    console.log('🔗 Found', links.length, 'links to monitor');
-
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (href && href !== '#' && !href.startsWith('javascript:')) {
-                if (formChanged && !formSubmitting) {
-                    e.preventDefault();
-                    console.log('🔗 Link clicked, showing modal');
-                    showConfirmModal(href);
-                }
-            }
-        });
-    });
-
-    console.log('✅ All event listeners attached');
-});
-
-console.log('✅ Script loaded successfully');
+console.log('✅ add_contract.js (COMPLETE FIXED VERSION) loaded successfully');

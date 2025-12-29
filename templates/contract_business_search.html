@@ -30,7 +30,14 @@
         </div>
     </div>
 </form>
+<style>
 
+    .table-responsive {
+    max-height: 420px;      /* ≈ 10 dòng bootstrap */
+    overflow-y: auto;       /* hiện thanh cuộn dọc */
+}
+
+</style>
 {% if contracts %}
 <div class="contracts-card mt-4">
     <div class="table-responsive">
