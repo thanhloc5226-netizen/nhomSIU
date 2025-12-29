@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const downArrows_khtt = document.querySelectorAll(".nav-arrow_khtt.down_khtt");
     const playPauseBtn_khtt = document.getElementById("playPauseBtn_khtt");
 
+    // ✅ LẤY CONTAINER CỦA CAROUSEL
+    const carouselContainer_khtt = document.querySelector(".khtt-section");
+
     //  KIỂM TRA XEM CÓ ELEMENTS KHÔNG
     if (!cards_khtt.length || !memberName_khtt || !memberRole_khtt) {
         console.error('Không tìm thấy elements carousel!');
@@ -138,22 +141,26 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // ✅ SỬA: CHỈ BẮT TOUCH EVENTS TRONG CAROUSEL
     let touchStartY_khtt=0, touchEndY_khtt=0;
-    document.addEventListener("touchstart",(e)=>{
-        touchStartY_khtt=e.changedTouches[0].screenY;
-    });
 
-    document.addEventListener("touchend",(e)=>{
-        touchEndY_khtt=e.changedTouches[0].screenY;
-        handleSwipe_khtt();
-    });
+    if (carouselContainer_khtt) {
+        carouselContainer_khtt.addEventListener("touchstart",(e)=>{
+            touchStartY_khtt=e.changedTouches[0].screenY;
+        }, {passive: true});
+
+        carouselContainer_khtt.addEventListener("touchend",(e)=>{
+            touchEndY_khtt=e.changedTouches[0].screenY;
+            handleSwipe_khtt();
+        }, {passive: true});
+    }
 
     function handleSwipe_khtt(){
         const diff=touchStartY_khtt-touchEndY_khtt;
         if(Math.abs(diff)>50){
             stopAutoplay_khtt();
             diff>0?updateCarousel_khtt(currentIndex_khtt+1):updateCarousel_khtt(currentIndex_khtt-1);
-            setTimeout(startAutoplay_khtt,100);
+            setTimeout(startAutoplay_khtt,1000);
         }
     }
 
@@ -165,11 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     createScrollIndicator_khtt();
 
-
     updateCarousel_khtt(0);
     startAutoplay_khtt();
 
 });
-
-
-

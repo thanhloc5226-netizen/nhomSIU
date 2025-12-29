@@ -2,7 +2,7 @@
 {% block body_block %}
 {% load static %}
 <link href="{% static 'css/add_contract.css' %}" rel="stylesheet">
-<script src="{% static 'js/add_contract.js' %}" defer></script>
+
 <div class="container mt-4">
     <!-- Header -->
     <div class="page-header">
@@ -57,7 +57,7 @@
 
             <!-- THÔNG TIN DỊCH VỤ -->
             <div class="form-section">
-                <div class="section-headesr">
+                <div class="section-header">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                         <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
@@ -66,77 +66,72 @@
                 </div>
 
                 <!-- Nhãn hiệu -->
-            <div id="nhanhieu_form" class="service-block">
-    <div class="service-header">
-        <h6>Dịch vụ Nhãn hiệu</h6>
-        <button type="button" class="btn-add" onclick="addForm('trademark')">
-            ➕ Thêm nhãn hiệu
-        </button>
-    </div>
+                <div id="nhanhieu_form" class="service-block">
+                    <div class="service-header">
+                        <h6>Dịch vụ Nhãn hiệu</h6>
+                        <button type="button" class="btn-add" onclick="addForm('trademark')">
+                            ➕ Thêm nhãn hiệu
+                        </button>
+                    </div>
 
-    {{ trademark_formset.management_form }}
+                    {{ trademark_formset.management_form }}
 
-    <div class="service-content" id="trademark-formset">
-        {% for form in trademark_formset %}
-        <div class="formset-item">
-            {{ form.as_p }}
-            {{ form.DELETE }}
-            <button type="button" class="btn-remove" onclick="removeItem(this)">
-                ❌ Xóa
-            </button>
-        </div>
-        {% endfor %}
-    </div>
+                    <div class="service-content" id="trademark-formset">
+                        {% for form in trademark_formset %}
+                        <div class="formset-item">
+                            {{ form.as_p }}
+                            {{ form.DELETE }}
+                            <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                ❌ Xóa
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
 
-    <div id="trademark-empty-form" style="display:none">
-    <div class="formset-item">
-        {{ trademark_formset.empty_form.as_p }}
-        {{ trademark_formset.empty_form.DELETE }}
-        <button type="button" class="btn-remove" onclick="removeItem(this)">
-            ❌ Xóa
-        </button>
-    </div>
-</div>
-
-
-</div>
-
+                    <div id="trademark-empty-form" style="display:none">
+                        <div class="formset-item">
+                            {{ trademark_formset.empty_form.as_p }}
+                            {{ trademark_formset.empty_form.DELETE }}
+                            <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                ❌ Xóa
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Bản quyền -->
-              <div id="banquyen_form" class="service-block">
-    <div class="service-header">
-        <h6>Dịch vụ Bản quyền</h6>
-        <button type="button" class="btn-add" onclick="addForm('copyright')">
-            ➕ Thêm bản quyền
-        </button>
-    </div>
+                <div id="banquyen_form" class="service-block">
+                    <div class="service-header">
+                        <h6>Dịch vụ Bản quyền</h6>
+                        <button type="button" class="btn-add" onclick="addForm('copyright')">
+                            ➕ Thêm bản quyền
+                        </button>
+                    </div>
 
-    {{ copyright_formset.management_form }}
+                    {{ copyright_formset.management_form }}
 
-    <div class="service-content" id="copyright-formset">
-        {% for form in copyright_formset %}
-        <div class="formset-item">
-            {{ form.as_p }}
-            {{ form.DELETE }}
-            <button type="button" class="btn-remove" onclick="removeItem(this)">
-                ❌ Xóa
-            </button>
-        </div>
-        {% endfor %}
-    </div>
+                    <div class="service-content" id="copyright-formset">
+                        {% for form in copyright_formset %}
+                        <div class="formset-item">
+                            {{ form.as_p }}
+                            {{ form.DELETE }}
+                            <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                ❌ Xóa
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
 
- <div id="copyright-empty-form" style="display:none">
-    <div class="formset-item">
-        {{ copyright_formset.empty_form.as_p }}
-        {{ copyright_formset.empty_form.DELETE }}
-        <button type="button" class="btn-remove" onclick="removeItem(this)">
-            ❌ Xóa
-        </button>
-    </div>
-</div>
-
-</div>
-
+                    <div id="copyright-empty-form" style="display:none">
+                        <div class="formset-item">
+                            {{ copyright_formset.empty_form.as_p }}
+                            {{ copyright_formset.empty_form.DELETE }}
+                            <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                ❌ Xóa
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- ĐKKD -->
                 <div id="dkkd_form" class="service-block">
@@ -192,29 +187,347 @@
                     </svg>
                     Lưu hợp đồng
                 </button>
-                <a href="{% url 'home' %}" class="btn-cancel">
+                <button type="button" class="btn-cancel" id="cancelBtn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                     Hủy
-                </a>
+                </button>
             </div>
 
         </form>
     </div>
 </div>
 
-<!-- jQuery -->
+<!-- MODAL XÁC NHẬN RỜI TRANG -->
+<div id="confirmModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <h4>Xác nhận rời trang</h4>
+        </div>
+        <div class="modal-body">
+            <p>Bạn có chắc chắn muốn rời khỏi trang này?</p>
+            <p class="modal-warning">⚠️ Dữ liệu chưa lưu sẽ bị mất!</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="stayBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Không, ở lại
+            </button>
+            <button type="button" class="btn btn-danger" id="leaveBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Có, rời trang
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery (PHẢI LOAD TRƯỚC) -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <!-- Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+<!-- INLINE SCRIPT - Modal & Form Warning -->
+<script>
+console.log('🚀 Script started loading...');
 
+// Biến toàn cục
+let formChanged = false;
+let formSubmitting = false;
+let pendingUrl = null;
 
+// Hàm hiển thị modal
+function showConfirmModal(url) {
+    console.log('📢 showConfirmModal called with URL:', url);
+    console.log('📊 formChanged:', formChanged, '| formSubmitting:', formSubmitting);
 
+    if (!formChanged || formSubmitting) {
+        console.log('✅ No changes, redirecting directly...');
+        window.location.href = url;
+        return;
+    }
 
+    pendingUrl = url;
+    const modal = document.getElementById('confirmModal');
+    if (modal) {
+        console.log('✅ Modal found, showing...');
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    } else {
+        console.error('❌ Modal not found!');
+    }
+}
+
+// Hàm đóng modal
+function closeConfirmModal() {
+    console.log('🚪 Closing modal...');
+    const modal = document.getElementById('confirmModal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+    pendingUrl = null;
+}
+
+// Hàm xác nhận rời trang
+function confirmLeave() {
+    console.log('✅ Confirmed leave, redirecting to:', pendingUrl);
+    if (pendingUrl) {
+        formSubmitting = true;
+        window.location.href = pendingUrl;
+    }
+}
+
+// Khởi tạo khi DOM ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ DOM Content Loaded');
+
+    const form = document.querySelector('.contract-form');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const stayBtn = document.getElementById('stayBtn');
+    const leaveBtn = document.getElementById('leaveBtn');
+    const modal = document.getElementById('confirmModal');
+
+    console.log('🔍 Elements found:', {
+        form: !!form,
+        cancelBtn: !!cancelBtn,
+        stayBtn: !!stayBtn,
+        leaveBtn: !!leaveBtn,
+        modal: !!modal
+    });
+
+    // Theo dõi thay đổi form
+    if (form) {
+        form.addEventListener('input', function(e) {
+            formChanged = true;
+            console.log('📝 Form changed (input):', e.target.name);
+        });
+
+        form.addEventListener('change', function(e) {
+            formChanged = true;
+            console.log('📝 Form changed (change):', e.target.name);
+        });
+
+        form.addEventListener('submit', function() {
+            formSubmitting = true;
+            console.log('💾 Form submitting...');
+        });
+    }
+
+    // Xử lý nút Hủy
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('🔴 Cancel button clicked');
+            showConfirmModal('{% url "home" %}');
+        });
+    }
+
+    // Xử lý nút "Không, ở lại"
+    if (stayBtn) {
+        stayBtn.addEventListener('click', function() {
+            console.log('🟢 Stay button clicked');
+            closeConfirmModal();
+        });
+    }
+
+    // Xử lý nút "Có, rời trang"
+    if (leaveBtn) {
+        leaveBtn.addEventListener('click', function() {
+            console.log('🔴 Leave button clicked');
+            confirmLeave();
+        });
+    }
+
+    // Đóng modal khi click overlay
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target.id === 'confirmModal') {
+                console.log('🖱️ Clicked overlay');
+                closeConfirmModal();
+            }
+        });
+    }
+
+    // Đóng modal khi nhấn ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            console.log('⌨️ ESC pressed');
+            closeConfirmModal();
+        }
+    });
+
+    // Cảnh báo khi rời trang (Back/Refresh/Close)
+    window.addEventListener('beforeunload', function(e) {
+        if (formChanged && !formSubmitting) {
+            console.log('⚠️ beforeunload triggered');
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        }
+    });
+
+    // Xử lý tất cả links
+    const links = document.querySelectorAll('a:not(#cancelBtn)');
+    console.log('🔗 Found', links.length, 'links to monitor');
+
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href && href !== '#' && !href.startsWith('javascript:')) {
+                if (formChanged && !formSubmitting) {
+                    e.preventDefault();
+                    console.log('🔗 Link clicked, showing modal');
+                    showConfirmModal(href);
+                }
+            }
+        });
+    });
+
+    console.log('✅ All event listeners attached');
+});
+
+console.log('✅ Script loaded successfully');
+</script>
+
+<!-- Your custom JS file -->
+<script src="{% static 'js/add_contract.js' %}"></script>
+
+<style>
+/* Modal Styles */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-overlay.show {
+    display: flex !important;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 0;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease-out;
+}
+
+.modal-header {
+    padding: 30px 30px 20px;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-header svg {
+    margin-bottom: 15px;
+}
+
+.modal-header h4 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.modal-body {
+    padding: 25px 30px;
+    text-align: center;
+}
+
+.modal-body p {
+    margin: 0 0 10px 0;
+    font-size: 15px;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.modal-warning {
+    color: #f59e0b !important;
+    font-weight: 600;
+    font-size: 14px !important;
+    margin-top: 15px !important;
+}
+
+.modal-footer {
+    padding: 20px 30px 30px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.modal-footer .btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.btn-secondary {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background-color: #d1d5db;
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background-color: #ef4444;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+</style>
 
 {% endblock %}
