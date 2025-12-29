@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="9aac382f-c075-4a1c-987a-39a2f9a21430" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/css/khachhang.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/khachhang.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/khachhang.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/khachhang.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/khachhang.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/khachhang.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
