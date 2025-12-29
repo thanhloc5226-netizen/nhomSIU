@@ -7,13 +7,7 @@
     <list default="true" id="9aac382f-c075-4a1c-987a-39a2f9a21430" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/add_contract.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/add_contract.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/add_customer.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/add_customer.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/css/khachhang.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/khachhang.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/add_contract.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/add_contract.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/khachhang.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/khachhang.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/add_contract.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/add_contract.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/add_customer.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/add_customer.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/khachhang.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/khachhang.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,5 +52,16 @@
       <updated>1766416259515</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

@@ -451,11 +451,143 @@ khách hang than thiet carousel
 /*==========================================================================================
 tieu de khach hang than thiet
 ============================================================================================*/
+/* Import Google Fonts hỗ trợ tiếng Việt */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');
 
+/* Header Styles */
+.khtt-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+    padding: 30px 20px;
+    position: relative;
+}
+
+.header-decoration {
+    flex: 1;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, #BE1E2D 50%, transparent 100%);
+    max-width: 200px;
+}
+
+.khtt-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 42px;
+    font-weight: 800;
+    color: #BE1E2D;
+    margin: 0;
+    text-align: center;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    position: relative;
+    padding: 0 20px;
+
+    /* Chọn 1 trong các font dưới đây */
+
+    /* Option 1: Be Vietnam Pro - Font Việt Nam chuyên nghiệp */
+    font-family: 'Be Vietnam Pro', sans-serif;
+
+    /* Option 2: Montserrat - Hiện đại, bold, hỗ trợ tiếng Việt tốt */
+    /* font-family: 'Montserrat', sans-serif; */
+
+    /* Option 3: Quicksand - Mềm mại, thân thiện */
+    /* font-family: 'Quicksand', sans-serif; */
+
+    /* Option 4: Nunito - Tròn trịa, dễ đọc */
+    /* font-family: 'Nunito', sans-serif; */
+
+    /* Option 5: System fonts - An toàn nhất */
+    /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif; */
+}
+
+.khtt-title::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent 0%, #BE1E2D 50%, transparent 100%);
+    border-radius: 2px;
+}
+
+.khtt-title svg {
+    color: #BE1E2D;
+    flex-shrink: 0;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.1);
+    }
+    50% {
+        transform: scale(1);
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .khtt-header {
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px;
+    }
+
+    .header-decoration {
+        width: 100%;
+        max-width: 150px;
+    }
+
+    .khtt-title {
+        font-size: 28px;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0 10px;
+    }
+
+    .khtt-title svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .khtt-title::before {
+        width: 60%;
+    }
+}
+
+@media (max-width: 480px) {
+    .khtt-title {
+        font-size: 22px;
+        gap: 8px;
+    }
+
+    .khtt-title svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .header-decoration {
+        max-width: 80px;
+    }
+}
 /*==========================================================================================
 tieu de mascot
 ============================================================================================*/
-
+/* Import Google Fonts - Hỗ trợ tiếng Việt tốt */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
 /* Mascot Header Styles */
 .mascot-header {
@@ -466,6 +598,7 @@ tieu de mascot
     margin-bottom: 40px;
     padding: 30px 20px;
     position: relative;
+    font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
 }
 
 .header-decoration-mascot {
@@ -489,6 +622,7 @@ tieu de mascot
     position: relative;
     padding: 0 20px;
     text-shadow: 2px 2px 4px rgba(190, 30, 45, 0.1);
+    font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
 }
 
 .mascot-title::before {
@@ -644,8 +778,6 @@ tieu de mascot
 .mascot-title.outlined svg {
     filter: drop-shadow(0 0 2px #BE1E2D);
 }
-
-
 
 /* ====================================================================================
 hieu ung nut them khách hàng
