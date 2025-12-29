@@ -447,9 +447,69 @@ khách hang than thiet carousel
 .nav-controls_khtt { display:flex; flex-direction:row; gap:30px; align-items:center; justify-content:center; }
 
 
+/* ==================== Responsive cho điện thoại ==================== */
+@media (max-width: 768px) {
+    /* Container chính */
+    .main-container_khtt {
+        flex-direction: column;
+        height: auto; /* để tự động co theo nội dung */
+        gap: 20px;
+        padding: 20px 10px;
+    }
 
+    .controls-section_khtt {
+        padding-left: 0;
+        gap: 20px;
+    }
 
+    /* Carousel */
+    .carousel-container_khtt {
+        max-width: 250px;
+        height: 35vh;
+    }
 
+    .carousel-track_khtt {
+        width: 200px;
+    }
+
+    .card_khtt {
+        width: 180px;
+        height: 120px;
+    }
+
+    .card_khtt.up-2_khtt { transform: translateY(-180px) scale(0.7) translateZ(-200px); opacity:0.6; }
+    .card_khtt.up-1_khtt { transform: translateY(-90px) scale(0.85) translateZ(-80px); opacity:0.8; }
+    .card_khtt.down-1_khtt { transform: translateY(90px) scale(0.85) translateZ(-80px); opacity:0.8; }
+    .card_khtt.down-2_khtt { transform: translateY(180px) scale(0.7) translateZ(-200px); opacity:0.6; }
+
+    /* Thông tin thành viên */
+    .member-name_khtt {
+        font-size: 1.5rem;
+    }
+
+    .member-role_khtt {
+        font-size: 1rem;
+    }
+
+    /* Dots điều hướng */
+    .dots_khtt {
+        gap: 8px;
+        margin-top: 20px;
+    }
+
+    .dot_khtt {
+        width: 10px;
+        height: 10px;
+    }
+
+    /* Nút nổi */
+    #super-btn_khtt {
+        width: 48px;
+        height: 48px;
+        right: 16px;
+        bottom: 16px;
+    }
+}
 
 
 /* ====================================================================================
