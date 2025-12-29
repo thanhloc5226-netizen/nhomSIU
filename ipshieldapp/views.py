@@ -343,12 +343,13 @@ def add_contract(request):
                 print("✅ Saved other service")
 
             # ===== HANDLE PREPAID PAYMENT =====
-            if contract.prepaid_amount and contract.prepaid_amount > 0:
+            if contract.payment_type == 'installment':
+                # Luôn tạo ít nhất 1 đợt thanh toán mặc định khi tạo hợp đồng trả góp
                 PaymentInstallment.objects.create(
                     contract=contract,
                     amount=contract.contract_value,
-                    paid_amount=contract.prepaid_amount,
-                    is_paid=contract.prepaid_amount >= contract.contract_value
+                    paid_amount=contract.prepaid_amount if contract.prepaid_amount else 0,
+                    is_paid=contract.prepaid_amount >= contract.contract_value if contract.prepaid_amount else False
                 )
 
 

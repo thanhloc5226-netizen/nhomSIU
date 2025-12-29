@@ -367,6 +367,9 @@
     .bottom-actions,
     .btn-edit-contract,
     .icon-wrapper,
+    .mt-5, 
+    .table-responsive,
+    .alert,
     form button[type="submit"] {
         display: none !important;
     }

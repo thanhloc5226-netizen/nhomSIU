@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <div class="info-item full-width">
+            <div class="info-item">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
@@ -63,6 +63,12 @@
                     <span class="info-label">Loại dịch vụ</span>
                     <span class="service-badge">{{ contract.get_service_type_display }}</span>
                 </div>
+            </div>
+            <div class="info-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
                 <div class="info-content">
                     <span class="info-label">Tổng giá trị hợp đồng</span>
                     <span class="service-badge">{{ contract.contract_value|intcomma }} VNĐ</span>
@@ -72,56 +78,41 @@
     </div>
 
     <!-- PAYMENT INFO CARD -->
+{% if contract.payment_type == "installment" and contract.status != "completed" %}
+    
     {% for ins in installments %}
-    <form method="post" style="margin:0;">
-        {% csrf_token %}
+        <form method="post" style="margin:0;">
+            {% csrf_token %}
+            <div class="installment-item" style="...">
+                <div style="display:flex; gap:16px; align-items:center;">
+                    
+                    <div style="font-size:13px; color:#6c757d;">
+                        Đã trả: {{ contract.total_paid|intcomma }} VNĐ
+                    </div>
 
-        <div class="installment-item {% if ins.is_paid %}paid{% endif %}"
-                style="padding:12px 16px; margin-bottom:10px; border-radius:8px;
-                border:1px solid {% if ins.is_paid %}#d4edda{% else %}#e0e0e0{% endif %};
-                background:{% if ins.is_paid %}#f8f9fa{% else %}#ffffff{% endif %};">
-
-            <div style="display:flex; gap:16px; align-items:center;">
-
-                <!-- INFO ĐỢT -->
-                <div style="font-size:13px; color:#6c757d;">
-                    Đã trả: {{ contract.total_paid|intcomma }} VNĐ
-                </div>
-
-                {% if contract.remaining_amount > 0 %}
                     <div style="font-size:13px; color:#dc3545;">
                         Còn thiếu: {{ contract.remaining_amount|intcomma }} VNĐ
                     </div>
-                {% else %}
-                    <div style="font-size:13px; color:#28a745;">
-                        ✓ Đã thanh toán đủ
-                    </div>
-                {% endif %}
 
+                    {% if not ins.is_paid %}
+                        <input type="number" name="paid_amount" class="form-control" 
+                            min="1" placeholder="Nhập số tiền" 
+                            style="width:180px; text-align:right;" required>
 
-                {% if contract.remaining_amount > 0 %}
-                    <!-- INPUT -->
-                    <input type="number"
-                        name="paid_amount"
-                        class="form-control"
-                        min="1"
-                        step="1"
-                        placeholder="Nhập số tiền"
-                        style="width:180px; text-align:right;"
-                        required>
+                        <input type="hidden" name="installment_id" value="{{ ins.id }}">
 
-                    <!-- ID -->
-                    <input type="hidden" name="installment_id" value="{{ ins.id }}">
-
-                    <!-- SUBMIT -->
-                    <button type="submit" class="btn btn-sm btn-primary">
-                        💾 Thanh toán
-                    </button>
-                {% endif %}
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            💾 Thanh toán
+                        </button>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
     {% endfor %}
+
+{% elif contract.status == "completed" %}
+    <div class="alert alert-success">✓ Hợp đồng đã thanh toán xong</div>
+{% endif %}
 
     <div class="mt-5">
         <h6>📑 NHẬT KÝ GIAO DỊCH CHI TIẾT</h6>
