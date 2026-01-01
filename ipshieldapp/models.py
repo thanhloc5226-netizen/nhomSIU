@@ -541,19 +541,17 @@ class Mascot(models.Model):
     def __str__(self):
         return self.title
 # ============================
-# Khách hàng thân thiết
+#Nhãn hiệu độc quyền
 # ============================
-class LoyalCustomer(models.Model):
-    name = models.CharField(max_length=255, blank=True, null=True, verbose_name="Tên khách hàng")
-    image = models.ImageField(upload_to='loyal_customers/', verbose_name="Ảnh")
-    role = models.CharField(max_length=255, blank=True, null=True, verbose_name="Vai trò/Chức vụ")
-    order = models.PositiveIntegerField(default=0, verbose_name="Thứ tự hiển thị")
-    is_active = models.BooleanField(default=True, verbose_name="Kích hoạt")
+class NhanHieuDocQuyen(models.Model):
+    name = models.CharField("Tên nhãn hiệu", max_length=100, blank=True)
+    image = models.ImageField("Ảnh nhãn hiệu", upload_to="logokhachhang/logobrand/")
+    is_active = models.BooleanField("Hiển thị", default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['order']
-        verbose_name = "Khách hàng thân thiết"
-        verbose_name_plural = "Khách hàng thân thiết"
+        verbose_name = "Nhãn hiệu độc quyền"
+        verbose_name_plural = "Nhãn hiệu độc quyền"
 
     def __str__(self):
-        return self.name or f"Loyal Customer {self.id}"
+        return self.name or f"Nhãn hiệu {self.id}"

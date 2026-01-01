@@ -38,13 +38,13 @@ def home(request):
 
     sliders = Slider.objects.filter(is_active=True)
     mascots = Mascot.objects.filter(is_active=True)
-    loyal_customers = LoyalCustomer.objects.filter(is_active=True).order_by('order')  # ← THÊM DÒNG NÀY
+    nhanhieudocquyen = NhanHieuDocQuyen.objects.filter(is_active=True).order_by('id')
 
     return render(request, 'khachhang.html', {
         'customers': customers,
         'sliders': sliders,
         'mascots': mascots,
-        'loyal_customers': loyal_customers,
+        "nhanhieudocquyen": nhanhieudocquyen,
     })
 
 # ===============================================
@@ -840,41 +840,53 @@ protect_views(
 # ===============================================
 # CONTRACT SEARCH (NHÃN HIỆU)
 # ===============================================
+from django.shortcuts import render, redirect
 from django.db.models import Q
+from .models import Contract, TrademarkService
+
 
 def contract_search(request):
     q = request.GET.get('q', '').strip()
 
-    # ✅ chỉ hợp đồng đăng ký nhãn hiệu
-    contracts = Contract.objects.filter(
-        service_type='nhanhieu'
-    ).select_related('customer').order_by('-created_at')
+    # Mặc định lấy tất cả hợp đồng nhãn hiệu
+    contracts = Contract.objects.filter(service_type='nhanhieu').order_by('-created_at')
 
     if q:
-        contracts = contracts.filter(
-            Q(contract_no__icontains=q) |                 # mã hợp đồng
-            Q(customer__customer_code__icontains=q) |     # mã KH
-            Q(customer__name__icontains=q)                # tên KH
-        )
+        # Nếu nhập số đơn nhãn hiệu, redirect sang chi tiết TrademarkService
+        trademark = TrademarkService.objects.filter(app_no__icontains=q).first()
+        if trademark:
+            return redirect('trademark_detail', trademark_id=trademark.id)
 
-    return render(request, 'contract_search.html', {
+        # Nếu không phải số đơn, lọc hợp đồng nhãn hiệu theo query
+        contracts = contracts.filter(
+            Q(contract_no__icontains=q) |
+            Q(customer__customer_code__icontains=q) |
+            Q(customer__name__icontains=q)
+        ).distinct()
+
+    context = {
         'contracts': contracts,
-        'q': q
-    })
+        'q': q,
+    }
+    return render(request, 'contract_search.html', context)
+
 
 # ===============================================
 # Bản quyền tác giả
 # ===============================================
-from django.db.models import Q
-
 def contract_copyright_search(request):
     q = request.GET.get('q', '').strip()
-
-    contracts = Contract.objects.filter(
-        service_type='banquyen'
-    )
+    contracts = Contract.objects.filter(service_type='banquyen')
 
     if q:
+        # Kiểm tra xem có phải số chứng nhận bản quyền không
+        copyright = CopyrightService.objects.filter(certificate_no__icontains=q).first()
+
+        if copyright:
+            # Nếu tìm thấy bản quyền, chuyển đến trang chi tiết
+            return redirect('copyright_detail', copyright_id=copyright.id)
+
+        # Nếu không phải số chứng nhận, tìm kiếm hợp đồng bình thường
         contracts = contracts.filter(
             Q(contract_no__icontains=q) |
             Q(customer__customer_code__icontains=q) |
@@ -894,12 +906,17 @@ def contract_copyright_search(request):
 
 def contract_business_search(request):
     q = request.GET.get('q', '').strip()
-
-    contracts = Contract.objects.filter(
-        service_type='dkkd'
-    )
+    contracts = Contract.objects.filter(service_type='dkkd')
 
     if q:
+        # Kiểm tra xem có phải mã số thuế không
+        business = BusinessRegistrationService.objects.filter(tax_code__icontains=q).first()
+
+        if business:
+            # Nếu tìm thấy, chuyển đến trang chi tiết
+            return redirect('business_detail', business_id=business.id)
+
+        # Nếu không phải mã số thuế, tìm kiếm hợp đồng bình thường
         contracts = contracts.filter(
             Q(contract_no__icontains=q) |
             Q(customer__customer_code__icontains=q) |
@@ -917,12 +934,17 @@ def contract_business_search(request):
 # ===============================================
 def contract_investment_search(request):
     q = request.GET.get('q', '').strip()
-
-    contracts = Contract.objects.filter(
-        service_type='dautu'
-    )
+    contracts = Contract.objects.filter(service_type='dautu')
 
     if q:
+        # Kiểm tra xem có phải mã dự án không
+        investment = InvestmentService.objects.filter(project_code__icontains=q).first()
+
+        if investment:
+            # Nếu tìm thấy, chuyển đến trang chi tiết
+            return redirect('investment_detail', investment_id=investment.id)
+
+        # Nếu không phải mã dự án, tìm kiếm hợp đồng bình thường
         contracts = contracts.filter(
             Q(contract_no__icontains=q) |
             Q(customer__customer_code__icontains=q) |
@@ -961,3 +983,136 @@ def contract_other_service_search(request):
     })
 
 
+
+
+
+
+def trademark_search(request):
+    q = request.GET.get('q', '').strip()
+
+    if q:
+        trademark = TrademarkService.objects.filter(app_no__icontains=q).first()
+
+        if trademark:
+            return redirect('trademark_detail', trademark_id=trademark.id)
+        else:
+            return render(request, 'trademark_search.html', {
+                'q': q,
+                'not_found': True
+            })
+
+    return render(request, 'trademark_search.html', {'q': q})
+
+
+def trademark_detail(request, trademark_id):
+    trademark = get_object_or_404(TrademarkService, id=trademark_id)
+    contract = trademark.contract
+
+    context = {
+        'trademark': trademark,
+        'contract': contract,
+    }
+    return render(request, 'trademark_detail.html', context)
+
+
+
+
+# ===============================================
+# COPYRIGHT SEARCH & DETAIL
+# ===============================================
+def copyright_search(request):
+    q = request.GET.get('q', '').strip()
+
+    if q:
+        # Tìm bản quyền theo số giấy chứng nhận
+        copyright = CopyrightService.objects.filter(certificate_no__icontains=q).first()
+
+        if copyright:
+            # Nếu tìm thấy, chuyển đến trang chi tiết
+            return redirect('copyright_detail', copyright_id=copyright.id)
+        else:
+            # Nếu không tìm thấy, hiển thị thông báo
+            return render(request, 'copyright_search.html', {
+                'q': q,
+                'not_found': True
+            })
+
+    return render(request, 'copyright_search.html', {'q': q})
+
+
+def copyright_detail(request, copyright_id):
+    copyright = get_object_or_404(CopyrightService, id=copyright_id)
+    contract = copyright.contract
+
+    context = {
+        'copyright': copyright,
+        'contract': contract,
+    }
+    return render(request, 'copyright_detail.html', context)
+
+
+# ===============================================
+# BUSINESS REGISTRATION SEARCH & DETAIL
+# ===============================================
+def business_search(request):
+    q = request.GET.get('q', '').strip()
+
+    if q:
+        # Tìm đăng ký kinh doanh theo mã số thuế
+        business = BusinessRegistrationService.objects.filter(tax_code__icontains=q).first()
+
+        if business:
+            # Nếu tìm thấy, chuyển đến trang chi tiết
+            return redirect('business_detail', business_id=business.id)
+        else:
+            # Nếu không tìm thấy, hiển thị thông báo
+            return render(request, 'business_search.html', {
+                'q': q,
+                'not_found': True
+            })
+
+    return render(request, 'business_search.html', {'q': q})
+
+
+def business_detail(request, business_id):
+    business = get_object_or_404(BusinessRegistrationService, id=business_id)
+    contract = business.contract
+
+    context = {
+        'business': business,
+        'contract': contract,
+    }
+    return render(request, 'business_detail.html', context)
+
+# ===============================================
+# INVESTMENT SEARCH & DETAIL
+# ===============================================
+def investment_search(request):
+    q = request.GET.get('q', '').strip()
+
+    if q:
+        # Tìm dự án đầu tư theo mã dự án
+        investment = InvestmentService.objects.filter(project_code__icontains=q).first()
+
+        if investment:
+            # Nếu tìm thấy, chuyển đến trang chi tiết
+            return redirect('investment_detail', investment_id=investment.id)
+        else:
+            # Nếu không tìm thấy, hiển thị thông báo
+            return render(request, 'investment_search.html', {
+                'q': q,
+                'not_found': True
+            })
+
+    return render(request, 'investment_search.html', {'q': q})
+
+
+def investment_detail(request, investment_id):
+    investment = get_object_or_404(InvestmentService, id=investment_id)
+    contract = investment.contract
+
+    context = {
+        'investment': investment,
+        'contract': contract,
+    }
+    return render(request, 'investment_detail.html', context)

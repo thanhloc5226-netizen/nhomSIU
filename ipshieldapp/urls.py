@@ -6,6 +6,19 @@ urlpatterns = [
 
     path('', views.home, name='home'),
 
+    # Đầu tư search & detail
+    path('investment/search/', views.investment_search, name='investment_search'),
+    path('investment/<int:investment_id>/', views.investment_detail, name='investment_detail'),
+    # Đăng ký kinh doanh search & detail
+    path('business/search/', views.business_search, name='business_search'),
+    path('business/<int:business_id>/', views.business_detail, name='business_detail'),
+    # Bản quyền search & detail
+    path('copyright/search/', views.copyright_search, name='copyright_search'),
+    path('copyright/<int:copyright_id>/', views.copyright_detail, name='copyright_detail'),
+
+    path('trademark/search/', views.trademark_search, name='trademark_search'),
+    path('trademark/<int:trademark_id>/', views.trademark_detail, name='trademark_detail'),
+
     path("contracts/search/", views.contract_search, name="contract_search"),
     path('contracts/copyright/search/',views.contract_copyright_search,name='contract_copyright_search'),
     path('hop-dong/dang-ky-kinh-doanh/', views.contract_business_search, name='contract_business_search'),

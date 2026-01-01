@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% block body_block %}
+{% load static %}
+
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="investment-header">
+        <div class="header-left">
+            <div class="icon-wrapper">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+            </div>
+            <h2 class="mb-0">Chi tiết dự án đầu tư</h2>
+        </div>
+        <div>
+            <a href="{% url 'investment_search' %}" class="btn btn-secondary me-2">
+                🔍 Tìm kiếm khác
+            </a>
+            <a href="{% url 'contract_detail' id=contract.id %}" class="btn btn-primary">
+                📄 Xem hợp đồng
+            </a>
+            <a href="{% url 'contract_investment_search' %}" class="btn-back">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Quay lại
+        </a>
+        </div>
+    </div>
+
+    <!-- Investment Info Card -->
+    <div class="info-card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">💰 Thông tin dự án đầu tư</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Mã dự án</span>
+                            <span class="detail-value text-success fw-bold">{{ investment.project_code }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Tên dự án</span>
+                            <span class="detail-value fw-bold">{{ investment.project_name }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Nhà đầu tư</span>
+                            <span class="detail-value">{{ investment.investor }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Địa chỉ dự án</span>
+                            <span class="detail-value">{{ investment.address }}</span>
+                        </div>
+
+                        <div class="detail-item">
+                            <span class="detail-label">Vốn đầu tư</span>
+                            <span class="detail-value text-success fw-bold">{{ investment.total_capital }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="detail-item">
+                        <span class="detail-label">Mục tiêu dự án</span>
+                        <div class="detail-value" style="white-space: pre-line;">{{ investment.objective }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contract Info -->
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">📄 Thông tin hợp đồng liên quan</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>Mã hợp đồng:</strong><br>
+                    <span class="text-primary">{{ contract.contract_no }}</span>
+                </div>
+                <div class="col-md-3">
+                    <strong>Khách hàng:</strong><br>
+                    {{ contract.customer.name }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Ngày tạo:</strong><br>
+                    {{ contract.created_at|date:"d/m/Y" }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Trạng thái:</strong><br>
+                    {% if contract.status == 'completed' %}
+                        <span class="badge bg-success">Hoàn thành</span>
+                    {% elif contract.status == 'processing' %}
+                        <span class="badge bg-warning text-dark">Đang xử lý</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Chưa xử lý</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <a href="{% url 'contract_detail' id=contract.id %}" class="btn btn-primary btn-sm">
+                        Xem chi tiết hợp đồng →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.investment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #e9ecef;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon-wrapper {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.info-card {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.detail-label {
+    font-size: 13px;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.detail-value {
+    font-size: 15px;
+    color: #212529;
+    font-weight: 500;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+</style>
+
+{% endblock %}

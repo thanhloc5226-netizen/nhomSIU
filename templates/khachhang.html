@@ -200,23 +200,13 @@
 </table>
 </div>
 <div class="mascot-header" data-aos="fade-right">
-    <div class="header-decoration-mascot" style="margin-top:4%"></div>
+
     <h1 class="mascot-title"  style="margin-top:4%">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-            <line x1="9" y1="9" x2="9.01" y2="9"></line>
-            <line x1="15" y1="9" x2="15.01" y2="9"></line>
-        </svg>
+
         Bản Quyền Nhân Vật
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-            <line x1="9" y1="9" x2="9.01" y2="9"></line>
-            <line x1="15" y1="9" x2="15.01" y2="9"></line>
-        </svg>
+
     </h1>
-    <div class="header-decoration-mascot" style="margin-top:4%"></div>
+
 </div>
 
 <section class="mascot_body" style="margin-top:-15%">
@@ -233,59 +223,172 @@
 
 
 <div class="khtt-header" style="margin-top:-6%">
-    <div class="header-decoration"></div>
+
     <h1 class="khtt-title">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-        </svg>
-        Khách Hàng Thân Thiết
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-        </svg>
+
+        Nhãn Hiệu Độc Quyền
+
     </h1>
-    <div class="header-decoration"></div>
+
 </div>
 
 
+<style>
+/* =====================================================
+   CSS NHÃN HIỆU ĐỘC QUYỀN – CAROUSEL LOGO
+===================================================== */
 
-<section class="khtt-section" style="margin-top:10%">
-    <a class="play-pause-btn_khtt" id="playPauseBtn_khtt"></a>
-    <div class="main-container_khtt">
-        <div class="carousel-section_khtt">
-            <div class="carousel-container_khtt">
-                <div class="carousel-track_khtt">
-                    {% for customer in loyal_customers %}
-                    <div class="card_khtt" data-index="{{ forloop.counter0 }}">
-                        <img src="{{ customer.image.url }}" alt="{{ customer.name }}">
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+/* ===== CONTAINER ===== */
+.carousel-container_nhdq {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background: var(--bg-color, #fff);
+  padding: 16px 0;
+}
+
+/* ===== GRADIENT (ẨN MOBILE) ===== */
+.gradient_nhdq {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 60px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.left-gradient_nhdq {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-color, #fff), transparent);
+}
+
+.right-gradient_nhdq {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-color, #fff), transparent);
+}
+
+/* ===== CAROUSEL ===== */
+.carousel_nhdq {
+  display: flex;
+  width: max-content;
+  animation: scroll_nhdq 22s linear infinite;
+  will-change: transform;
+}
+
+/* ===== SLIDE ===== */
+.logos-slide_nhdq {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ===== LOGO ITEM (TO + SÁT) ===== */
+.logo-item_nhdq {
+  width: 180px;
+  height: 100px;
+  margin: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== LOGO ===== */
+.logo_nhdq {
+  max-width: 95%;
+  max-height: 95%;
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.9;
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.logo_nhdq:hover {
+  filter: grayscale(0%);
+  transform: scale(1.05);
+}
+
+/* ===== ANIMATION ===== */
+@keyframes scroll_nhdq {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ===================== MOBILE ===================== */
+@media (max-width: 768px) {
+
+  .carousel-container_nhdq {
+    padding: 10px 0;
+  }
+
+  .logo-item_nhdq {
+    width: 120px;
+    height: 70px;
+    margin: 0 8px;
+  }
+
+  .carousel_nhdq {
+    animation-duration: 16s;
+  }
+
+  .gradient_nhdq {
+    display: none;
+  }
+}
+
+/* =====================================================
+   END CSS NHÃN HIỆU ĐỘC QUYỀN
+===================================================== */
+</style>
+
+<section class="khtt-section" style="margin-top:0%">
+
+{% if nhanhieudocquyen %}
+<div class="carousel-container_nhdq">
+
+  <!-- Gradient trái / phải -->
+  <div class="gradient_nhdq left-gradient_nhdq"></div>
+  <div class="gradient_nhdq right-gradient_nhdq"></div>
+
+  <div class="carousel_nhdq">
+
+    <!-- ===== SLIDE 1 ===== -->
+    <div class="logos-slide_nhdq">
+      {% for nh in nhanhieudocquyen %}
+        <div class="logo-item_nhdq">
+          <img
+            src="{{ nh.image.url }}"
+            class="logo_nhdq"
+            alt="{{ nh.name }}"
+            loading="lazy"
+          >
         </div>
-
-        <div class="controls-section_khtt">
-            <div class="nav-controls_khtt">
-                <button class="nav-arrow_khtt up_khtt">
-                    <img src="https://ik.imagekit.io/gopichakradhar/icons/top.png" alt="Up">
-                </button>
-                <button class="nav-arrow_khtt down_khtt">
-                    <img src="https://ik.imagekit.io/gopichakradhar/icons/down.png" alt="Down">
-                </button>
-            </div>
-
-            <div class="member-info_khtt">
-                <h2 class="member-name_khtt">{{ loyal_customers.0.name }}</h2>
-                <p class="member-role_khtt">{{ loyal_customers.0.role }}</p>
-            </div>
-
-            <div class="dots_khtt">
-                {% for customer in loyal_customers %}
-                <div class="dot_khtt {% if forloop.first %}active_khtt{% endif %}" data-index="{{ forloop.counter0 }}"></div>
-                {% endfor %}
-            </div>
-        </div>
+      {% endfor %}
     </div>
+
+    <!-- ===== SLIDE 2 (DUPLICATE để chạy mượt) ===== -->
+    <div class="logos-slide_nhdq">
+      {% for nh in nhanhieudocquyen %}
+        <div class="logo-item_nhdq">
+          <img
+            src="{{ nh.image.url }}"
+            class="logo_nhdq"
+            alt="{{ nh.name }}"
+            loading="lazy"
+          >
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+{% endif %}
+
 </section>
+
 
 <style>.table-container {
     max-height: 420px;      /* tương đương khoảng 10 dòng bootstrap */
@@ -311,6 +414,7 @@ tieu de khach hang than thiet
     margin-bottom: 40px;
     padding: 30px 20px;
     position: relative;
+    font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
 }
 
 .header-decoration {
@@ -321,113 +425,24 @@ tieu de khach hang than thiet
 }
 
 .khtt-title {
-    display: flex;
+      display: flex;
     align-items: center;
     gap: 16px;
-    font-size: 42px;
-    font-weight: 800;
+    font-size: 48px;
+    font-weight: 900;
     color: #BE1E2D;
     margin: 0;
     text-align: center;
-    letter-spacing: -0.5px;
+    letter-spacing: 4px;
     text-transform: uppercase;
     position: relative;
     padding: 0 20px;
+    text-shadow: 2px 2px 4px rgba(190, 30, 45, 0.1);
+    font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
 
-    /* Chọn 1 trong các font dưới đây */
-
-    /* Option 1: Be Vietnam Pro - Font Việt Nam chuyên nghiệp */
-    font-family: 'Be Vietnam Pro', sans-serif;
-
-    /* Option 2: Montserrat - Hiện đại, bold, hỗ trợ tiếng Việt tốt */
-    /* font-family: 'Montserrat', sans-serif; */
-
-    /* Option 3: Quicksand - Mềm mại, thân thiện */
-    /* font-family: 'Quicksand', sans-serif; */
-
-    /* Option 4: Nunito - Tròn trịa, dễ đọc */
-    /* font-family: 'Nunito', sans-serif; */
-
-    /* Option 5: System fonts - An toàn nhất */
-    /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif; */
 }
 
-.khtt-title::before {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 4px;
-    background: linear-gradient(90deg, transparent 0%, #BE1E2D 50%, transparent 100%);
-    border-radius: 2px;
-}
 
-.khtt-title svg {
-    color: #BE1E2D;
-    flex-shrink: 0;
-    animation: heartbeat 1.5s ease-in-out infinite;
-}
-
-@keyframes heartbeat {
-    0%, 100% {
-        transform: scale(1);
-    }
-    25% {
-        transform: scale(1.1);
-    }
-    50% {
-        transform: scale(1);
-    }
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .khtt-header {
-        flex-direction: column;
-        gap: 16px;
-        padding: 20px;
-    }
-
-    .header-decoration {
-        width: 100%;
-        max-width: 150px;
-    }
-
-    .khtt-title {
-        font-size: 28px;
-        gap: 12px;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 0 10px;
-    }
-
-    .khtt-title svg {
-        width: 24px;
-        height: 24px;
-    }
-
-    .khtt-title::before {
-        width: 60%;
-    }
-}
-
-@media (max-width: 480px) {
-    .khtt-title {
-        font-size: 22px;
-        gap: 8px;
-    }
-
-    .khtt-title svg {
-        width: 20px;
-        height: 20px;
-    }
-
-    .header-decoration {
-        max-width: 80px;
-    }
-}
 
 /*==========================================================================================
 tieu de mascot
@@ -471,159 +486,7 @@ tieu de mascot
     font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
 }
 
-.mascot-title::before {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 4px;
-    background: linear-gradient(90deg, transparent 0%, #BE1E2D 50%, transparent 100%);
-    border-radius: 2px;
-}
 
-.mascot-title svg {
-    color: #BE1E2D;
-    flex-shrink: 0;
-    animation: bounce-mascot 2s ease-in-out infinite;
-}
-
-@keyframes bounce-mascot {
-    0%, 100% {
-        transform: translateY(0) rotate(0deg);
-    }
-    25% {
-        transform: translateY(-5px) rotate(-5deg);
-    }
-    50% {
-        transform: translateY(0) rotate(0deg);
-    }
-    75% {
-        transform: translateY(-5px) rotate(5deg);
-    }
-}
-
-/* Alternative: Playful Style */
-.mascot-title.playful {
-    background: linear-gradient(135deg, #BE1E2D 0%, #e63946 50%, #BE1E2D 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: gradient-shift 3s ease infinite;
-    background-size: 200% 200%;
-}
-
-@keyframes gradient-shift {
-    0%, 100% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-}
-
-/* Mascot Body Section */
-.mascot_body {
-    position: relative;
-    padding: 20px 0;
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .mascot-header {
-        flex-direction: column;
-        gap: 16px;
-        padding: 20px;
-    }
-
-    .header-decoration-mascot {
-        width: 100%;
-        max-width: 150px;
-    }
-
-    .mascot-title {
-        font-size: 32px;
-        gap: 12px;
-        letter-spacing: 2px;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 0 10px;
-    }
-
-    .mascot-title svg {
-        width: 24px;
-        height: 24px;
-    }
-
-    .mascot-title::before {
-        width: 50%;
-    }
-}
-
-@media (max-width: 480px) {
-    .mascot-title {
-        font-size: 24px;
-        gap: 8px;
-        letter-spacing: 1px;
-    }
-
-    .mascot-title svg {
-        width: 20px;
-        height: 20px;
-    }
-
-    .header-decoration-mascot {
-        max-width: 80px;
-    }
-}
-
-/* Alternative Style Option 1: Card Style */
-.mascot-header.card-style {
-    background: white;
-    border: 3px solid #BE1E2D;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 8px 24px rgba(190, 30, 45, 0.15);
-}
-
-/* Alternative Style Option 2: Ribbon Style */
-.mascot-title.ribbon-style {
-    background: #BE1E2D;
-    color: white;
-    padding: 15px 40px;
-    position: relative;
-    clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
-}
-
-.mascot-title.ribbon-style::before {
-    display: none;
-}
-
-.mascot-title.ribbon-style svg {
-    color: white;
-}
-
-/* Alternative Style Option 3: 3D Effect */
-.mascot-title.effect-3d {
-    text-shadow:
-        1px 1px 0 #a01827,
-        2px 2px 0 #a01827,
-        3px 3px 0 #a01827,
-        4px 4px 0 #a01827,
-        5px 5px 10px rgba(190, 30, 45, 0.3);
-}
-
-/* Alternative Style Option 4: Outlined */
-.mascot-title.outlined {
-    color: transparent;
-    -webkit-text-stroke: 3px #BE1E2D;
-    text-stroke: 3px #BE1E2D;
-}
-
-.mascot-title.outlined svg {
-    filter: drop-shadow(0 0 2px #BE1E2D);
-}
 </style>
 
 

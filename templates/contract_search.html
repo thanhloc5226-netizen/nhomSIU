@@ -12,7 +12,7 @@
                        name="q"
                        value="{{ q }}"
                        class="form-control"
-                       placeholder="Mã hợp đồng, mã KH, tên KH...">
+                       placeholder="Số đơn nhãn hiệu, mã hợp đồng, mã KH, tên KH...">
             </div>
 
             <div class="col-6 col-md-3 col-lg-2">
@@ -101,6 +101,17 @@
 
 
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('input[name="q"]');
 
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            this.closest('form').submit();
+        }
+    });
+});
+</script>
 
 {% endblock %}
