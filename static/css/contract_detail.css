@@ -1,3 +1,7 @@
+/* ========================================
+   HEADER STYLES
+   ======================================== */
+
 /* Header */
 .contract-header {
     display: flex;
@@ -56,6 +60,10 @@
     transform: translateX(-4px);
     color: #BE1E2D;
 }
+
+/* ========================================
+   INFO CARD STYLES
+   ======================================== */
 
 /* Info Card */
 .info-card {
@@ -118,6 +126,10 @@
     font-weight: 700;
 }
 
+/* ========================================
+   SERVICE CARD STYLES
+   ======================================== */
+
 /* Service Card */
 .service-card {
     background: white;
@@ -148,6 +160,125 @@
 .service-content {
     padding: 24px;
 }
+
+/* ========================================
+   SERVICE ITEM CARD STYLES (MỚI)
+   ======================================== */
+
+/* Service Item Card */
+.service-item-card {
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+}
+
+.service-item-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-3px);
+    border-color: #BE1E2D;
+}
+
+/* Service Item Header */
+.service-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.service-item-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.service-item-title svg {
+    color: #BE1E2D;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   BUTTON STYLES (MỚI)
+   ======================================== */
+
+/* Nút xem chi tiết */
+.btn-view-detail {
+    background: linear-gradient(135deg, #BE1E2D 0%, #a01827 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(190, 30, 45, 0.3);
+    white-space: nowrap;
+}
+
+.btn-view-detail:hover {
+    background: linear-gradient(135deg, #a01827 0%, #8a1522 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(190, 30, 45, 0.5);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-view-detail:active {
+    transform: translateY(0);
+}
+
+.btn-view-detail svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* ========================================
+   TEXT HIGHLIGHT & BADGES (MỚI)
+   ======================================== */
+
+/* Highlight text (số đơn, mã số thuế, etc.) */
+.highlight-text {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    color: #92400e;
+    border: 2px solid #fbbf24;
+    display: inline-block;
+}
+
+/* Badge cho loại dịch vụ */
+.service-type-badge {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 8px;
+    border: 1px solid #fbbf24;
+}
+
+/* ========================================
+   DETAIL GRID STYLES
+   ======================================== */
 
 /* Detail Grid */
 .detail-grid {
@@ -180,11 +311,19 @@
     font-weight: 500;
 }
 
+/* ========================================
+   IMAGE SECTION STYLES
+   ======================================== */
+
 /* Image Section */
 .image-section {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
 }
 
 .image-label {
@@ -205,16 +344,17 @@
     justify-content: center;
     align-items: center;
     padding: 20px;
-    background: #f9fafb;
-    border: 2px dashed #e5e7eb;
+    background: white;
+    border: 2px dashed #d1d5db;
     border-radius: 12px;
+    min-height: 200px;
 }
 
 .trademark-image {
     max-width: 100%;
-    height: auto;
+    max-height: 400px;
+    object-fit: contain;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .no-image {
@@ -226,6 +366,8 @@
     background: #f9fafb;
     border: 2px dashed #e5e7eb;
     border-radius: 12px;
+    text-align: center;
+    color: #9ca3af;
 }
 
 .no-image svg {
@@ -238,6 +380,10 @@
     color: #6b7280;
     font-size: 14px;
 }
+
+/* ========================================
+   ACTION BUTTONS
+   ======================================== */
 
 /* Service Actions */
 .service-actions {
@@ -296,7 +442,63 @@
     color: white;
 }
 
-/* Responsive */
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+/* Animation cho card khi load */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.service-item-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Stagger animation cho nhiều cards */
+.service-item-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.service-item-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.service-item-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.service-item-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.service-item-card:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablet */
+@media (max-width: 992px) {
+    .service-item-card {
+        padding: 20px;
+    }
+
+    .detail-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+/* Mobile */
 @media (max-width: 768px) {
     .contract-header {
         flex-direction: column;
@@ -332,7 +534,55 @@
     .trademark-image {
         max-width: 100%;
     }
+
+    /* Service Item Card Mobile */
+    .service-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .btn-view-detail {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 20px;
+    }
+
+    .service-item-title {
+        font-size: 16px;
+    }
+
+    .service-item-card {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .highlight-text {
+        font-size: 13px;
+        padding: 4px 10px;
+    }
 }
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .service-item-title {
+        font-size: 14px;
+    }
+
+    .btn-view-detail {
+        font-size: 13px;
+        padding: 10px 16px;
+    }
+
+    .btn-view-detail svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
 
 @media print {
     /* 1. Ẩn toàn bộ thành phần thuộc về base.html */
@@ -366,8 +616,9 @@
     .service-actions,
     .bottom-actions,
     .btn-edit-contract,
+    .btn-view-detail,
     .icon-wrapper,
-    .mt-5, 
+    .mt-5,
     .table-responsive,
     .alert,
     form button[type="submit"] {
@@ -375,12 +626,14 @@
     }
 
     /* 4. Định dạng lại các Card thông tin */
-    .info-card, .service-card {
-        border: 1px solid #eee !important; /* Tạo viền mảnh thay cho bóng đổ */
+    .info-card,
+    .service-card,
+    .service-item-card {
+        border: 1px solid #eee !important;
         box-shadow: none !important;
         margin-bottom: 20px !important;
         padding: 10px !important;
-        page-break-inside: avoid; /* Tránh cắt đôi card khi qua trang mới */
+        page-break-inside: avoid;
     }
 
     /* 5. Chỉnh tiêu đề chính cho trang in chuyên nghiệp */
@@ -391,6 +644,8 @@
         margin-bottom: 40px;
         border-bottom: 2px solid #333;
         padding-bottom: 10px;
+        background: none !important;
+        box-shadow: none !important;
     }
 
     .contract-header h2 {
@@ -398,6 +653,20 @@
         color: black !important;
         margin: 0 !important;
         text-transform: uppercase;
+    }
+
+    /* 6. Ẩn các badge và highlight màu sắc */
+    .service-type-badge {
+        background: transparent !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+    }
+
+    .highlight-text {
+        background: transparent !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+        padding: 2px 6px !important;
     }
 
     /* Đảm bảo chữ đen rõ nét trên giấy */
@@ -414,5 +683,10 @@
     input[type="checkbox"] {
         print-color-adjust: exact;
         -webkit-print-color-adjust: exact;
+    }
+
+    /* Ẩn animation khi in */
+    .service-item-card {
+        animation: none !important;
     }
 }
