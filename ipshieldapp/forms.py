@@ -372,11 +372,10 @@ class PaymentInstallmentForm(forms.ModelForm):
         }
 
         widgets = {
-            'is_paid': forms.CheckboxInput(attrs={
-                'class': 'form-check-input'
-            }),
+            'is_paid': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            # Sửa lại thành datetime-local hoặc date để người dùng tự chọn
             'paid_date': forms.DateInput(attrs={
-                'type': 'date',
+                'type': 'date', # Hoặc 'datetime-local' nếu muốn có cả giờ
                 'class': 'form-control'
             }),
         }

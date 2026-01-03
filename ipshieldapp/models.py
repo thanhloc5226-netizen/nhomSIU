@@ -193,6 +193,7 @@ class Contract(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(default=timezone.now)
 
+
     class Meta:
         verbose_name = 'Hợp đồng'
         verbose_name_plural = 'Hợp đồng'
@@ -336,7 +337,9 @@ class PaymentLog(models.Model):
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='payment_logs')
     installment = models.ForeignKey(PaymentInstallment, on_delete=models.CASCADE, related_name='logs')
     amount_paid = models.DecimalField(max_digits=15, decimal_places=0)
-    paid_at = models.DateTimeField(auto_now_add=True) # Tự động lưu ngày giờ lúc bấm nút
+    paid_at = models.DateTimeField(verbose_name="Thời gian thanh toán")
+    is_exported_bill = models.BooleanField(default=False)
+    bill_exported_at = models.DateTimeField(null=True, blank=True)
     def __str__(self):
         return f"Thanh toán {self.amount_paid} cho HĐ {self.contract.id}"
 
