@@ -877,56 +877,70 @@ def contract_search(request):
 
     # Mặc định lấy tất cả hợp đồng nhãn hiệu
     contracts = Contract.objects.filter(service_type='nhanhieu').order_by('-created_at')
+    trademarks = []  # 🔥 THÊM BIẾN ĐỂ LƯU DANH SÁCH NHÃN HIỆU
 
     if q:
-        # Nếu nhập số đơn nhãn hiệu, redirect sang chi tiết TrademarkService
-        trademark = TrademarkService.objects.filter(app_no__icontains=q).first()
-        if trademark:
-            return redirect('trademark_detail', trademark_id=trademark.id)
+        # 🔥 TÌM TẤT CẢ NHÃN HIỆU CÓ CHỨA SỐ ĐƠN
+        trademarks = TrademarkService.objects.filter(
+            app_no__icontains=q
+        ).select_related('contract', 'contract__customer')
 
-        # Nếu không phải số đơn, lọc hợp đồng nhãn hiệu theo query
-        contracts = contracts.filter(
-            Q(contract_no__icontains=q) |
-            Q(customer__customer_code__icontains=q) |
-            Q(customer__name__icontains=q)
-        ).distinct()
+        # Nếu tìm thấy nhãn hiệu, lọc các hợp đồng liên quan
+        if trademarks.exists():
+            contract_ids = trademarks.values_list('contract_id', flat=True)
+            contracts = Contract.objects.filter(
+                id__in=contract_ids
+            ).order_by('-created_at')
+        else:
+            # Nếu không tìm thấy theo số đơn, tìm theo thông tin hợp đồng
+            contracts = contracts.filter(
+                Q(contract_no__icontains=q) |
+                Q(customer__customer_code__icontains=q) |
+                Q(customer__name__icontains=q)
+            ).distinct()
 
     context = {
         'contracts': contracts,
+        'trademarks': trademarks,  # 🔥 TRUYỀN DANH SÁCH NHÃN HIỆU VÀO TEMPLATE
         'q': q,
     }
     return render(request, 'contract_search.html', context)
-
 
 # ===============================================
 # Bản quyền tác giả
 # ===============================================
 def contract_copyright_search(request):
     q = request.GET.get('q', '').strip()
-    contracts = Contract.objects.filter(service_type='banquyen')
+
+    # Mặc định lấy tất cả hợp đồng bản quyền
+    contracts = Contract.objects.filter(service_type='banquyen').order_by('-created_at')
+    copyrights = []  # 🔥 THÊM BIẾN ĐỂ LƯU DANH SÁCH BẢN QUYỀN
 
     if q:
-        # Kiểm tra xem có phải số chứng nhận bản quyền không
-        copyright = CopyrightService.objects.filter(certificate_no__icontains=q).first()
+        # 🔥 TÌM TẤT CẢ BẢN QUYỀN CÓ CHỨA SỐ GIẤY CHỨNG NHẬN
+        copyrights = CopyrightService.objects.filter(
+            certificate_no__icontains=q
+        ).select_related('contract', 'contract__customer')
 
-        if copyright:
-            # Nếu tìm thấy bản quyền, chuyển đến trang chi tiết
-            return redirect('copyright_detail', copyright_id=copyright.id)
-
-        # Nếu không phải số chứng nhận, tìm kiếm hợp đồng bình thường
-        contracts = contracts.filter(
-            Q(contract_no__icontains=q) |
-            Q(customer__customer_code__icontains=q) |
-            Q(customer__name__icontains=q)
-        )
-
-    contracts = contracts.order_by('-created_at')
+        # Nếu tìm thấy bản quyền, lọc các hợp đồng liên quan
+        if copyrights.exists():
+            contract_ids = copyrights.values_list('contract_id', flat=True)
+            contracts = Contract.objects.filter(
+                id__in=contract_ids
+            ).order_by('-created_at')
+        else:
+            # Nếu không tìm thấy theo số chứng nhận, tìm theo thông tin hợp đồng
+            contracts = contracts.filter(
+                Q(contract_no__icontains=q) |
+                Q(customer__customer_code__icontains=q) |
+                Q(customer__name__icontains=q)
+            ).distinct()
 
     return render(request, 'contract_copyright_search.html', {
         'contracts': contracts,
+        'copyrights': copyrights,  # 🔥 TRUYỀN DANH SÁCH BẢN QUYỀN VÀO TEMPLATE
         'q': q
     })
-
 # ===============================================
 # dkkq search
 # ===============================================

@@ -25,15 +25,93 @@
         </div>
     </div>
 </form>
+
 <style>
-
     .table-responsive {
-    max-height: 420px;      /* ≈ 10 dòng bootstrap */
-    overflow-y: auto;       /* hiện thanh cuộn dọc */
-}
+        max-height: 420px;      /* ≈ 10 dòng bootstrap */
+        overflow-y: auto;       /* hiện thanh cuộn dọc */
+    }
 
+    /* Hover effect cho ảnh */
+    .trademark-image-thumb:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+        transition: all 0.2s ease;
+    }
 </style>
-{% if contracts %}
+
+<!-- 🔥 MODAL XEM ẢNH PHÓNG TO -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Hình ảnh nhãn hiệu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" alt="" class="img-fluid" style="max-height: 70vh;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 🔥 HIỂN THỊ DANH SÁCH NHÃN HIỆU (NẾU TÌM THEO SỐ ĐƠN) -->
+{% if trademarks %}
+<div class="contracts-card mt-3">
+
+
+    <div class="table-responsive">
+        <table class="contracts-table table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Số đơn</th>
+
+                    <th>Tên nhãn hiệu</th>
+                    <th>Người nộp đơn</th>
+                    <th>Ngày nộp</th>
+                    <th>Số hợp đồng</th>
+                    <th>Khách hàng</th>
+                     <th>Hình ảnh</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trademark in trademarks %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td class="contract-code"><strong>{{ trademark.app_no }}</strong></td>
+
+                    <td>{{ trademark.trademark_name }}</td>
+                    <td>{{ trademark.applicant }}</td>
+                    <td>{{ trademark.filing_date|date:"d/m/Y" }}</td>
+                    <td>{{ trademark.contract.contract_no }}</td>
+                    <td>{{ trademark.contract.customer.name }}</td>
+                    <td>
+                        {% if trademark.trademark_image %}
+                            <img src="{{ trademark.trademark_image.url }}"
+                                 alt="{{ trademark.trademark_name }}"
+                                 class="img-thumbnail trademark-image-thumb"
+                                 style="max-width: 80px; max-height: 80px; object-fit: contain; cursor: pointer;"
+                                 onclick="showImageModal('{{ trademark.trademark_image.url }}', '{{ trademark.trademark_name|escapejs }}')">
+                        {% else %}
+                            <span class="text-muted">Không có ảnh</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'trademark_detail' trademark.id %}" class="btn btn-sm btn-info">
+                            Xem
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- HIỂN THỊ DANH SÁCH HỢP ĐỒNG (NẾU TÌM THEO THÔNG TIN KHÁC) -->
+{% elif contracts %}
 <div class="contracts-card">
     <div class="table-responsive">
         <table class="contracts-table table table-bordered table-hover">
@@ -91,17 +169,30 @@
         </table>
     </div>
 </div>
+
+<!-- KHÔNG TÌM THẤY KẾT QUẢ -->
 {% else %}
 <div class="empty-state text-center mt-4">
-    <p>Không tìm thấy hợp đồng nào.</p>
+    {% if q %}
+        <p>⚠️ Không tìm thấy kết quả nào cho "{{ q }}"</p>
+    {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>Hướng dẫn:</strong> Nhập số đơn nhãn hiệu (VD: 123) hoặc mã hợp đồng để tìm kiếm
+        </div>
+    {% endif %}
 </div>
 {% endif %}
 
-
-
-
-
 <script>
+// Hàm hiển thị ảnh phóng to trong modal
+function showImageModal(imageUrl, imageName) {
+    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    document.getElementById('modalImage').src = imageUrl;
+    document.getElementById('imageModalLabel').textContent = imageName;
+    modal.show();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('input[name="q"]');
 

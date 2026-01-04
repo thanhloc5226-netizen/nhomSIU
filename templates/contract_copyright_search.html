@@ -13,7 +13,7 @@
                        name="q"
                        value="{{ q }}"
                        class="form-control"
-                       placeholder="Mã hợp đồng, mã KH, tên KH...">
+                       placeholder="Số giấy chứng nhận bản quyền, mã hợp đồng, mã KH, tên KH...">
             </div>
 
             <div class="col-6 col-md-3 col-lg-2">
@@ -31,15 +31,59 @@
         </div>
     </div>
 </form>
+
 <style>
-
     .table-responsive {
-    max-height: 420px;      /* ≈ 10 dòng bootstrap */
-    overflow-y: auto;       /* hiện thanh cuộn dọc */
-}
-
+        max-height: 420px;      /* ≈ 10 dòng bootstrap */
+        overflow-y: auto;       /* hiện thanh cuộn dọc */
+    }
 </style>
-{% if contracts %}
+
+<!-- 🔥 HIỂN THỊ DANH SÁCH BẢN QUYỀN (NẾU TÌM THEO SỐ CHỨNG NHẬN) -->
+{% if copyrights %}
+<div class="contracts-card">
+
+
+    <div class="table-responsive">
+        <table class="contracts-table table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>STT</th>
+                    <th>Số chứng nhận</th>
+                    <th>Tên tác phẩm</th>
+                    <th>Tác giả</th>
+                    <th>Chủ sở hữu</th>
+                    <th>Loại tác phẩm</th>
+                    <th>Số hợp đồng</th>
+                    <th>Khách hàng</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for copyright in copyrights %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td class="fw-semibold"><strong>{{ copyright.certificate_no }}</strong></td>
+                    <td>{{ copyright.work_name }}</td>
+                    <td>{{ copyright.author }}</td>
+                    <td>{{ copyright.owner }}</td>
+                    <td>{{ copyright.type }}</td>
+                    <td>{{ copyright.contract.contract_no }}</td>
+                    <td>{{ copyright.contract.customer.name }}</td>
+                    <td>
+                        <a href="{% url 'copyright_detail' copyright.id %}" class="btn btn-sm btn-info">
+                            Xem
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- HIỂN THỊ DANH SÁCH HỢP ĐỒNG (NẾU TÌM THEO THÔNG TIN KHÁC) -->
+{% elif contracts %}
 <div class="contracts-card">
     <div class="table-responsive">
         <table class="contracts-table table table-bordered table-hover align-middle">
@@ -59,7 +103,7 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
 
-                    <td class="fw-semibold ">
+                    <td class="fw-semibold">
                         {{ contract.contract_no }}
                     </td>
 
@@ -100,10 +144,11 @@
     </div>
 </div>
 
+<!-- KHÔNG TÌM THẤY KẾT QUẢ -->
 {% else %}
 <div class="empty-state text-center mt-4">
     <p class="text-muted">
-        Không tìm thấy hợp đồng bản quyền tác giả.
+        {% if q %}⚠️ Không tìm thấy kết quả nào cho "{{ q }}"{% else %}Không tìm thấy hợp đồng bản quyền tác giả.{% endif %}
     </p>
 </div>
 {% endif %}

@@ -5,23 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9aac382f-c075-4a1c-987a-39a2f9a21430" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/business_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/business_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/copyright_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/copyright_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/investment_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/investment_search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/trademark_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/trademark_search.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ipshieldapp/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ipshieldapp/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ipshieldapp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/ipshieldapp/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ipshieldapp/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/ipshieldapp/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ipshieldapp/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/ipshieldapp/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/khachhang.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/khachhang.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/contract_copyright_search.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contract_copyright_search.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/contract_search.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/contract_search.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/khachhang.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/khachhang.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,17 +34,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/nhomSIU"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/nhomSIU&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
