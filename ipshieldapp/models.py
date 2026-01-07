@@ -1,9 +1,8 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 from django.db.models import Sum
-# ============================
-# KHÁCH HÀNG
-# ============================
 
 # ============================
 # VALIDATORS (THÔNG BÁO TV)
@@ -18,11 +17,11 @@ number_validator = RegexValidator(
     message='Trường này chỉ được nhập số'
 )
 
+
 # ============================
 # KHÁCH HÀNG
 # ============================
 class Customer(models.Model):
-
     CUSTOMER_TYPE_CHOICES = (
         ('personal', 'Cá nhân'),
         ('company', 'Doanh nghiệp'),
@@ -118,15 +117,11 @@ class Customer(models.Model):
     def __str__(self):
         return f"{self.customer_code} - {self.name}"
 
+
 # ============================
 # HỢP ĐỒNG
 # ============================
-from django.db import models
-from django.core.exceptions import ValidationError
-from django.utils import timezone
-
 class Contract(models.Model):
-
     SERVICE_TYPE_CHOICES = (
         ('nhanhieu', 'Đăng ký nhãn hiệu'),
         ('banquyen', 'Bản quyền tác giả'),
@@ -141,7 +136,7 @@ class Contract(models.Model):
         ('completed', 'Hoàn thành'),
         ('paused', 'Ngưng'),
     )
-    
+
     PAYMENT_TYPE_CHOICES = (
         ('full', 'Trả dứt điểm'),
         ('installment', 'Trả nhiều đợt'),
@@ -157,10 +152,9 @@ class Contract(models.Model):
         max_length=50,
         choices=SERVICE_TYPE_CHOICES
     )
-    
 
     contract_no = models.CharField(max_length=50, unique=True)
-    
+
     # 🟢 GIÁ TRỊ HỢP ĐỒNG
     contract_value = models.DecimalField(
         max_digits=15,
@@ -182,8 +176,7 @@ class Contract(models.Model):
         default=0,
         verbose_name='Số tiền trả trước'
     )
-    
-    
+
     status = models.CharField(
         max_length=20,
         choices=CONTRACT_STATUS_CHOICES,
@@ -192,7 +185,6 @@ class Contract(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(default=timezone.now)
-
 
     class Meta:
         verbose_name = 'Hợp đồng'
@@ -205,15 +197,13 @@ class Contract(models.Model):
 
     def clean(self):
         super().clean()
-        
-    
+
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
 
     @property
     def total_paid(self):
-        from django.db.models import Sum
         return self.installments.aggregate(Sum('paid_amount'))['paid_amount__sum'] or 0
 
     @property
@@ -231,7 +221,6 @@ class Contract(models.Model):
     def is_fully_paid(self):
         """Đã thanh toán đủ chưa"""
         return self.total_paid >= self.contract_value
-
 
     def __str__(self):
         return f"{self.contract_no} - {self.get_service_type_display()}"
@@ -268,11 +257,9 @@ class PaymentInstallment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
     class Meta:
         verbose_name = 'Đợt thanh toán'
         verbose_name_plural = 'Các đợt thanh toán'
-        # unique_together = ('contract')
         ordering = ['contract']
         indexes = [
             models.Index(fields=['contract', 'is_paid']),
@@ -292,9 +279,6 @@ class PaymentInstallment(models.Model):
         if self.paid_amount > self.amount:
             raise ValidationError({'paid_amount': 'Số tiền trả vượt quá số tiền đợt'})
 
-
-
-
     def save(self, *args, **kwargs):
         if self.paid_amount >= self.amount:
             self.is_paid = True
@@ -306,7 +290,6 @@ class PaymentInstallment(models.Model):
 
         super().save(*args, **kwargs)
 
-    
     def add_payment(self, amount, paid_date=None, notes=''):
         if amount <= 0:
             raise ValidationError('Số tiền phải lớn hơn 0')
@@ -322,17 +305,15 @@ class PaymentInstallment(models.Model):
 
         self.save()
 
-    
-
-    
     def __str__(self):
         status = "✓" if self.is_paid else "✗"
         return f"{self.contract.contract_no} - Đợt  ({status})"
-    
+
     @property
     def remaining_amount(self):
         return max(self.amount - self.paid_amount, 0)
-    
+
+
 class PaymentLog(models.Model):
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='payment_logs')
     installment = models.ForeignKey(PaymentInstallment, on_delete=models.CASCADE, related_name='logs')
@@ -340,11 +321,13 @@ class PaymentLog(models.Model):
     paid_at = models.DateTimeField(verbose_name="Thời gian thanh toán")
     is_exported_bill = models.BooleanField(default=False)
     bill_exported_at = models.DateTimeField(null=True, blank=True)
+
     def __str__(self):
         return f"Thanh toán {self.amount_paid} cho HĐ {self.contract.id}"
 
     class Meta:
-        ordering = ['-paid_at'] # Cái mới nhất hiện lên đầu
+        ordering = ['-paid_at']
+
 
 # ============================
 # 1. NHÃN HIỆU
@@ -356,33 +339,108 @@ class TrademarkService(models.Model):
         related_name='trademarks'
     )
 
-    applicant = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    email = models.EmailField()
+    # 🔥 TẤT CẢ TRƯỜNG ĐỀU blank=True, null=True
+    applicant = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Người nộp đơn'
+    )
+
+    address = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Địa chỉ'
+    )
+
+    email = models.EmailField(
+        blank=True,
+        null=True,
+        verbose_name='Email'
+    )
+
     phone = models.CharField(
         max_length=20,
         validators=[phone_validator],
+        blank=True,
+        null=True,
         verbose_name='Số điện thoại'
     )
 
-    app_no = models.CharField(max_length=50)
-    filing_date = models.DateField()
-    trademark_name = models.CharField(max_length=255)
+    # 🔥 SỐ ĐƠN: UNIQUE + CHO PHÉP TRỐNG (null=True cho phép nhiều giá trị NULL)
+    app_no = models.CharField(
+        max_length=50,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name='Số đơn'
+    )
+
+    filing_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Ngày nộp đơn'
+    )
+
+    trademark_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Tên nhãn hiệu'
+    )
+
     trademark_image = models.ImageField(
         upload_to='images/trademark/',
         blank=True,
-        null=True
+        null=True,
+        verbose_name='Hình ảnh nhãn hiệu'
     )
 
-    classification = models.TextField()
-    publish_date = models.DateField(blank=True, null=True)
-    decision_date = models.DateField(blank=True, null=True)
+    classification = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Nhóm sản phẩm/dịch vụ'
+    )
+
+    publish_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Ngày công bố'
+    )
+
+    decision_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Ngày cấp'
+    )
 
     certificate_file = models.FileField(
         upload_to='images/certificates/',
         blank=True,
-        null=True
+        null=True,
+        verbose_name='File chứng nhận'
     )
+
+    class Meta:
+        verbose_name = 'Nhãn hiệu'
+        verbose_name_plural = 'Nhãn hiệu'
+
+    def clean(self):
+        super().clean()
+        # 🔥 KIỂM TRA SỐ ĐƠN TRÙNG (chỉ khi có giá trị)
+        if self.app_no:
+            existing = TrademarkService.objects.filter(
+                app_no=self.app_no
+            ).exclude(pk=self.pk)
+
+            if existing.exists():
+                raise ValidationError({
+                    'app_no': f'Số đơn "{self.app_no}" đã tồn tại!'
+                })
+
+    def __str__(self):
+        return self.trademark_name or f"Nhãn hiệu #{self.id}"
 
 
 # ============================
@@ -395,19 +453,76 @@ class CopyrightService(models.Model):
         related_name='copyrights'
     )
 
-    work_name = models.CharField(max_length=255)
-    author = models.CharField(max_length=255)
-    owner = models.CharField(max_length=255)
-    owner_address = models.CharField(max_length=255)
+    work_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Tên tác phẩm'
+    )
 
-    type = models.CharField(max_length=255)
-    certificate_no = models.CharField(max_length=50)
+    author = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Tác giả'
+    )
+
+    owner = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Chủ sở hữu'
+    )
+
+    owner_address = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Địa chỉ chủ sở hữu'
+    )
+
+    type = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Loại hình tác phẩm'
+    )
+
+    # 🔥 SỐ CHỨNG NHẬN: UNIQUE + CHO PHÉP TRỐNG
+    certificate_no = models.CharField(
+        max_length=50,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name='Số chứng nhận'
+    )
 
     certificate_file = models.FileField(
         upload_to='images/certificates/',
         blank=True,
-        null=True
+        null=True,
+        verbose_name='File chứng nhận'
     )
+
+    class Meta:
+        verbose_name = 'Bản quyền'
+        verbose_name_plural = 'Bản quyền'
+
+    def clean(self):
+        super().clean()
+        # 🔥 KIỂM TRA SỐ CHỨNG NHẬN TRÙNG (chỉ khi có giá trị)
+        if self.certificate_no:
+            existing = CopyrightService.objects.filter(
+                certificate_no=self.certificate_no
+            ).exclude(pk=self.pk)
+
+            if existing.exists():
+                raise ValidationError({
+                    'certificate_no': f'Số chứng nhận "{self.certificate_no}" đã tồn tại!'
+                })
+
+    def __str__(self):
+        return self.work_name or f"Bản quyền #{self.id}"
 
 
 # ============================
@@ -420,29 +535,97 @@ class BusinessRegistrationService(models.Model):
         related_name='business'
     )
 
-    company_name = models.CharField(max_length=255)
-    business_type = models.CharField(max_length=100)
+    company_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Tên công ty'
+    )
 
-    tax_code = models.CharField(max_length=20, blank=True, null=True)
-    address = models.CharField(max_length=255)
+    business_type = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name='Loại hình kinh doanh'
+    )
 
-    email = models.EmailField()
+    # 🔥 MÃ SỐ THUẾ: UNIQUE + CHO PHÉP TRỐNG
+    tax_code = models.CharField(
+        max_length=20,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name='Mã số thuế'
+    )
+
+    address = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Địa chỉ'
+    )
+
+    email = models.EmailField(
+        blank=True,
+        null=True,
+        verbose_name='Email'
+    )
+
     phone = models.CharField(
         max_length=20,
         validators=[phone_validator],
+        blank=True,
+        null=True,
         verbose_name='Số điện thoại'
     )
 
-    legal_representative = models.CharField(max_length=255)
-    position = models.CharField(max_length=100)
+    legal_representative = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Người đại diện pháp luật'
+    )
 
-    charter_capital = models.CharField(max_length=100)
+    position = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name='Chức danh'
+    )
+
+    charter_capital = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name='Vốn điều lệ'
+    )
 
     certificate_file = models.FileField(
         upload_to='images/certificates/',
         blank=True,
-        null=True
+        null=True,
+        verbose_name='File chứng nhận'
     )
+
+    class Meta:
+        verbose_name = 'ĐKKD'
+        verbose_name_plural = 'ĐKKD'
+
+    def clean(self):
+        super().clean()
+        # 🔥 KIỂM TRA MÃ SỐ THUẾ TRÙNG (chỉ khi có giá trị)
+        if self.tax_code:
+            existing = BusinessRegistrationService.objects.filter(
+                tax_code=self.tax_code
+            ).exclude(pk=self.pk)
+
+            if existing.exists():
+                raise ValidationError({
+                    'tax_code': f'Mã số thuế "{self.tax_code}" đã tồn tại!'
+                })
+
+    def __str__(self):
+        return self.company_name or f"ĐKKD #{self.id}"
 
 
 # ============================
@@ -455,20 +638,75 @@ class InvestmentService(models.Model):
         related_name='investment'
     )
 
-    project_code = models.CharField(max_length=100)
-    investor = models.CharField(max_length=255)
+    # 🔥 MÃ DỰ ÁN: UNIQUE + CHO PHÉP TRỐNG
+    project_code = models.CharField(
+        max_length=100,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name='Mã dự án'
+    )
 
-    project_name = models.CharField(max_length=255)
-    objective = models.TextField()
+    investor = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Nhà đầu tư'
+    )
 
-    address = models.CharField(max_length=255)
-    total_capital = models.CharField(max_length=100)
+    project_name = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Tên dự án'
+    )
+
+    objective = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Mục tiêu dự án'
+    )
+
+    address = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Địa chỉ'
+    )
+
+    total_capital = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name='Tổng vốn'
+    )
 
     certificate_file = models.FileField(
         upload_to='images/certificates/',
         blank=True,
-        null=True
+        null=True,
+        verbose_name='File chứng nhận'
     )
+
+    class Meta:
+        verbose_name = 'Đầu tư'
+        verbose_name_plural = 'Đầu tư'
+
+    def clean(self):
+        super().clean()
+        # 🔥 KIỂM TRA MÃ DỰ ÁN TRÙNG (chỉ khi có giá trị)
+        if self.project_code:
+            existing = InvestmentService.objects.filter(
+                project_code=self.project_code
+            ).exclude(pk=self.pk)
+
+            if existing.exists():
+                raise ValidationError({
+                    'project_code': f'Mã dự án "{self.project_code}" đã tồn tại!'
+                })
+
+    def __str__(self):
+        return self.project_name or f"Dự án #{self.id}"
 
 
 # ============================
@@ -481,20 +719,53 @@ class OtherService(models.Model):
         related_name='other_service'
     )
 
-    description = models.TextField()
-    legal_representative = models.CharField(max_length=255,null=False)
-    position = models.CharField(max_length=100)
+    description = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name='Mô tả dịch vụ'
+    )
+
+    legal_representative = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Người đại diện'
+    )
+
+    position = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name='Chức danh'
+    )
+
     phone = models.CharField(
         max_length=20,
         validators=[phone_validator],
+        blank=True,
+        null=True,
         verbose_name='Số điện thoại'
     )
-    email = models.EmailField()
+
+    email = models.EmailField(
+        blank=True,
+        null=True,
+        verbose_name='Email'
+    )
+
     certificate_file = models.FileField(
         upload_to='images/certificates/',
         blank=True,
-        null=True
+        null=True,
+        verbose_name='File đính kèm'
     )
+
+    class Meta:
+        verbose_name = 'Dịch vụ khác'
+        verbose_name_plural = 'Dịch vụ khác'
+
+    def __str__(self):
+        return f"Dịch vụ khác #{self.id}"
 
 
 # ============================
@@ -517,8 +788,10 @@ class ContractHistory(models.Model):
 
     def __str__(self):
         return f"{self.contract.contract_no} - {self.action}"
+
+
 # ============================
-# carousel
+# CAROUSEL
 # ============================
 class Slider(models.Model):
     title = models.CharField(max_length=255)
@@ -528,6 +801,8 @@ class Slider(models.Model):
 
     def __str__(self):
         return self.title
+
+
 # ============================
 # MASCOT
 # ============================
@@ -543,8 +818,10 @@ class Mascot(models.Model):
 
     def __str__(self):
         return self.title
+
+
 # ============================
-#Nhãn hiệu độc quyền
+# NHÃN HIỆU ĐỘC QUYỀN
 # ============================
 class NhanHieuDocQuyen(models.Model):
     name = models.CharField("Tên nhãn hiệu", max_length=100, blank=True)

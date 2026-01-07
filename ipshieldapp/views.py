@@ -117,7 +117,7 @@ def add_contract(request):
                     print(f"   Non-form errors: {trademark_formset.non_form_errors()}")
 
                     contract.delete()
-                    
+
                     # Show formset errors properly
                     for idx, form_errors in enumerate(trademark_formset.errors):
                         if form_errors:
@@ -133,7 +133,8 @@ def add_contract(request):
                     return render(request, "add_contract.html", {
                         'contract_form': contract_form,
                         'trademark_formset': trademark_formset,  # Giữ nguyên formset để hiển thị lỗi
-                        'copyright_formset': CopyrightFormSet(prefix='copyright', queryset=CopyrightService.objects.none()),
+                        'copyright_formset': CopyrightFormSet(prefix='copyright',
+                                                              queryset=CopyrightService.objects.none()),
                         'business_form': BusinessRegistrationForm(),
                         'investment_form': InvestmentForm(),
                         'other_form': OtherServiceForm(),
@@ -143,56 +144,27 @@ def add_contract(request):
 
                 # Count valid forms BEFORE saving
                 valid_forms = [
-                    form for form in trademark_formset 
+                    form for form in trademark_formset
                     if form.cleaned_data and not form.cleaned_data.get('DELETE', False)
                 ]
-                
+
+                # 🔥 CHO PHÉP LƯU KHÔNG CẦN DỊCH VỤ
                 if len(valid_forms) == 0:
-                    contract.delete()
-                    messages.error(request, "⚠️ Vui lòng thêm ít nhất 1 nhãn hiệu!")
-                    
-                    # Return với formset để giữ nguyên dữ liệu đã nhập
-                    return render(request, "add_contract.html", {
-                        'contract_form': contract_form,
-                        'trademark_formset': trademark_formset,
-                        'copyright_formset': CopyrightFormSet(prefix='copyright', queryset=CopyrightService.objects.none()),
-                        'business_form': BusinessRegistrationForm(),
-                        'investment_form': InvestmentForm(),
-                        'other_form': OtherServiceForm(),
-                    })
-                
-                # Save valid forms
-                saved_count = 0
-                for idx, form in enumerate(valid_forms):
-                    print(f"   Form {idx}: {form.cleaned_data.get('trademark_name', 'N/A')}")
-                    
-                    instance = form.save(commit=False)
-                    instance.contract = contract
-                    instance.save()
-                    saved_count += 1
-                    print(f"   ✅ Saved trademark #{saved_count}")
-
-                print(f"✅ Saved {saved_count} trademarks")
-
-                # Get valid forms (not marked for deletion, has data)
-                saved_count = 0
-                for idx, form in enumerate(trademark_formset):
-                    if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
+                    print("⚠️ No trademark data provided, but contract saved")
+                    messages.warning(request, "⚠️ Hợp đồng đã lưu nhưng chưa có thông tin nhãn hiệu")
+                else:
+                    # Save valid forms
+                    saved_count = 0
+                    for idx, form in enumerate(valid_forms):
                         print(f"   Form {idx}: {form.cleaned_data.get('trademark_name', 'N/A')}")
 
-                        # Save instance
                         instance = form.save(commit=False)
                         instance.contract = contract
                         instance.save()
                         saved_count += 1
                         print(f"   ✅ Saved trademark #{saved_count}")
 
-                if saved_count == 0:
-                    contract.delete()
-                    messages.error(request, "⚠️ Vui lòng thêm ít nhất 1 nhãn hiệu!")
-                    return redirect('add_contract')
-
-                print(f"✅ Saved {saved_count} trademarks")
+                    print(f"✅ Saved {saved_count} trademarks")
 
             # ==================================================
             # 🔥 BẢN QUYỀN (COPYRIGHT)
@@ -215,7 +187,7 @@ def add_contract(request):
                     print(f"   Non-form errors: {copyright_formset.non_form_errors()}")
 
                     contract.delete()
-                    
+
                     for idx, form_errors in enumerate(copyright_formset.errors):
                         if form_errors:
                             for field, errors in form_errors.items():
@@ -228,7 +200,8 @@ def add_contract(request):
                     # 🔴 Return với context đầy đủ
                     return render(request, "add_contract.html", {
                         'contract_form': contract_form,
-                        'trademark_formset': TrademarkFormSet(prefix='trademark', queryset=TrademarkService.objects.none()),
+                        'trademark_formset': TrademarkFormSet(prefix='trademark',
+                                                              queryset=TrademarkService.objects.none()),
                         'copyright_formset': copyright_formset,  # Giữ nguyên formset
                         'business_form': BusinessRegistrationForm(),
                         'investment_form': InvestmentForm(),
@@ -239,35 +212,27 @@ def add_contract(request):
 
                 # Count valid forms BEFORE saving
                 valid_forms = [
-                    form for form in copyright_formset 
+                    form for form in copyright_formset
                     if form.cleaned_data and not form.cleaned_data.get('DELETE', False)
                 ]
-                
+
+                # 🔥 CHO PHÉP LƯU KHÔNG CẦN DỊCH VỤ
                 if len(valid_forms) == 0:
-                    contract.delete()
-                    messages.error(request, "⚠️ Vui lòng thêm ít nhất 1 bản quyền!")
-                    
-                    return render(request, "add_contract.html", {
-                        'contract_form': contract_form,
-                        'trademark_formset': TrademarkFormSet(prefix='trademark', queryset=TrademarkService.objects.none()),
-                        'copyright_formset': copyright_formset,
-                        'business_form': BusinessRegistrationForm(),
-                        'investment_form': InvestmentForm(),
-                        'other_form': OtherServiceForm(),
-                    })
+                    print("⚠️ No copyright data provided, but contract saved")
+                    messages.warning(request, "⚠️ Hợp đồng đã lưu nhưng chưa có thông tin bản quyền")
+                else:
+                    # Save valid forms
+                    saved_count = 0
+                    for idx, form in enumerate(valid_forms):
+                        print(f"   Form {idx}: {form.cleaned_data.get('work_name', 'N/A')}")
 
-                # Save valid forms
-                saved_count = 0
-                for idx, form in enumerate(valid_forms):
-                    print(f"   Form {idx}: {form.cleaned_data.get('work_name', 'N/A')}")
+                        instance = form.save(commit=False)
+                        instance.contract = contract
+                        instance.save()
+                        saved_count += 1
+                        print(f"   ✅ Saved copyright #{saved_count}")
 
-                    instance = form.save(commit=False)
-                    instance.contract = contract
-                    instance.save()
-                    saved_count += 1
-                    print(f"   ✅ Saved copyright #{saved_count}")
-
-                print(f"✅ Saved {saved_count} copyrights")
+                    print(f"✅ Saved {saved_count} copyrights")
 
             # ==================================================
             # OTHER SERVICES (DKKD, DAUTU, KHAC)
@@ -280,21 +245,28 @@ def add_contract(request):
                         for error in errors:
                             field_label = form.fields.get(field).label if field in form.fields else field
                             messages.error(request, f"ĐKKD - {field_label}: {error}")
-                    
+
                     # 🔴 Return với context đầy đủ
                     return render(request, "add_contract.html", {
                         'contract_form': contract_form,
-                        'trademark_formset': TrademarkFormSet(prefix='trademark', queryset=TrademarkService.objects.none()),
-                        'copyright_formset': CopyrightFormSet(prefix='copyright', queryset=CopyrightService.objects.none()),
+                        'trademark_formset': TrademarkFormSet(prefix='trademark',
+                                                              queryset=TrademarkService.objects.none()),
+                        'copyright_formset': CopyrightFormSet(prefix='copyright',
+                                                              queryset=CopyrightService.objects.none()),
                         'business_form': form,  # Giữ form để hiển thị lỗi
                         'investment_form': InvestmentForm(),
                         'other_form': OtherServiceForm(),
                     })
 
-                obj = form.save(commit=False)
-                obj.contract = contract
-                obj.save()
-                print("✅ Saved business registration")
+                # 🔥 CHỈ LƯU NẾU CÓ DỮ LIỆU
+                if any(form.cleaned_data.values()):
+                    obj = form.save(commit=False)
+                    obj.contract = contract
+                    obj.save()
+                    print("✅ Saved business registration")
+                else:
+                    print("⚠️ No business data provided")
+                    messages.warning(request, "⚠️ Hợp đồng đã lưu nhưng chưa có thông tin ĐKKD")
 
             elif service_type == 'dautu':
                 form = InvestmentForm(request.POST, request.FILES)
@@ -304,20 +276,27 @@ def add_contract(request):
                         for error in errors:
                             field_label = form.fields.get(field).label if field in form.fields else field
                             messages.error(request, f"Đầu tư - {field_label}: {error}")
-                    
+
                     return render(request, "add_contract.html", {
                         'contract_form': contract_form,
-                        'trademark_formset': TrademarkFormSet(prefix='trademark', queryset=TrademarkService.objects.none()),
-                        'copyright_formset': CopyrightFormSet(prefix='copyright', queryset=CopyrightService.objects.none()),
+                        'trademark_formset': TrademarkFormSet(prefix='trademark',
+                                                              queryset=TrademarkService.objects.none()),
+                        'copyright_formset': CopyrightFormSet(prefix='copyright',
+                                                              queryset=CopyrightService.objects.none()),
                         'business_form': BusinessRegistrationForm(),
                         'investment_form': form,  # Giữ form
                         'other_form': OtherServiceForm(),
                     })
 
-                obj = form.save(commit=False)
-                obj.contract = contract
-                obj.save()
-                print("✅ Saved investment")
+                # 🔥 CHỈ LƯU NẾU CÓ DỮ LIỆU
+                if any(form.cleaned_data.values()):
+                    obj = form.save(commit=False)
+                    obj.contract = contract
+                    obj.save()
+                    print("✅ Saved investment")
+                else:
+                    print("⚠️ No investment data provided")
+                    messages.warning(request, "⚠️ Hợp đồng đã lưu nhưng chưa có thông tin đầu tư")
 
             else:  # khac
                 form = OtherServiceForm(request.POST, request.FILES)
@@ -327,20 +306,27 @@ def add_contract(request):
                         for error in errors:
                             field_label = form.fields.get(field).label if field in form.fields else field
                             messages.error(request, f"Dịch vụ khác - {field_label}: {error}")
-                    
+
                     return render(request, "add_contract.html", {
                         'contract_form': contract_form,
-                        'trademark_formset': TrademarkFormSet(prefix='trademark', queryset=TrademarkService.objects.none()),
-                        'copyright_formset': CopyrightFormSet(prefix='copyright', queryset=CopyrightService.objects.none()),
+                        'trademark_formset': TrademarkFormSet(prefix='trademark',
+                                                              queryset=TrademarkService.objects.none()),
+                        'copyright_formset': CopyrightFormSet(prefix='copyright',
+                                                              queryset=CopyrightService.objects.none()),
                         'business_form': BusinessRegistrationForm(),
                         'investment_form': InvestmentForm(),
                         'other_form': form,  # Giữ form
                     })
 
-                obj = form.save(commit=False)
-                obj.contract = contract
-                obj.save()
-                print("✅ Saved other service")
+                # 🔥 CHỈ LƯU NẾU CÓ DỮ LIỆU
+                if any(form.cleaned_data.values()):
+                    obj = form.save(commit=False)
+                    obj.contract = contract
+                    obj.save()
+                    print("✅ Saved other service")
+                else:
+                    print("⚠️ No service data provided")
+                    messages.warning(request, "⚠️ Hợp đồng đã lưu nhưng chưa có thông tin dịch vụ")
 
             # ===== HANDLE PREPAID PAYMENT =====
             if contract.payment_type == 'installment':
@@ -351,7 +337,6 @@ def add_contract(request):
                     paid_amount=contract.prepaid_amount if contract.prepaid_amount else 0,
                     is_paid=contract.prepaid_amount >= contract.contract_value if contract.prepaid_amount else False
                 )
-
 
             # ===== UPDATE CUSTOMER STATUS =====
             customer = contract.customer
