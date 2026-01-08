@@ -44,7 +44,26 @@ urlpatterns = [
         views.download_certificate,
         name='download_certificate'
     ),
+    # URLs tải giấy chứng nhận cho từng loại dịch vụ
+    path('trademark/<int:trademark_id>/download/',
+         views.download_trademark_certificate,
+         name='download_trademark_certificate'),
 
+    path('copyright/<int:copyright_id>/download/',
+         views.download_copyright_certificate,
+         name='download_copyright_certificate'),
+
+    path('business/<int:business_id>/download/',
+         views.download_business_certificate,
+         name='download_business_certificate'),
+
+    path('investment/<int:investment_id>/download/',
+         views.download_investment_certificate,
+         name='download_investment_certificate'),
+
+    path('other-service/<int:other_id>/download/',
+         views.download_other_certificate,
+         name='download_other_certificate'),
     #login.css
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
