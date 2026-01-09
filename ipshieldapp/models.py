@@ -177,6 +177,13 @@ class Contract(models.Model):
         verbose_name='Số tiền trả trước'
     )
 
+    # 🟢 NGÀY THANH TOÁN (cho trả dứt điểm)
+    payment_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Ngày thanh toán'
+    )
+
     status = models.CharField(
         max_length=20,
         choices=CONTRACT_STATUS_CHOICES,
@@ -197,6 +204,12 @@ class Contract(models.Model):
 
     def clean(self):
         super().clean()
+        
+        if self.payment_type == 'full' and self.payment_date:
+            if self.prepaid_amount != self.contract_value:
+                raise ValidationError({
+                    'prepaid_amount': 'Thanh toán dứt điểm phải bằng giá trị hợp đồng'
+                })
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -607,6 +620,13 @@ class BusinessRegistrationService(models.Model):
         verbose_name='File chứng nhận'
     )
 
+    registration_certificate = models.FileField(
+        upload_to='images/certificates/',
+        blank=True,
+        null=True,
+        verbose_name='File chứng nhận đăng ký'
+    )
+    
     class Meta:
         verbose_name = 'ĐKKD'
         verbose_name_plural = 'ĐKKD'
@@ -835,3 +855,4 @@ class NhanHieuDocQuyen(models.Model):
 
     def __str__(self):
         return self.name or f"Nhãn hiệu {self.id}"
+    

@@ -33,7 +33,7 @@
                     <h5>Thông tin hợp đồng</h5>
                 </div>
                 <div class="form-content">
-                    <!-- Thêm ô tìm kiếm khách hàng -->
+                    <!-- Tìm kiếm khách hàng -->
                     <div class="customer-search-wrapper">
                         <label for="customer_search">Tìm kiếm khách hàng</label>
                         <div class="search-input-group">
@@ -52,6 +52,16 @@
                     </div>
 
                     {{ contract_form.as_p }}
+
+                    <!-- Trường ngày thanh toán (chỉ hiện khi chọn trả dứt điểm) -->
+                    <div id="payment_date_field" style="display: none;">
+                        <label for="id_payment_date">Ngày thanh toán <span style="color: #ef4444;">*</span></label>
+                        <input type="date" 
+                               name="payment_date" 
+                               id="id_payment_date"
+                               class="form-control">
+                        <small class="form-text text-muted">Chỉ nhập nếu đã thanh toán dứt điểm</small>
+                    </div>
                 </div>
             </div>
 
@@ -288,7 +298,67 @@
 <!-- ✅ CHỈ LOAD FILE JS - KHÔNG CÓ INLINE SCRIPT NỮA -->
 <script src="{% static 'js/add_contract.js' %}"></script>
 
+<script>
+// ✅ Logic hiển thị trường ngày thanh toán
+$(document).ready(function() {
+    const paymentTypeField = $('#id_payment_type');
+    const paymentDateField = $('#payment_date_field');
+    
+    // Hàm kiểm tra và hiển thị/ẩn trường ngày thanh toán
+    function togglePaymentDate() {
+        if (paymentTypeField.val() === 'full') {
+            paymentDateField.show();
+        } else {
+            paymentDateField.hide();
+            $('#id_payment_date').val(''); // Xóa giá trị khi ẩn
+        }
+    }
+    
+    // Chạy lần đầu khi load trang
+    togglePaymentDate();
+    
+    // Lắng nghe sự kiện thay đổi
+    paymentTypeField.on('change', togglePaymentDate);
+});
+</script>
+
 <style>
+/* Payment date field styling */
+#payment_date_field {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0fdf4;
+    border: 1px solid #86efac;
+    border-radius: 8px;
+}
+
+#payment_date_field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #166534;
+}
+
+#payment_date_field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #86efac;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+#payment_date_field input:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+#payment_date_field .form-text {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #16a34a;
+}
+
 /* Modal Styles */
 .modal-overlay {
     display: none;

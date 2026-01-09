@@ -441,7 +441,7 @@ def customer_edit(request, id):
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request,
-                                   f"{form.fields.get(field).label if field in form.fields else field}: {error}")
+                                f"{form.fields.get(field).label if field in form.fields else field}: {error}")
     else:
         form = CustomerForm(instance=customer)
 
