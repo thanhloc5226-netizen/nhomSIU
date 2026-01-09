@@ -44,6 +44,11 @@ urlpatterns = [
         views.download_certificate,
         name='download_certificate'
     ),
+    path(
+        'business/<int:business_id>/download-registration/',
+        views.register_certificate,
+        name='register_certificate'
+    ),
     # URLs tải giấy chứng nhận cho từng loại dịch vụ
     path('trademark/<int:trademark_id>/download/',
          views.download_trademark_certificate,
