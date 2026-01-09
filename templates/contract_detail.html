@@ -1,608 +1,602 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block body_block %}
-{% load humanize %}
-{% load static %}
-<link href="{% static 'css/contract_detail.css' %}" rel="stylesheet">
+  {% load humanize %}
+  {% load static %}
+  <link href="{% static 'css/contract_detail.css' %}" rel="stylesheet" />
 
-<div class="container mt-4">
-
+  <div class="container mt-4">
     <!-- Header -->
     <div class="contract-header">
-        <div class="header-left">
-            <div class="icon-wrapper">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                    <line x1="16" y1="13" x2="8" y2="13"></line>
-                    <line x1="16" y1="17" x2="8" y2="17"></line>
-                </svg>
-            </div>
-            <h2 class="mb-0">Chi tiết hợp đồng</h2>
+      <div class="header-left">
+        <div class="icon-wrapper">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
         </div>
-        <a href="{% url 'home' %}" class="btn-back">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            Quay lại
-        </a>
+        <h2 class="mb-0">Chi tiết hợp đồng</h2>
+      </div>
+      <a href="{% url 'home' %}" class="btn-back">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>Quay lại
+      </a>
     </div>
 
     <!-- Contract Info Card -->
     <div class="info-card mb-4">
-        <div class="info-grid">
-            <div class="info-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-                <div class="info-content">
-                    <span class="info-label">Khách hàng</span>
-                    <span class="info-value">{{ contract.customer.name }}</span>
-                </div>
-            </div>
-
-            <div class="info-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-                <div class="info-content">
-                    <span class="info-label">Ngày tạo</span>
-                    <span class="info-value">{{ contract.created_at|date:"d/m/Y" }}</span>
-                </div>
-            </div>
-
-            <div class="info-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                </svg>
-                <div class="info-content">
-                    <span class="info-label">Loại dịch vụ</span>
-                    <span class="service-badge">{{ contract.get_service_type_display }}</span>
-                </div>
-            </div>
-            <div class="info-item">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                </svg>
-                <div class="info-content">
-                    <span class="info-label">Tổng giá trị hợp đồng</span>
-                    <span class="service-badge">{{ contract.contract_value|intcomma }} VNĐ</span>
-                </div>
-            </div>
+      <div class="info-grid">
+        <div class="info-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <div class="info-content">
+            <span class="info-label">Khách hàng</span>
+            <span class="info-value">{{ contract.customer.name }}</span>
+          </div>
         </div>
+
+        <div class="info-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <div class="info-content">
+            <span class="info-label">Ngày tạo</span>
+            <span class="info-value">{{ contract.created_at|date:'d/m/Y' }}</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <div class="info-content">
+            <span class="info-label">Loại dịch vụ</span>
+            <span class="service-badge">{{ contract.get_service_type_display }}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <div class="info-content">
+            <span class="info-label">Tổng giá trị hợp đồng</span>
+            <span class="service-badge">{{ contract.contract_value|intcomma }} VNĐ</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- PAYMENT INFO CARD -->
-    {% if contract.payment_type == "installment" and contract.remaining_amount > 0 %}
-        <div class="payment-section no-print mb-4">
-            <h6>💳 CẬP NHẬT THANH TOÁN</h6>
-            {% for ins in installments %}
-                {% if not ins.is_paid %}
-                <form method="post" class="installment-item mb-2" style="border: 1px solid #eee; padding: 15px; border-radius: 8px;">
-                    {% csrf_token %}
-                    <div style="display:flex; gap:16px; align-items:center; flex-wrap: wrap;">
-                        <div style="font-size:13px;">Đã trả: <b>{{ contract.total_paid|intcomma }}</b></div>
-                        <div style="font-size:13px; color:#dc3545;">Thiếu: <b>{{ contract.remaining_amount|intcomma }}</b></div>
-                        
-                        <input type="datetime-local" name="paid_date" class="form-control" 
-                            style="width:220px;" required 
-                            value="{{ now|date:'Y-m-d\TH:i' }}">
-                        
-                        <input type="number" name="paid_amount" class="form-control" min="1" placeholder="Số tiền nộp" style="width:160px;" required>
-                        <input type="hidden" name="installment_id" value="{{ ins.id }}">
-                        
-                        <button type="submit" class="btn btn-sm btn-primary">💾 Thanh toán</button>
-                    </div>
-                </form>
-                {% endif %}
-            {% endfor %}
-        </div>
+    {% if contract.payment_type == 'installment' and contract.remaining_amount > 0 %}
+      <div class="payment-section no-print mb-4">
+        <h6>💳 CẬP NHẬT THANH TOÁN</h6>
+        {% for ins in installments %}
+          {% if not ins.is_paid %}
+            <form method="post" class="installment-item mb-2" style="border: 1px solid #eee; padding: 15px; border-radius: 8px;">
+              {% csrf_token %}
+              <div style="display:flex; gap:16px; align-items:center; flex-wrap: wrap;">
+                <div style="font-size:13px;">
+                  Đã trả: <b>{{ contract.total_paid|intcomma }}</b>
+                </div>
+                <div style="font-size:13px; color:#dc3545;">
+                  Thiếu: <b>{{ contract.remaining_amount|intcomma }}</b>
+                </div>
 
-    <!-- STATUS -->
-    {% elif contract.status == "completed" %}
-        <div class="alert alert-success">✓ Hợp đồng đã thanh toán xong</div>
+                <input type="datetime-local" name="paid_date" class="form-control" style="width:220px;" required value="{{ now|date:'Y-m-d\TH:i' }}" />
+
+                <input type="number" name="paid_amount" class="form-control" min="1" placeholder="Số tiền nộp" style="width:160px;" required />
+                <input type="hidden" name="installment_id" value="{{ ins.id }}" />
+
+                <button type="submit" class="btn btn-sm btn-primary">💾 Thanh toán</button>
+              </div>
+            </form>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- STATUS -->
+    {% elif contract.status == 'completed' %}
+      <div class="alert alert-success">✓ Hợp đồng đã thanh toán xong</div>
     {% endif %}
 
     <!-- Payment Logs -->
-<div class="mt-5">
-    <h6>📑 NHẬT KÝ GIAO DỊCH CHI TIẾT</h6>
-    <div class="table-responsive">
+    <div class="mt-5">
+      <h6>📑 NHẬT KÝ GIAO DỊCH CHI TIẾT</h6>
+      <div class="table-responsive">
         <table class="table table-sm table-bordered" style="font-size: 13px;">
-            <thead class="table-success">
-                <tr>
-                    <th>Thời gian</th>
-                    <th>Đợt</th>
-                    <th>Số tiền nộp</th>
-                    <th>Người thu</th>
-                    <th>Hóa đơn đỏ</th> </tr>
-            </thead>
-            <tbody>
-                {% for log in contract.payment_logs.all %}
-                <tr>
-                    <td>{{ log.paid_at|date:"d/m/Y H:i" }}</td>
-                    <td>ID giao dịch: {{ log.installment.id }}</td>
-                    <td class="text-primary fw-bold">+ {{ log.amount_paid|intcomma }} VNĐ</td>
-                    <td>{{ user.username }}</td>
-                    <td class="text-center" style="vertical-align: middle;">
-                        {% if log.is_exported_bill %}
-                            <div class="badge bg-light text-success border border-success" 
-                                style="cursor: pointer; font-size: 11px; line-height: 1.4; padding: 5px 8px; min-width: 80px;"
-                                title="Nhấn để xem chi tiết"
-                                onclick="showFullInfo('{{ log.bill_exported_at|date:'H:i' }}', '{{ log.bill_exported_at|date:'d/m/Y' }}')">
-                                <i class="bi bi-check-circle-fill d-block mb-1" style="font-size: 14px;"></i>
-                                <strong>{{ log.bill_exported_at|date:"H:i" }}</strong><br>
-                                {{ log.bill_exported_at|date:"d/m/Y" }}
-                            </div>
-                        {% else %}
-                            <form method="post" id="form-bill-{{ log.id }}" style="margin:0;">
-                                {% csrf_token %}
-                                <input type="hidden" name="action" value="log_toggle_bill">
-                                <input type="hidden" name="log_id" value="{{ log.id }}">
-                                <input type="checkbox" 
-                                    onchange="if(confirm('Xác nhận đã xuất hóa đơn cho giao dịch này?')) document.getElementById('form-bill-{{ log.id }}').submit();" 
-                                    style="transform: scale(1.3); cursor: pointer; accent-color: #198754;">
-                            </form>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center text-muted">Chưa có giao dịch nào được ghi lại.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+          <thead class="table-success">
+            <tr>
+              <th>Thời gian</th>
+              <th>Đợt</th>
+              <th>Số tiền nộp</th>
+              <th>Người thu</th>
+              <th>Hóa đơn đỏ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in contract.payment_logs.all %}
+              <tr>
+                <td>{{ log.paid_at|date:'d/m/Y H:i' }}</td>
+                <td>ID giao dịch: {{ log.installment.id }}</td>
+                <td class="text-primary fw-bold">+ {{ log.amount_paid|intcomma }} VNĐ</td>
+                <td>{{ user.username }}</td>
+                <td class="text-center" style="vertical-align: middle;">
+                  {% if log.is_exported_bill %}
+                    <div class="badge bg-light text-success border border-success" style="cursor: pointer; font-size: 11px; line-height: 1.4; padding: 5px 8px; min-width: 80px;" title="Nhấn để xem chi tiết" onclick="showFullInfo('{{ log.bill_exported_at|date:'H:i' }}', '{{ log.bill_exported_at|date:'d/m/Y' }}')">
+                      <i class="bi bi-check-circle-fill d-block mb-1" style="font-size: 14px;"></i>
+                      <strong>{{ log.bill_exported_at|date:'H:i' }}</strong><br />
+                      {{ log.bill_exported_at|date:'d/m/Y' }}
+                    </div>
+                  {% else %}
+                    <form method="post" id="form-bill-{{ log.id }}" style="margin:0;">
+                      {% csrf_token %}
+                      <input type="hidden" name="action" value="log_toggle_bill" />
+                      <input type="hidden" name="log_id" value="{{ log.id }}" />
+                      <input type="checkbox" onchange="if(confirm('Xác nhận đã xuất hóa đơn cho giao dịch này?')) document.getElementById('form-bill-{{ log.id }}').submit();" style="transform: scale(1.3); cursor: pointer; accent-color: #198754;" />
+                    </form>
+                  {% endif %}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="5" class="text-center text-muted">Chưa có giao dịch nào được ghi lại.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
         </table>
+      </div>
     </div>
-</div>
 
     <!-- Service Details Card -->
     <div class="service-card">
-        <div class="service-header">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-            </svg>
-            <h5>Thông tin dịch vụ</h5>
-        </div>
+      <div class="service-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+        <h5>Thông tin dịch vụ</h5>
+      </div>
 
-        <div class="service-content">
-
-             {% if contract.service_type == "nhanhieu" %}
-            <!-- ============================================ -->
-            <!-- NHÃN HIỆU -->
-            <!-- ============================================ -->
-            {% for s in service %}
+      <div class="service-content">
+        {% if contract.service_type == 'nhanhieu' %}
+          <!-- ============================================ -->
+          <!-- NHÃN HIỆU -->
+          <!-- ============================================ -->
+          {% for s in service %}
             <div class="service-item-card">
-                <div class="service-item-header">
-                    <h6 class="service-item-title">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                        </svg>
-                        Nhãn hiệu: {{ s.trademark_name|default:"Chưa đặt tên" }}
-                    </h6>
-                    <a href="{% url 'trademark_detail' s.id %}" class="btn-view-detail">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                        Xem chi tiết số đơn
-                    </a>
-                </div>
+              <div class="service-item-header">
+                <h6 class="service-item-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                  </svg>Nhãn hiệu: {{ s.trademark_name|default:'Chưa đặt tên' }}
+                </h6>
+                <a href="{% url 'trademark_detail' s.id %}" class="btn-view-detail">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>Xem chi tiết số đơn
+                </a>
+              </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="detail-grid">
-                            <div class="detail-item">
-                                <span class="detail-label">Chủ đơn</span>
-                                <span class="detail-value">{{ contract.customer.name }}</span>
-                            </div>
-
-                            <div class="detail-item">
-                                <span class="detail-label">Người nộp đơn</span>
-                                <span class="detail-value">{{ s.applicant }}</span>
-                            </div>
-
-                            <div class="detail-item">
-                                <span class="detail-label">Địa chỉ</span>
-                                <span class="detail-value">{{ s.address }}</span>
-                            </div>
-
-                            <div class="detail-item">
-                                <span class="detail-label">SĐT</span>
-                                <span class="detail-value">{{ s.phone }}</span>
-                            </div>
-
-                            <div class="detail-item">
-                                <span class="detail-label">Số đơn</span>
-                                <span class="highlight-text">{{ s.app_no }}</span>
-                            </div>
-
-                            <div class="detail-item">
-                                <span class="detail-label">Ngày nộp đơn</span>
-                                <span class="detail-value">{{ s.filing_date|date:"d/m/Y" }}</span>
-                            </div>
-
-                            <div class="detail-item">
-                                <span class="detail-label">Phân loại dịch vụ</span>
-                                <span class="detail-value">{{ s.classification }}</span>
-                            </div>
-
-                            <div class="detail-item">
-                                <span class="detail-label">Ngày công bố</span>
-                                <span class="detail-value">{{ s.publish_date|date:"d/m/Y" }}</span>
-                            </div>
-
-                            <div class="detail-item">
-                                <span class="detail-label">Ngày cấp</span>
-                                <span class="detail-value">{{ s.decision_date|date:"d/m/Y" }}</span>
-                            </div>
-                        </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="detail-grid">
+                    <div class="detail-item">
+                      <span class="detail-label">Chủ đơn</span>
+                      <span class="detail-value">{{ contract.customer.name }}</span>
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="image-section">
-                            <div class="image-label">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                     stroke="currentColor" stroke-width="2">
-                                    <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                    <polyline points="21 15 16 10 5 21"></polyline>
-                                </svg>
-                                <span>Nhãn hiệu + hình</span>
-                            </div>
-
-                            {% if s.trademark_image %}
-                            <div class="image-wrapper">
-                                <img src="{{ s.trademark_image.url }}"
-                                     alt="Trademark Image"
-                                     class="trademark-image">
-                            </div>
-                            {% else %}
-                            <div class="no-image">
-                                <p>Chưa có hình ảnh</p>
-                            </div>
-                            {% endif %}
-                        </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Người nộp đơn</span>
+                      <span class="detail-value">{{ s.applicant }}</span>
                     </div>
+
+                    <div class="detail-item">
+                      <span class="detail-label">Địa chỉ</span>
+                      <span class="detail-value">{{ s.address }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                      <span class="detail-label">SĐT</span>
+                      <span class="detail-value">{{ s.phone }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                      <span class="detail-label">Số đơn</span>
+                      <span class="highlight-text">{{ s.app_no }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                      <span class="detail-label">Ngày nộp đơn</span>
+                      <span class="detail-value">{{ s.filing_date|date:'d/m/Y' }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                      <span class="detail-label">Phân loại dịch vụ</span>
+                      <span class="detail-value">{{ s.classification }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                      <span class="detail-label">Ngày công bố</span>
+                      <span class="detail-value">{{ s.publish_date|date:'d/m/Y' }}</span>
+                    </div>
+
+                    <div class="detail-item">
+                      <span class="detail-label">Ngày cấp</span>
+                      <span class="detail-value">{{ s.decision_date|date:'d/m/Y' }}</span>
+                    </div>
+                  </div>
                 </div>
 
-                <!-- 👇 NÚT TẢI Ở CUỐI FORM - BÊN TRONG VÒNG LẶP -->
-                {% if s.certificate_file %}
+                <div class="col-md-6">
+                  <div class="image-section">
+                    <div class="image-label">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                      </svg>
+                      <span>Nhãn hiệu + hình</span>
+                    </div>
+
+                    {% if s.trademark_image %}
+                      <div class="image-wrapper">
+                        <img src="{{ s.trademark_image.url }}" alt="Trademark Image" class="trademark-image" />
+                      </div>
+                    {% else %}
+                      <div class="no-image">
+                        <p>Chưa có hình ảnh</p>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <!-- 👇 NÚT TẢI Ở CUỐI FORM - BÊN TRONG VÒNG LẶP -->
+              {% if s.certificate_file %}
                 <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
-                    <a href="{% url 'download_trademark_certificate' s.id %}" class="btn-view-detail" style="background: #28a745;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                        Tải giấy chứng nhận
-                    </a>
+                  <a href="{% url 'download_trademark_certificate' s.id %}" class="btn-view-detail" style="background: #28a745;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>Tải giấy chứng nhận
+                  </a>
                 </div>
-                {% endif %}
+              {% endif %}
             </div>
-            {% empty %}
-                <p>❌ Chưa có nhãn hiệu nào</p>
-            {% endfor %}
-
-            {% elif contract.service_type == "banquyen" %}
-            <!-- ============================================ -->
-            <!-- BẢN QUYỀN -->
-            <!-- ============================================ -->
-            {% for s in service %}
+          {% empty %}
+            <p>❌ Chưa có nhãn hiệu nào</p>
+          {% endfor %}
+        {% elif contract.service_type == 'banquyen' %}
+          <!-- ============================================ -->
+          <!-- BẢN QUYỀN -->
+          <!-- ============================================ -->
+          {% for s in service %}
             <div class="service-item-card">
+              <div class="service-item-header">
+                <h6 class="service-item-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M15 9.354a4 4 0 1 0 0 5.292"></path>
+                  </svg>Bản quyền: {{ s.work_name }}
+                </h6>
+                <a href="{% url 'copyright_detail' s.id %}" class="btn-view-detail">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>Xem chi tiết bản quyền
+                </a>
+              </div>
+
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <span class="detail-label">Tác phẩm</span>
+                  <span class="detail-value">{{ s.work_name }}</span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Tác giả</span>
+                  <span class="detail-value">{{ s.author }}</span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Chủ sở hữu</span>
+                  <span class="detail-value">{{ s.owner }}</span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Địa chỉ chủ sở hữu</span>
+                  <span class="detail-value">{{ s.owner_address }}</span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Loại hình</span>
+                  <span class="detail-value">{{ s.type }}</span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Số giấy chứng nhận</span>
+                  <span class="highlight-text">{{ s.certificate_no }}</span>
+                </div>
+              </div>
+              {% if trademark.attachments.exists %}
+                <div class="attachment-box">
+                  <h6>📎 Tài liệu đính kèm</h6>
+
+                  <form method="post" action="{% url 'download_trademark_attachments' %}">
+                    {% csrf_token %}
+
+                    {% for file in trademark.attachments.all %}
+                      <div class="attachment-item">
+                        <label><input type="checkbox" name="files" value="{{ file.id }}" />📄 {{ file.name }}</label>
+                      </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-primary">⬇️ Tải file đã chọn</button>
+                  </form>
+                </div>
+              {% endif %}
+
+              <!-- 👇 NÚT TẢI Ở CUỐI FORM -->
+              {% if s.certificate_file %}
+                <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
+                  <a href="{% url 'download_copyright_certificate' s.id %}" class="btn-view-detail" style="background: #28a745;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>Tải giấy chứng nhận
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+          {% empty %}
+            <p>❌ Chưa có bản quyền nào</p>
+          {% endfor %}
+        {% elif contract.service_type == 'dkkd' %}
+          <!-- ============================================ -->
+          <!-- ĐĂNG KÝ KINH DOANH -->
+          <!-- ============================================ -->
+          {% if service.first %}
+            {% with s=service.first %}
+              <div class="service-item-card">
                 <div class="service-item-header">
-                    <h6 class="service-item-title">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M15 9.354a4 4 0 1 0 0 5.292"></path>
-                        </svg>
-                        Bản quyền: {{ s.work_name }}
-                    </h6>
-                    <a href="{% url 'copyright_detail' s.id %}" class="btn-view-detail">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                            <circle cx="12" cy="12" r="3"></circle>
-                        </svg>
-                        Xem chi tiết bản quyền
-                    </a>
+                  <h6 class="service-item-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    </svg>
+                    {{ s.company_name }}
+                  </h6>
+                  <a href="{% url 'business_detail' s.id %}" class="btn-view-detail">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>Xem chi tiết ĐKKD
+                  </a>
                 </div>
 
                 <div class="detail-grid">
-                    <div class="detail-item">
-                        <span class="detail-label">Tác phẩm</span>
-                        <span class="detail-value">{{ s.work_name }}</span>
-                    </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Tên công ty</span>
+                    <span class="detail-value">{{ s.company_name }}</span>
+                  </div>
 
-                    <div class="detail-item">
-                        <span class="detail-label">Tác giả</span>
-                        <span class="detail-value">{{ s.author }}</span>
-                    </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Loại hình kinh doanh</span>
+                    <span class="detail-value">{{ s.business_type }}</span>
+                  </div>
 
-                    <div class="detail-item">
-                        <span class="detail-label">Chủ sở hữu</span>
-                        <span class="detail-value">{{ s.owner }}</span>
-                    </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Mã số thuế</span>
+                    <span class="highlight-text">{{ s.tax_code|default:'Chưa cập nhật' }}</span>
+                  </div>
 
-                    <div class="detail-item">
-                        <span class="detail-label">Địa chỉ chủ sở hữu</span>
-                        <span class="detail-value">{{ s.owner_address }}</span>
-                    </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Địa chỉ</span>
+                    <span class="detail-value">{{ s.address }}</span>
+                  </div>
 
-                    <div class="detail-item">
-                        <span class="detail-label">Loại hình</span>
-                        <span class="detail-value">{{ s.type }}</span>
-                    </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value">{{ s.email }}</span>
+                  </div>
 
+                  <div class="detail-item">
+                    <span class="detail-label">Số điện thoại</span>
+                    <span class="detail-value">{{ s.phone }}</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <span class="detail-label">Người đại diện pháp luật</span>
+                    <span class="detail-value">{{ s.legal_representative }}</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <span class="detail-label">Chức danh</span>
+                    <span class="detail-value">{{ s.position }}</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <span class="detail-label">Vốn điều lệ</span>
+                    <span class="detail-value">{{ s.charter_capital }}</span>
+                  </div>
+                  {% if s.registration_certificate %}
                     <div class="detail-item">
-                        <span class="detail-label">Số giấy chứng nhận</span>
-                        <span class="highlight-text">{{ s.certificate_no }}</span>
+                      <span class="detail-label">Giấy chứng nhận đăng ký kinh doanh</span>
+                      <a href="{% url 'register_certificate' s.id %}">Xem giấy đăng ký kinh doanh</a>
                     </div>
+                  {% endif %}
                 </div>
 
                 <!-- 👇 NÚT TẢI Ở CUỐI FORM -->
                 {% if s.certificate_file %}
-                <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
-                    <a href="{% url 'download_copyright_certificate' s.id %}" class="btn-view-detail" style="background: #28a745;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                        Tải giấy chứng nhận
+                  <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
+                    <a href="{% url 'download_business_certificate' s.id %}" class="btn-view-detail" style="background: #28a745;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                      </svg>Tải giấy chứng nhận
                     </a>
-                </div>
+                  </div>
                 {% endif %}
+              </div>
+            {% endwith %}
+          {% else %}
+            <p>❌ Chưa có thông tin đăng ký kinh doanh</p>
+          {% endif %}
+        {% elif contract.service_type == 'dautu' %}
+          <!-- ============================================ -->
+          <!-- ĐĂNG KÝ ĐẦU TƯ -->
+          <!-- ============================================ -->
+          {% if service.first %}
+            {% with s=service.first %}
+              <div class="service-item-card">
+                <div class="service-item-header">
+                  <h6 class="service-item-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="1" x2="12" y2="23"></line>
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    {{ s.project_name }}
+                  </h6>
+                  <a href="{% url 'investment_detail' s.id %}" class="btn-view-detail">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>Xem chi tiết dự án
+                  </a>
+                </div>
+
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <span class="detail-label">Mã dự án</span>
+                    <span class="highlight-text">{{ s.project_code }}</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <span class="detail-label">Nhà đầu tư</span>
+                    <span class="detail-value">{{ s.investor }}</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <span class="detail-label">Tên dự án</span>
+                    <span class="detail-value">{{ s.project_name }}</span>
+                  </div>
+
+                  <div class="detail-item full-width">
+                    <span class="detail-label">Mục tiêu dự án</span>
+                    <span class="detail-value">{{ s.objective }}</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <span class="detail-label">Địa chỉ dự án</span>
+                    <span class="detail-value">{{ s.address }}</span>
+                  </div>
+
+                  <div class="detail-item">
+                    <span class="detail-label">Vốn đầu tư</span>
+                    <span class="detail-value">{{ s.total_capital }}</span>
+                  </div>
+                </div>
+
+                <!-- 👇 NÚT TẢI Ở CUỐI FORM -->
+                {% if s.certificate_file %}
+                  <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
+                    <a href="{% url 'download_investment_certificate' s.id %}" class="btn-view-detail" style="background: #28a745;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                      </svg>Tải giấy chứng nhận
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            {% endwith %}
+          {% else %}
+            <p>❌ Chưa có thông tin đầu tư</p>
+          {% endif %}
+        {% elif contract.service_type == 'khac' %}
+          <!-- ============================================ -->
+          <!-- DỊCH VỤ KHÁC -->
+          <!-- ============================================ -->
+          {% for s in service %}
+            <div class="service-item-card">
+              <div class="service-item-header">
+                <h6 class="service-item-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>Dịch vụ khác
+                </h6>
+              </div>
+
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <span class="detail-label">Người liên hệ</span>
+                  <span class="detail-value">{{ s.legal_representative }}</span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Chức vụ</span>
+                  <span class="detail-value">{{ s.position }}</span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Số điện thoại</span>
+                  <span class="detail-value">{{ s.phone }}</span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Email</span>
+                  <span class="detail-value">{{ s.email }}</span>
+                </div>
+
+                <div class="detail-item full-width">
+                  <span class="detail-label">Mô tả dịch vụ</span>
+                  <span class="detail-value">{{ s.description }}</span>
+                </div>
+              </div>
+
+              <!-- 👇 NÚT TẢI Ở CUỐI FORM -->
+              {% if s.certificate_file %}
+                <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
+                  <a href="{% url 'download_other_certificate' s.id %}" class="btn-view-detail" style="background: #28a745;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>Tải file đính kèm
+                  </a>
+                </div>
+              {% endif %}
             </div>
-            {% empty %}
-                <p>❌ Chưa có bản quyền nào</p>
-            {% endfor %}
-
-            {% elif contract.service_type == "dkkd" %}
-            <!-- ============================================ -->
-            <!-- ĐĂNG KÝ KINH DOANH -->
-            <!-- ============================================ -->
-            {% if service.first %}
-                {% with s=service.first %}
-                <div class="service-item-card">
-                    <div class="service-item-header">
-                        <h6 class="service-item-title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                            </svg>
-                            {{ s.company_name }}
-                        </h6>
-                        <a href="{% url 'business_detail' s.id %}" class="btn-view-detail">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                            Xem chi tiết ĐKKD
-                        </a>
-                    </div>
-
-                    <div class="detail-grid">
-                        <div class="detail-item">
-                            <span class="detail-label">Tên công ty</span>
-                            <span class="detail-value">{{ s.company_name }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Loại hình kinh doanh</span>
-                            <span class="detail-value">{{ s.business_type }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Mã số thuế</span>
-                            <span class="highlight-text">{{ s.tax_code|default:"Chưa cập nhật" }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Địa chỉ</span>
-                            <span class="detail-value">{{ s.address }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Email</span>
-                            <span class="detail-value">{{ s.email }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Số điện thoại</span>
-                            <span class="detail-value">{{ s.phone }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Người đại diện pháp luật</span>
-                            <span class="detail-value">{{ s.legal_representative }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Chức danh</span>
-                            <span class="detail-value">{{ s.position }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Vốn điều lệ</span>
-                            <span class="detail-value">{{ s.charter_capital }}</span>
-                        </div>
-                    </div>
-
-                    <!-- 👇 NÚT TẢI Ở CUỐI FORM -->
-                    {% if s.certificate_file %}
-                    <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
-                        <a href="{% url 'download_business_certificate' s.id %}" class="btn-view-detail" style="background: #28a745;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                            Tải giấy chứng nhận
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
-                {% endwith %}
-            {% else %}
-                <p>❌ Chưa có thông tin đăng ký kinh doanh</p>
-            {% endif %}
-
-            {% elif contract.service_type == "dautu" %}
-            <!-- ============================================ -->
-            <!-- ĐĂNG KÝ ĐẦU TƯ -->
-            <!-- ============================================ -->
-            {% if service.first %}
-                {% with s=service.first %}
-                <div class="service-item-card">
-                    <div class="service-item-header">
-                        <h6 class="service-item-title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                            {{ s.project_name }}
-                        </h6>
-                        <a href="{% url 'investment_detail' s.id %}" class="btn-view-detail">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                            Xem chi tiết dự án
-                        </a>
-                    </div>
-
-                    <div class="detail-grid">
-                        <div class="detail-item">
-                            <span class="detail-label">Mã dự án</span>
-                            <span class="highlight-text">{{ s.project_code }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Nhà đầu tư</span>
-                            <span class="detail-value">{{ s.investor }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Tên dự án</span>
-                            <span class="detail-value">{{ s.project_name }}</span>
-                        </div>
-
-                        <div class="detail-item full-width">
-                            <span class="detail-label">Mục tiêu dự án</span>
-                            <span class="detail-value">{{ s.objective }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Địa chỉ dự án</span>
-                            <span class="detail-value">{{ s.address }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Vốn đầu tư</span>
-                            <span class="detail-value">{{ s.total_capital }}</span>
-                        </div>
-                    </div>
-
-                    <!-- 👇 NÚT TẢI Ở CUỐI FORM -->
-                    {% if s.certificate_file %}
-                    <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
-                        <a href="{% url 'download_investment_certificate' s.id %}" class="btn-view-detail" style="background: #28a745;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                            Tải giấy chứng nhận
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
-                {% endwith %}
-            {% else %}
-                <p>❌ Chưa có thông tin đầu tư</p>
-            {% endif %}
-
-            {% elif contract.service_type == "khac" %}
-            <!-- ============================================ -->
-            <!-- DỊCH VỤ KHÁC -->
-            <!-- ============================================ -->
-            {% for s in service %}
-                <div class="service-item-card">
-                    <div class="service-item-header">
-                        <h6 class="service-item-title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="16" x2="12" y2="12"></line>
-                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                            </svg>
-                            Dịch vụ khác
-                        </h6>
-                    </div>
-
-                    <div class="detail-grid">
-                        <div class="detail-item">
-                            <span class="detail-label">Người liên hệ</span>
-                            <span class="detail-value">{{ s.legal_representative }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Chức vụ</span>
-                            <span class="detail-value">{{ s.position }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Số điện thoại</span>
-                            <span class="detail-value">{{ s.phone }}</span>
-                        </div>
-
-                        <div class="detail-item">
-                            <span class="detail-label">Email</span>
-                            <span class="detail-value">{{ s.email }}</span>
-                        </div>
-
-                        <div class="detail-item full-width">
-                            <span class="detail-label">Mô tả dịch vụ</span>
-                            <span class="detail-value">{{ s.description }}</span>
-                        </div>
-                    </div>
-
-                    <!-- 👇 NÚT TẢI Ở CUỐI FORM -->
-                    {% if s.certificate_file %}
-                    <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
-                        <a href="{% url 'download_other_certificate' s.id %}" class="btn-view-detail" style="background: #28a745;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                            Tải file đính kèm
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
-            {% empty %}
-                <p>❌ Chưa có dịch vụ khác</p>
-            {% endfor %}
-
-            {% endif %}
-
-        </div>
+          {% empty %}
+            <p>❌ Chưa có dịch vụ khác</p>
+          {% endfor %}
+        {% endif %}
+      </div>
     </div>
     <!-- Edit Button -->
     <div class="bottom-actions">
-        <a href="{% url 'contract_edit' contract.id %}" class="btn-edit-contract">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-            </svg>
-            Sửa hợp đồng
-        </a>
+      <a href="{% url 'contract_edit' contract.id %}" class="btn-edit-contract">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+        </svg>Sửa hợp đồng
+      </a>
     </div>
-
-</div>
-
+  </div>
 {% endblock %}

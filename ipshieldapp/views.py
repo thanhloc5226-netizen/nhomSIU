@@ -91,7 +91,7 @@ def add_contract(request):
         try:
             contract.save()
             print(f"✅ Contract saved: {contract.contract_no}")
-
+            
             # ===== HANDLE SERVICE BASED ON TYPE =====
             service_type = contract.service_type
             print(f"\n📦 Processing service type: {service_type}")
@@ -156,13 +156,19 @@ def add_contract(request):
                     # Save valid forms
                     saved_count = 0
                     for idx, form in enumerate(valid_forms):
-                        print(f"   Form {idx}: {form.cleaned_data.get('trademark_name', 'N/A')}")
-
                         instance = form.save(commit=False)
                         instance.contract = contract
                         instance.save()
-                        saved_count += 1
-                        print(f"   ✅ Saved trademark #{saved_count}")
+
+                        # ===== HANDLE ATTACHMENTS =====
+                        files = request.FILES.getlist(f'trademark_files_{idx}')
+
+                        for f in files:
+                            TrademarkAttachment.objects.create(
+                                trademark=instance,
+                                file=f,
+                                name = f.name
+                            )
 
                     print(f"✅ Saved {saved_count} trademarks")
 
@@ -224,16 +230,18 @@ def add_contract(request):
                     # Save valid forms
                     saved_count = 0
                     for idx, form in enumerate(valid_forms):
-                        print(f"   Form {idx}: {form.cleaned_data.get('work_name', 'N/A')}")
-
                         instance = form.save(commit=False)
                         instance.contract = contract
                         instance.save()
-                        saved_count += 1
-                        print(f"   ✅ Saved copyright #{saved_count}")
 
-                    print(f"✅ Saved {saved_count} copyrights")
+                        files = request.FILES.getlist(f'copyright_files_{idx}')
 
+                        for f in files:
+                            CopyrightAttachment.objects.create(
+                                copyright=instance,
+                                file=f,
+                                name=f.name
+                            )
             # ==================================================
             # OTHER SERVICES (DKKD, DAUTU, KHAC)
             # ==================================================
@@ -263,6 +271,13 @@ def add_contract(request):
                     obj = form.save(commit=False)
                     obj.contract = contract
                     obj.save()
+                    files = request.FILES.getlist('business_files')
+                    for f in files:
+                        BusinessAttachment.objects.create(
+                            business=obj,
+                            file=f,
+                            name=f.name
+                        )
                     print("✅ Saved business registration")
                 else:
                     print("⚠️ No business data provided")
@@ -293,6 +308,14 @@ def add_contract(request):
                     obj = form.save(commit=False)
                     obj.contract = contract
                     obj.save()
+                    files = request.FILES.getlist('investment_files')
+                    for f in files:
+                        InvestmentAttachment.objects.create(
+                            investment=obj,
+                            file=f,
+                            name=f.name
+                        )
+
                     print("✅ Saved investment")
                 else:
                     print("⚠️ No investment data provided")
@@ -599,7 +622,11 @@ def contract_detail(request, id):
 # ===============================================
 # CONTRACT EDIT (ĐÃ SỬA - CẬP NHẬT TRẠNG THÁI)
 # ===============================================
+@login_required
 def contract_edit(request, id):
+    # ==========================
+    # 1. LẤY HỢP ĐỒNG
+    # ==========================
     contract = get_object_or_404(Contract, id=id)
 
     contract_form = None
@@ -607,13 +634,13 @@ def contract_edit(request, id):
     service_formset = None
 
     # ==========================
-    # XÁC ĐỊNH DỊCH VỤ
+    # 2. XÁC ĐỊNH LOẠI DỊCH VỤ
     # ==========================
-    FormSetClass = None
-    ServiceForm = None
-    service = None
+    FormSetClass = None     # Dùng cho nhanhieu / banquyen
+    ServiceForm = None      # Dùng cho dkkd / dautu / khac
     queryset = None
     prefix = None
+    service = None
 
     if contract.service_type == "nhanhieu":
         FormSetClass = TrademarkFormSet
@@ -626,24 +653,26 @@ def contract_edit(request, id):
         prefix = "copyright"
 
     elif contract.service_type == "dkkd":
-        service = get_object_or_404(BusinessRegistrationService, contract=contract)
         ServiceForm = BusinessRegistrationForm
+        service = BusinessRegistrationService.objects.filter(contract=contract).first()
 
     elif contract.service_type == "dautu":
-        service = get_object_or_404(InvestmentService, contract=contract)
         ServiceForm = InvestmentForm
+        service = InvestmentService.objects.filter(contract=contract).first()
 
-    else:  # khac
-        service = get_object_or_404(OtherService, contract=contract)
+    else:  # 🔥 khac
         ServiceForm = OtherServiceForm
+        service = OtherService.objects.filter(contract=contract).first()
 
     # ==========================
-    # POST
+    # 3. POST – LƯU DỮ LIỆU
     # ==========================
     if request.method == "POST":
+        # 🔒 KHÓA TRƯỜNG HỢP ĐỒNG
         contract_form = ContractForm(request.POST, instance=contract)
         lock_contract_fields(contract_form)
 
+        # ===== 3.1 FORMSET (NHÃN HIỆU / BẢN QUYỀN) =====
         if FormSetClass:
             service_formset = FormSetClass(
                 request.POST,
@@ -653,35 +682,42 @@ def contract_edit(request, id):
             )
 
             if contract_form.is_valid() and service_formset.is_valid():
+                # Lưu hợp đồng (chỉ những field cho phép)
                 contract_form.save()
 
+                # Lưu / update service
                 instances = service_formset.save(commit=False)
                 for obj in instances:
                     obj.contract = contract
                     obj.save()
 
+                # Xóa service bị đánh dấu DELETE
                 for obj in service_formset.deleted_objects:
                     obj.delete()
 
                 messages.success(request, "✅ Cập nhật hợp đồng thành công!")
                 return redirect("contract_detail", id=contract.id)
 
+        # ===== 3.2 SERVICE ĐƠN (DKKD / ĐẦU TƯ / KHÁC) =====
         else:
             service_form = ServiceForm(
                 request.POST,
                 request.FILES,
-                instance=service
+                instance=service   # 🔥 có thì update, không có thì tạo
             )
 
             if contract_form.is_valid() and service_form.is_valid():
                 contract_form.save()
-                service_form.save()
+
+                obj = service_form.save(commit=False)
+                obj.contract = contract   # 🔥 đảm bảo gắn contract
+                obj.save()
 
                 messages.success(request, "✅ Cập nhật hợp đồng thành công!")
                 return redirect("contract_detail", id=contract.id)
 
     # ==========================
-    # GET
+    # 4. GET – HIỂN THỊ FORM
     # ==========================
     else:
         contract_form = ContractForm(instance=contract)
@@ -696,15 +732,14 @@ def contract_edit(request, id):
             service_form = ServiceForm(instance=service)
 
     # ==========================
-    # RENDER
+    # 5. RENDER
     # ==========================
     return render(request, "contract_edit.html", {
         "contract": contract,
         "contract_form": contract_form,
-        "service_formset": service_formset,  # 🔥 KHỚP TEMPLATE
+        "service_formset": service_formset,
         "service_form": service_form,
     })
-
 
 
 
@@ -736,6 +771,28 @@ def download_certificate(request, id):
         as_attachment=True,
         filename=os.path.basename(service.certificate_file.name)
     )
+    
+def register_certificate(request, business_id):
+    business = get_object_or_404(
+        BusinessRegistrationService,
+        id=business_id
+    )
+    file_field = business.registration_certificate
+
+    if not file_field:
+        raise Http404("Chưa có file đăng ký kinh doanh")
+
+    file_path = file_field.path
+
+    if not os.path.exists(file_path):
+        raise Http404("File không tồn tại")
+
+    return FileResponse(
+        open(file_path, 'rb'),
+        as_attachment=True,
+        filename=os.path.basename(file_path)
+    )
+    
 # ===============================================
 # CUSTOMER CREATE
 # ===============================================
@@ -1243,6 +1300,7 @@ def download_other_certificate(request, other_id):
         as_attachment=True,
         filename=filename
     )
+# FILE ĐÍNH KÈM
 
 
 # Bảo vệ các views mới

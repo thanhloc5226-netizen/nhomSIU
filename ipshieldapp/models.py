@@ -193,6 +193,7 @@ class Contract(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(default=timezone.now)
 
+    
     class Meta:
         verbose_name = 'Hợp đồng'
         verbose_name_plural = 'Hợp đồng'
@@ -621,10 +622,10 @@ class BusinessRegistrationService(models.Model):
     )
 
     registration_certificate = models.FileField(
-        upload_to='images/certificates/',
+        upload_to='images/registration_certificates/',
         blank=True,
         null=True,
-        verbose_name='File chứng nhận đăng ký'
+        verbose_name='File chứng nhận đăng ký kinh doanh'
     )
     
     class Meta:
@@ -856,3 +857,4 @@ class NhanHieuDocQuyen(models.Model):
     def __str__(self):
         return self.name or f"Nhãn hiệu {self.id}"
     
+# Tài liệu đính kèm //
