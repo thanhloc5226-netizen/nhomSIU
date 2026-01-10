@@ -222,7 +222,7 @@ class TrademarkForm(forms.ModelForm):
             'classification': 'Nhóm sản phẩm/dịch vụ',
             'publish_date': 'Ngày công bố',
             'decision_date': 'Ngày cấp',
-            'certificate_file': 'File chứng nhận',
+            'certificates': 'File chứng nhận',
         }
 
         widgets = {
@@ -236,7 +236,7 @@ class TrademarkForm(forms.ModelForm):
             'publish_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'decision_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'trademark_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'certificate_file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'certificates': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -255,7 +255,7 @@ class CopyrightForm(forms.ModelForm):
             'owner_address': 'Địa chỉ chủ sở hữu',
             'type': 'Loại hình tác phẩm',
             'certificate_no': 'Số chứng nhận',
-            'certificate_file': 'File chứng nhận',
+            'certificates': 'File chứng nhận',
         }
 
         widgets = {
@@ -265,7 +265,7 @@ class CopyrightForm(forms.ModelForm):
             'owner_address': forms.TextInput(attrs={'class': 'form-control'}),
             'type': forms.TextInput(attrs={'class': 'form-control'}),
             'certificate_no': forms.TextInput(attrs={'class': 'form-control'}),
-            'certificate_file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'certificates': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -287,7 +287,7 @@ class BusinessRegistrationForm(forms.ModelForm):
             'legal_representative': 'Người đại diện pháp luật',
             'position': 'Chức danh',
             'charter_capital': 'Vốn điều lệ',
-            'certificate_file': 'File chứng nhận',
+            'certificates': 'File chứng nhận',
         }
 
         widgets = {
@@ -300,7 +300,7 @@ class BusinessRegistrationForm(forms.ModelForm):
             'legal_representative': forms.TextInput(attrs={'class': 'form-control'}),
             'position': forms.TextInput(attrs={'class': 'form-control'}),
             'charter_capital': forms.TextInput(attrs={'class': 'form-control'}),
-            'certificate_file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'certificates': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -319,7 +319,7 @@ class InvestmentForm(forms.ModelForm):
             'objective': 'Mục tiêu dự án',
             'address': 'Địa chỉ',
             'total_capital': 'Tổng vốn',
-            'certificate_file': 'File chứng nhận',
+            'certificates': 'File chứng nhận',
         }
 
         widgets = {
@@ -329,7 +329,7 @@ class InvestmentForm(forms.ModelForm):
             'objective': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'address': forms.TextInput(attrs={'class': 'form-control'}),
             'total_capital': forms.TextInput(attrs={'class': 'form-control'}),
-            'certificate_file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'certificates': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -347,7 +347,7 @@ class OtherServiceForm(forms.ModelForm):
             'position': 'Chức danh',
             'phone': 'Số điện thoại',
             'email': 'Email',
-            'certificate_file': 'File đính kèm',
+            'certificates': 'File đính kèm',
         }
 
         widgets = {
@@ -356,7 +356,7 @@ class OtherServiceForm(forms.ModelForm):
             'position': forms.TextInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Chỉ nhập số'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'certificate_file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'certificates': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 from .models import PaymentInstallment
 

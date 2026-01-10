@@ -129,12 +129,11 @@ def add_contract(request):
                     for error in trademark_formset.non_form_errors():
                         messages.error(request, f"Lỗi formset: {error}")
 
-                    # 🔴 QUAN TRỌNG: Return với context đầy đủ
                     return render(request, "add_contract.html", {
                         'contract_form': contract_form,
-                        'trademark_formset': trademark_formset,  # Giữ nguyên formset để hiển thị lỗi
+                        'trademark_formset': trademark_formset,
                         'copyright_formset': CopyrightFormSet(prefix='copyright',
-                                                              queryset=CopyrightService.objects.none()),
+                                                            queryset=CopyrightService.objects.none()),
                         'business_form': BusinessRegistrationForm(),
                         'investment_form': InvestmentForm(),
                         'other_form': OtherServiceForm(),
@@ -156,19 +155,23 @@ def add_contract(request):
                     # Save valid forms
                     saved_count = 0
                     for idx, form in enumerate(valid_forms):
+                        # 🔥 LƯU TRADEMARK TRƯỚC
                         instance = form.save(commit=False)
                         instance.contract = contract
                         instance.save()
+                        saved_count += 1
 
-                        # ===== HANDLE ATTACHMENTS =====
+                        # 🔥 SAU ĐÓ MỚI XỬ LÝ FILE (instance đã tồn tại)
                         files = request.FILES.getlist(f'trademark_files_{idx}')
+                        print(f"   📎 Found {len(files)} files for trademark #{idx}")
 
                         for f in files:
-                            TrademarkAttachment.objects.create(
-                                trademark=instance,
+                            Certificate.objects.create(
+                                content_object=instance,
                                 file=f,
-                                name = f.name
+                                name=f.name,
                             )
+                            print(f"      ✅ Saved file: {f.name}")
 
                     print(f"✅ Saved {saved_count} trademarks")
 
@@ -203,12 +206,11 @@ def add_contract(request):
                     for error in copyright_formset.non_form_errors():
                         messages.error(request, f"Lỗi formset: {error}")
 
-                    # 🔴 Return với context đầy đủ
                     return render(request, "add_contract.html", {
                         'contract_form': contract_form,
                         'trademark_formset': TrademarkFormSet(prefix='trademark',
-                                                              queryset=TrademarkService.objects.none()),
-                        'copyright_formset': copyright_formset,  # Giữ nguyên formset
+                                                            queryset=TrademarkService.objects.none()),
+                        'copyright_formset': copyright_formset,
                         'business_form': BusinessRegistrationForm(),
                         'investment_form': InvestmentForm(),
                         'other_form': OtherServiceForm(),
@@ -230,18 +232,25 @@ def add_contract(request):
                     # Save valid forms
                     saved_count = 0
                     for idx, form in enumerate(valid_forms):
+                        # 🔥 LƯU COPYRIGHT TRƯỚC
                         instance = form.save(commit=False)
                         instance.contract = contract
                         instance.save()
+                        saved_count += 1
 
+                        # 🔥 SAU ĐÓ MỚI XỬ LÝ FILE
                         files = request.FILES.getlist(f'copyright_files_{idx}')
+                        print(f"   📎 Found {len(files)} files for copyright #{idx}")
 
                         for f in files:
-                            CopyrightAttachment.objects.create(
-                                copyright=instance,
+                            Certificate.objects.create(
+                                content_object=instance,
                                 file=f,
-                                name=f.name
+                                name=f.name,
                             )
+                            print(f"      ✅ Saved file: {f.name}")
+
+                    print(f"✅ Saved {saved_count} copyrights")
             # ==================================================
             # OTHER SERVICES (DKKD, DAUTU, KHAC)
             # ==================================================
@@ -254,30 +263,36 @@ def add_contract(request):
                             field_label = form.fields.get(field).label if field in form.fields else field
                             messages.error(request, f"ĐKKD - {field_label}: {error}")
 
-                    # 🔴 Return với context đầy đủ
                     return render(request, "add_contract.html", {
                         'contract_form': contract_form,
                         'trademark_formset': TrademarkFormSet(prefix='trademark',
-                                                              queryset=TrademarkService.objects.none()),
+                                                            queryset=TrademarkService.objects.none()),
                         'copyright_formset': CopyrightFormSet(prefix='copyright',
-                                                              queryset=CopyrightService.objects.none()),
-                        'business_form': form,  # Giữ form để hiển thị lỗi
+                                                            queryset=CopyrightService.objects.none()),
+                        'business_form': form,
                         'investment_form': InvestmentForm(),
                         'other_form': OtherServiceForm(),
                     })
 
                 # 🔥 CHỈ LƯU NẾU CÓ DỮ LIỆU
                 if any(form.cleaned_data.values()):
+                    # 🔥 LƯU BUSINESS TRƯỚC
                     obj = form.save(commit=False)
                     obj.contract = contract
                     obj.save()
+                    
+                    # 🔥 SAU ĐÓ MỚI XỬ LÝ FILE
                     files = request.FILES.getlist('business_files')
+                    print(f"   📎 Found {len(files)} files for business")
+                    
                     for f in files:
-                        BusinessAttachment.objects.create(
-                            business=obj,
+                        Certificate.objects.create(
+                            content_object=obj,
                             file=f,
-                            name=f.name
+                            name=f.name,
                         )
+                        print(f"      ✅ Saved file: {f.name}")
+                    
                     print("✅ Saved business registration")
                 else:
                     print("⚠️ No business data provided")
@@ -295,26 +310,32 @@ def add_contract(request):
                     return render(request, "add_contract.html", {
                         'contract_form': contract_form,
                         'trademark_formset': TrademarkFormSet(prefix='trademark',
-                                                              queryset=TrademarkService.objects.none()),
+                                                            queryset=TrademarkService.objects.none()),
                         'copyright_formset': CopyrightFormSet(prefix='copyright',
-                                                              queryset=CopyrightService.objects.none()),
+                                                            queryset=CopyrightService.objects.none()),
                         'business_form': BusinessRegistrationForm(),
-                        'investment_form': form,  # Giữ form
+                        'investment_form': form,
                         'other_form': OtherServiceForm(),
                     })
 
                 # 🔥 CHỈ LƯU NẾU CÓ DỮ LIỆU
                 if any(form.cleaned_data.values()):
+                    # 🔥 LƯU INVESTMENT TRƯỚC
                     obj = form.save(commit=False)
                     obj.contract = contract
                     obj.save()
+                    
+                    # 🔥 SAU ĐÓ MỚI XỬ LÝ FILE
                     files = request.FILES.getlist('investment_files')
+                    print(f"   📎 Found {len(files)} files for investment")
+                    
                     for f in files:
-                        InvestmentAttachment.objects.create(
-                            investment=obj,
+                        Certificate.objects.create(
+                            content_object=obj,
                             file=f,
-                            name=f.name
+                            name=f.name,
                         )
+                        print(f"      ✅ Saved file: {f.name}")
 
                     print("✅ Saved investment")
                 else:
@@ -333,19 +354,33 @@ def add_contract(request):
                     return render(request, "add_contract.html", {
                         'contract_form': contract_form,
                         'trademark_formset': TrademarkFormSet(prefix='trademark',
-                                                              queryset=TrademarkService.objects.none()),
+                                                            queryset=TrademarkService.objects.none()),
                         'copyright_formset': CopyrightFormSet(prefix='copyright',
-                                                              queryset=CopyrightService.objects.none()),
+                                                            queryset=CopyrightService.objects.none()),
                         'business_form': BusinessRegistrationForm(),
                         'investment_form': InvestmentForm(),
-                        'other_form': form,  # Giữ form
+                        'other_form': form,
                     })
 
                 # 🔥 CHỈ LƯU NẾU CÓ DỮ LIỆU
                 if any(form.cleaned_data.values()):
+                    # 🔥 LƯU OTHER SERVICE TRƯỚC
                     obj = form.save(commit=False)
                     obj.contract = contract
                     obj.save()
+                    
+                    # 🔥 SAU ĐÓ MỚI XỬ LÝ FILE
+                    files = request.FILES.getlist('other_files')
+                    print(f"   📎 Found {len(files)} files for other service")
+                    
+                    for f in files:
+                        Certificate.objects.create(
+                            content_object=obj,
+                            file=f,
+                            name=f.name,
+                        )
+                        print(f"      ✅ Saved file: {f.name}")
+                    
                     print("✅ Saved other service")
                 else:
                     print("⚠️ No service data provided")
@@ -1301,7 +1336,17 @@ def download_other_certificate(request, other_id):
         filename=filename
     )
 # FILE ĐÍNH KÈM
+def delete_certificate(request, pk):
+    cert = get_object_or_404(Certificate, pk=pk)
 
+    # xóa file vật lý
+    if cert.file:
+        cert.file.delete(save=False)
+
+    contract_id = cert.content_object.contract.id  # quay về đúng hợp đồng
+    cert.delete()
+
+    return redirect("contract_detail", contract_id)
 
 # Bảo vệ các views mới
 protect_views(

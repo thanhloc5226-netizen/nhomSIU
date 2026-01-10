@@ -3,7 +3,8 @@ from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db.models import Sum
-
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 # ============================
 # VALIDATORS (THÔNG BÁO TV)
 # ============================
@@ -239,7 +240,7 @@ class Contract(models.Model):
     def __str__(self):
         return f"{self.contract_no} - {self.get_service_type_display()}"
 
-
+# THANH TOÁN
 class PaymentInstallment(models.Model):
     contract = models.ForeignKey(
         Contract,
@@ -343,6 +344,56 @@ class PaymentLog(models.Model):
         ordering = ['-paid_at']
 
 
+# Tài liệu đính kèm //
+class Certificate(models.Model):
+    # GenericForeignKey để liên kết với nhiều model
+    content_type = models.ForeignKey(
+        ContentType, 
+        on_delete=models.CASCADE,
+        verbose_name='Loại đối tượng'
+    )
+    object_id = models.PositiveIntegerField(verbose_name='ID đối tượng')
+    content_object = GenericForeignKey('content_type', 'object_id')
+    
+    # File chứng nhận
+    certificate_file = models.FileField(
+        upload_to='images/certificates/',
+        verbose_name='File chứng nhận'
+    )
+    
+    # 🔥 THÊM 2 TRƯỜNG NÀY
+    file = models.FileField(
+        upload_to='images/certificates/',
+        verbose_name='File đính kèm'
+    )
+    
+    name = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='Tên file'
+    )
+    description = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='Mô tả'
+    )
+    
+    uploaded_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Ngày tải lên'
+    )
+    
+    class Meta:
+        verbose_name = 'Tài liệu đính kèm'
+        verbose_name_plural = 'Tài liệu đính kèm'
+        ordering = ['-uploaded_at']
+        indexes = [
+            models.Index(fields=['content_type', 'object_id']),
+        ]
+    
+    def __str__(self):
+        return f"Certificate #{self.id} - {self.description or 'No description'}"
+    
 # ============================
 # 1. NHÃN HIỆU
 # ============================
@@ -429,11 +480,9 @@ class TrademarkService(models.Model):
         verbose_name='Ngày cấp'
     )
 
-    certificate_file = models.FileField(
-        upload_to='images/certificates/',
-        blank=True,
-        null=True,
-        verbose_name='File chứng nhận'
+    certificates = GenericRelation(
+        Certificate,
+        related_query_name='trademark'
     )
 
     class Meta:
@@ -511,11 +560,9 @@ class CopyrightService(models.Model):
         verbose_name='Số chứng nhận'
     )
 
-    certificate_file = models.FileField(
-        upload_to='images/certificates/',
-        blank=True,
-        null=True,
-        verbose_name='File chứng nhận'
+    certificates = GenericRelation(
+        Certificate,
+        related_query_name='copyright_files'
     )
 
     class Meta:
@@ -614,11 +661,9 @@ class BusinessRegistrationService(models.Model):
         verbose_name='Vốn điều lệ'
     )
 
-    certificate_file = models.FileField(
-        upload_to='images/certificates/',
-        blank=True,
-        null=True,
-        verbose_name='File chứng nhận'
+    certificates = GenericRelation(
+        Certificate,
+        related_query_name='business_files'
     )
 
     registration_certificate = models.FileField(
@@ -702,11 +747,9 @@ class InvestmentService(models.Model):
         verbose_name='Tổng vốn'
     )
 
-    certificate_file = models.FileField(
-        upload_to='images/certificates/',
-        blank=True,
-        null=True,
-        verbose_name='File chứng nhận'
+    certificates = GenericRelation(
+        Certificate,
+        related_query_name='investment_files'
     )
 
     class Meta:
@@ -774,11 +817,9 @@ class OtherService(models.Model):
         verbose_name='Email'
     )
 
-    certificate_file = models.FileField(
-        upload_to='images/certificates/',
-        blank=True,
-        null=True,
-        verbose_name='File đính kèm'
+    certificates = GenericRelation(
+        Certificate,
+        related_query_name='other_service_files'
     )
 
     class Meta:
@@ -857,4 +898,3 @@ class NhanHieuDocQuyen(models.Model):
     def __str__(self):
         return self.name or f"Nhãn hiệu {self.id}"
     
-# Tài liệu đính kèm //

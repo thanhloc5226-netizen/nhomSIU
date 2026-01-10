@@ -89,6 +89,22 @@
               {% for form in trademark_formset %}
                 <div class="formset-item">
                   {{ form.as_p }}
+
+                  <!-- 🔥 THÊM PHẦN UPLOAD FILE -->
+                  <div class="file-upload-section" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px dashed #dee2e6;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #495057;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 5px; vertical-align: middle;">
+                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                      </svg>📎 Tài liệu đính kèm (có thể chọn nhiều file)
+                    </label>
+
+                    <input type="file" name="trademark_files_{{ forloop.counter0 }}" multiple class="form-control file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="displaySelectedFiles(this)" style="padding: 10px; border: 1px solid #ced4da; border-radius: 6px;" />
+
+                    <div class="selected-files-display" style="margin-top: 10px; font-size: 13px; color: #6c757d;"></div>
+
+                    <small style="display: block; margin-top: 8px; color: #6c757d;">💡 Chấp nhận: PDF, Word, Hình ảnh (JPG, PNG). Có thể chọn nhiều file cùng lúc.</small>
+                  </div>
+
                   {{ form.DELETE }}
                   <button type="button" class="btn-remove" onclick="removeItem(this)">❌ Xóa</button>
                 </div>
@@ -98,13 +114,29 @@
             <div id="trademark-empty-form" style="display:none">
               <div class="formset-item">
                 {{ trademark_formset.empty_form.as_p }}
+
+                <!-- 🔥 THÊM PHẦN UPLOAD FILE CHO EMPTY FORM -->
+                <div class="file-upload-section" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px dashed #dee2e6;">
+                  <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #495057;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 5px; vertical-align: middle;">
+                      <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                    </svg>📎 Tài liệu đính kèm (có thể chọn nhiều file)
+                  </label>
+
+                  <input type="file" name="trademark_files___prefix__" multiple class="form-control file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="displaySelectedFiles(this)" style="padding: 10px; border: 1px solid #ced4da; border-radius: 6px;" />
+
+                  <div class="selected-files-display" style="margin-top: 10px; font-size: 13px; color: #6c757d;"></div>
+
+                  <small style="display: block; margin-top: 8px; color: #6c757d;">💡 Chấp nhận: PDF, Word, Hình ảnh. Có thể chọn nhiều file cùng lúc.</small>
+                </div>
+
                 {{ trademark_formset.empty_form.DELETE }}
                 <button type="button" class="btn-remove" onclick="removeItem(this)">❌ Xóa</button>
               </div>
             </div>
           </div>
 
-          <!-- Bản quyền -->
+          <!-- Bản quyền - TƯƠNG TỰ -->
           <div id="banquyen_form" class="service-block">
             <div class="service-header">
               <h6>Dịch vụ Bản quyền</h6>
@@ -125,6 +157,16 @@
               {% for form in copyright_formset %}
                 <div class="formset-item">
                   {{ form.as_p }}
+
+                  <!-- 🔥 UPLOAD FILE CHO BẢN QUYỀN -->
+                  <div class="file-upload-section" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px dashed #dee2e6;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #495057;">📎 Tài liệu đính kèm (có thể chọn nhiều file)</label>
+
+                    <input type="file" name="copyright_files_{{ forloop.counter0 }}" multiple class="form-control file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="displaySelectedFiles(this)" style="padding: 10px; border: 1px solid #ced4da; border-radius: 6px;" />
+
+                    <div class="selected-files-display" style="margin-top: 10px; font-size: 13px; color: #6c757d;"></div>
+                  </div>
+
                   {{ form.DELETE }}
                   <button type="button" class="btn-remove" onclick="removeItem(this)">❌ Xóa</button>
                 </div>
@@ -134,6 +176,15 @@
             <div id="copyright-empty-form" style="display:none">
               <div class="formset-item">
                 {{ copyright_formset.empty_form.as_p }}
+
+                <div class="file-upload-section" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px dashed #dee2e6;">
+                  <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #495057;">📎 Tài liệu đính kèm</label>
+
+                  <input type="file" name="copyright_files___prefix__" multiple class="form-control file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="displaySelectedFiles(this)" style="padding: 10px;" />
+
+                  <div class="selected-files-display" style="margin-top: 10px;"></div>
+                </div>
+
                 {{ copyright_formset.empty_form.DELETE }}
                 <button type="button" class="btn-remove" onclick="removeItem(this)">❌ Xóa</button>
               </div>
@@ -159,6 +210,15 @@
             </div>
             <div class="service-content">
               {{ business_form.as_p }}
+
+              <!-- 🔥 UPLOAD FILE CHO ĐKKD -->
+              <div class="file-upload-section" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px dashed #dee2e6;">
+                <label style="display: block; margin-bottom: 10px; font-weight: 600;">📎 Tài liệu đính kèm</label>
+
+                <input type="file" name="business_files" multiple class="form-control file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="displaySelectedFiles(this)" />
+
+                <div class="selected-files-display" style="margin-top: 10px;"></div>
+              </div>
             </div>
           </div>
 
@@ -181,6 +241,15 @@
             </div>
             <div class="service-content">
               {{ investment_form.as_p }}
+
+              <!-- 🔥 UPLOAD FILE CHO ĐẦU TƯ -->
+              <div class="file-upload-section" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px dashed #dee2e6;">
+                <label style="display: block; margin-bottom: 10px; font-weight: 600;">📎 Tài liệu đính kèm</label>
+
+                <input type="file" name="investment_files" multiple class="form-control file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="displaySelectedFiles(this)" />
+
+                <div class="selected-files-display" style="margin-top: 10px;"></div>
+              </div>
             </div>
           </div>
 
@@ -202,9 +271,7 @@
                 </svg>Xem danh sách
               </button>
             </div>
-            <div class="service-content">
-              {{ other_form.as_p }}
-            </div>
+            <div class="service-content">{{ other_form.as_p }}</div>
           </div>
         </div>
 
