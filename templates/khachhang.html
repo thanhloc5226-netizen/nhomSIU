@@ -219,7 +219,171 @@
         {% endfor %}
     </div>
 </section>
+<style>
+@layer base_mascot, cards_mascot;
 
+@layer cards_mascot {
+    :root {
+        --carousel-duration_mascot: 30s;
+        --carousel-depth_mascot: 180px;
+        --card-width_mascot: 100px;
+        --card-height_mascot: 150px;
+
+        @media (width > 600px) {
+            --carousel-depth_mascot: 330px;
+            --card-width_mascot: 150px;
+            --card-height_mascot: 220px;
+        }
+    }
+
+    /* Pause carousel on hover */
+    .carousel_mascot:hover .card_mascot {
+        animation-play-state: paused;
+    }
+
+    .carousel_mascot {
+        /* FIX 1: Thay đổi số này = số lượng mascot thực tế */
+        --card-count_mascot: 8;
+
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+    }
+
+    .card_mascot {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: var(--card-width_mascot);
+        height: var(--card-height_mascot);
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        display: grid;
+        place-content: end;
+        perspective: 500px;
+        -webkit-perspective: 500px;
+
+        --angle_mascot: calc((360deg / var(--card-count_mascot)) * var(--i_mascot));
+        --delay_mascot: calc((-1 * var(--carousel-duration_mascot) / var(--card-count_mascot)) * var(--i_mascot));
+
+        /* FIX 2: Gộp scale vào transform */
+        transform: translate(-50%, -50%) rotateY(var(--angle_mascot)) translateZ(var(--carousel-depth_mascot)) scale(1);
+        animation: orbit-x_mascot var(--carousel-duration_mascot) linear infinite;
+        animation-delay: var(--delay_mascot);
+        opacity: 1;
+        transition: .3s ease;
+
+        /* FIX 4: Chỉ bật reflect trên Chrome, tắt trên Safari */
+        @supports (-webkit-box-reflect: below 0) and (not (-webkit-hyphens: none)) {
+            -webkit-box-reflect: below 5px linear-gradient(to top, rgba(0, 0, 0, .15) 25%, transparent);
+        }
+
+        &:hover > img {
+            transform: scale(1.2);
+        }
+
+        & > img {
+            width: 100%;
+            height: 130%;
+            object-fit: cover;
+            transition: .3s ease;
+        }
+    }
+
+    /* FIX 1: Thủ công set --i_mascot (thêm/bớt theo số mascot thực tế) */
+    .card_mascot:nth-child(1) { --i_mascot: 1; }
+    .card_mascot:nth-child(2) { --i_mascot: 2; }
+    .card_mascot:nth-child(3) { --i_mascot: 3; }
+    .card_mascot:nth-child(4) { --i_mascot: 4; }
+    .card_mascot:nth-child(5) { --i_mascot: 5; }
+    .card_mascot:nth-child(6) { --i_mascot: 6; }
+    .card_mascot:nth-child(7) { --i_mascot: 7; }
+    .card_mascot:nth-child(8) { --i_mascot: 8; }
+    /* Nếu có 9 mascots thì uncomment dòng dưới */
+    /* .card_mascot:nth-child(9) { --i_mascot: 9; } */
+
+    /* FIX 2: Quay NGƯỢC chiều kim đồng hồ và hiển thị tất cả hình */
+    @keyframes orbit-x_mascot {
+        0% {
+            transform: translate(-50%, -50%) rotateY(0deg) translateZ(var(--carousel-depth_mascot)) scale(1);
+            opacity: 1;
+        }
+        25% {
+            transform: translate(-50%, -50%) rotateY(-90deg) translateZ(var(--carousel-depth_mascot)) scale(0.9);
+            opacity: 0.9;
+        }
+        50% {
+            transform: translate(-50%, -50%) rotateY(-180deg) translateZ(var(--carousel-depth_mascot)) scale(0.85);
+            opacity: 0.85;
+        }
+        75% {
+            transform: translate(-50%, -50%) rotateY(-270deg) translateZ(var(--carousel-depth_mascot)) scale(0.9);
+            opacity: 0.9;
+        }
+        100% {
+            transform: translate(-50%, -50%) rotateY(-360deg) translateZ(var(--carousel-depth_mascot)) scale(1);
+            opacity: 1;
+        }
+    }
+}
+
+@layer base_mascot {
+    * {
+        box-sizing: border-box;
+    }
+
+    .mascot_body {
+        color: white;
+        margin: 0;
+        padding: 1rem;
+        /* FIX 5: Dùng svh thay vì vh cho Safari */
+        min-height: 100svh;
+        min-height: 100vh; /* Fallback cho browser cũ */
+        display: grid;
+        place-content: center;
+    }
+}
+
+/* Speech bubble styling */
+.speech_mascot {
+    position: absolute;
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 200px;
+    background: white;
+    color: black;
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: .85rem;
+    text-align: center;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: .25s ease;
+    pointer-events: none;
+    z-index: 999;
+}
+
+.speech_mascot::after {
+    content: "";
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 12px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+}
+
+.card_mascot:hover .speech_mascot {
+    opacity: 1;
+}
+</style>
 
 
 <div class="khtt-header" style="margin-top:-1%">

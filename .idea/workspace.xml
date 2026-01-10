@@ -8,11 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/css/khachhang.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/khachhang.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/business_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/business_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/copyright_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/copyright_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/investment_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/investment_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/khachhang.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/khachhang.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/trademark_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/trademark_detail.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
