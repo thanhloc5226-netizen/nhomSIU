@@ -33,6 +33,7 @@ urlpatterns = [
 
     # CONTRACT
     path("contracts/add/", views.add_contract, name="add_contract"),
+    path('contracts/delete/<int:pk>/', views.contract_delete, name='contract_delete'),
     path("contracts/", views.contract_list, name="contract_list"),
     path("contracts/<int:id>/", views.contract_detail, name="contract_detail"),
     path('<int:pk>/change-status/', views.customer_change_status, name='customer_change_status'),
@@ -50,30 +51,16 @@ urlpatterns = [
         name='register_certificate'
     ),
     path(
-    "certificate/delete/<int:pk>/",
-    views.delete_certificate,
-    name="delete_certificate"
+     "certificate/delete/<int:pk>/",
+     views.delete_certificate,
+     name="delete_certificate"
      ),
-    # URLs tải giấy chứng nhận cho từng loại dịch vụ
-    path('trademark/<int:trademark_id>/download/',
-         views.download_trademark_certificate,
-         name='download_trademark_certificate'),
-
-    path('copyright/<int:copyright_id>/download/',
-         views.download_copyright_certificate,
-         name='download_copyright_certificate'),
-
-    path('business/<int:business_id>/download/',
-         views.download_business_certificate,
-         name='download_business_certificate'),
-
-    path('investment/<int:investment_id>/download/',
-         views.download_investment_certificate,
-         name='download_investment_certificate'),
-
-    path('other-service/<int:other_id>/download/',
-         views.download_other_certificate,
-         name='download_other_certificate'),
+    path(
+    'certificates/upload/',
+    views.upload_certificate,
+    name='upload_certificate'
+    ),
+    
     #login.css
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),

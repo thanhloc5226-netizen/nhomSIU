@@ -437,7 +437,11 @@ def add_contract(request):
     })
 
 
-
+def contract_delete(request, pk):
+    print("🔥 DELETE VIEW CALLED:", pk)
+    contract = get_object_or_404(Contract, pk=pk)
+    contract.delete()
+    return redirect('contract_list')
 
 
 
@@ -1237,104 +1241,6 @@ def investment_detail(request, investment_id):
 
 
 # Thêm vào cuối file views.py
-
-# ===============================================
-# DOWNLOAD CERTIFICATE CHO TỪNG LOẠI DỊCH VỤ
-# ===============================================
-
-def download_trademark_certificate(request, trademark_id):
-    """
-    Tải giấy chứng nhận cho một nhãn hiệu cụ thể
-    """
-    trademark = get_object_or_404(TrademarkService, id=trademark_id)
-
-    if not trademark.certificate_file:
-        messages.error(request, "❌ Nhãn hiệu này chưa có giấy chứng nhận")
-        return redirect('contract_detail', id=trademark.contract.id)
-
-    filename = f"GCN_Nhanhieu_{trademark.app_no or trademark.id}_{os.path.basename(trademark.certificate_file.name)}"
-
-    return FileResponse(
-        trademark.certificate_file.open("rb"),
-        as_attachment=True,
-        filename=filename
-    )
-
-
-def download_copyright_certificate(request, copyright_id):
-    """
-    Tải giấy chứng nhận cho một bản quyền cụ thể
-    """
-    copyright = get_object_or_404(CopyrightService, id=copyright_id)
-
-    if not copyright.certificate_file:
-        messages.error(request, "❌ Bản quyền này chưa có giấy chứng nhận")
-        return redirect('contract_detail', id=copyright.contract.id)
-
-    filename = f"GCN_Banquyen_{copyright.certificate_no or copyright.id}_{os.path.basename(copyright.certificate_file.name)}"
-
-    return FileResponse(
-        copyright.certificate_file.open("rb"),
-        as_attachment=True,
-        filename=filename
-    )
-
-
-def download_business_certificate(request, business_id):
-    """
-    Tải giấy chứng nhận đăng ký kinh doanh
-    """
-    business = get_object_or_404(BusinessRegistrationService, id=business_id)
-
-    if not business.certificate_file:
-        messages.error(request, "❌ ĐKKD này chưa có giấy chứng nhận")
-        return redirect('contract_detail', id=business.contract.id)
-
-    filename = f"GCN_DKKD_{business.tax_code or business.id}_{os.path.basename(business.certificate_file.name)}"
-
-    return FileResponse(
-        business.certificate_file.open("rb"),
-        as_attachment=True,
-        filename=filename
-    )
-
-
-def download_investment_certificate(request, investment_id):
-    """
-    Tải giấy chứng nhận đầu tư
-    """
-    investment = get_object_or_404(InvestmentService, id=investment_id)
-
-    if not investment.certificate_file:
-        messages.error(request, "❌ Dự án đầu tư này chưa có giấy chứng nhận")
-        return redirect('contract_detail', id=investment.contract.id)
-
-    filename = f"GCN_Dautu_{investment.project_code or investment.id}_{os.path.basename(investment.certificate_file.name)}"
-
-    return FileResponse(
-        investment.certificate_file.open("rb"),
-        as_attachment=True,
-        filename=filename
-    )
-
-
-def download_other_certificate(request, other_id):
-    """
-    Tải file đính kèm cho dịch vụ khác
-    """
-    other = get_object_or_404(OtherService, id=other_id)
-
-    if not other.certificate_file:
-        messages.error(request, "❌ Dịch vụ này chưa có file đính kèm")
-        return redirect('contract_detail', id=other.contract.id)
-
-    filename = f"File_DichvuKhac_{other.id}_{os.path.basename(other.certificate_file.name)}"
-
-    return FileResponse(
-        other.certificate_file.open("rb"),
-        as_attachment=True,
-        filename=filename
-    )
 # FILE ĐÍNH KÈM
 def delete_certificate(request, pk):
     cert = get_object_or_404(Certificate, pk=pk)
@@ -1347,12 +1253,35 @@ def delete_certificate(request, pk):
     cert.delete()
 
     return redirect("contract_detail", contract_id)
+def upload_certificate(request):
+    if request.method == 'POST':
+        service_type = request.POST.get('service_type')
+        service_id = request.POST.get('service_id')
 
-# Bảo vệ các views mới
-protect_views(
-    download_trademark_certificate,
-    download_copyright_certificate,
-    download_business_certificate,
-    download_investment_certificate,
-    download_other_certificate,
-)
+        file = request.FILES.get('file')
+        name = request.POST.get('name')
+
+        if not file:
+            messages.error(request, 'Chưa chọn file')
+            return redirect(request.META.get('HTTP_REFERER'))
+
+        # lấy đúng service
+        MODEL_MAP = {
+            'nhanhieu': TrademarkService,
+            'banquyen': CopyrightService,
+            'dkkd': BusinessRegistrationService,
+            'dautu': InvestmentService,
+            'khac': OtherService,
+        }
+
+        model = MODEL_MAP.get(service_type)
+        service = get_object_or_404(model, id=service_id)
+
+        Certificate.objects.create(
+            content_object=service,   # nếu dùng GenericForeignKey
+            name=name,
+            file=file
+        )
+
+        messages.success(request, 'Đã thêm tài liệu')
+        return redirect(request.META.get('HTTP_REFERER'))
