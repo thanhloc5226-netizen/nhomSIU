@@ -132,6 +132,8 @@ class ContractForm(forms.ModelForm):
             'contract_value',
             'payment_type',
             'prepaid_amount',
+            'number_of_installments',  # 🆕
+            'installment_interval_days',  # 🆕
         ]
 
         labels = {
@@ -141,6 +143,8 @@ class ContractForm(forms.ModelForm):
             'contract_value': 'Giá trị hợp đồng',
             'payment_type': 'Hình thức thanh toán',
             'prepaid_amount': 'Số tiền trả trước (VNĐ)',
+            'number_of_installments': 'Số đợt trả góp',  # 🆕
+            'installment_interval_days': 'Khoảng cách giữa các đợt (ngày)',  # 🆕
         }
 
         widgets = {
@@ -168,26 +172,22 @@ class ContractForm(forms.ModelForm):
                 'placeholder': 'Nhập số tiền trả trước',
                 'min': 0
             }),
+            # 🆕 THÊM WIDGETS MỚI
+            'number_of_installments': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ví dụ: 3, 6, 12...',
+                'min': 1,
+                'value': 1,
+                'id': 'id_number_of_installments'
+            }),
+            'installment_interval_days': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ví dụ: 30 (1 tháng)',
+                'min': 1,
+                'value': 30,
+                'id': 'id_installment_interval_days'
+            }),
         }
-
-    def clean(self):
-        cleaned_data = super().clean()
-        contract_value = cleaned_data.get('contract_value') or 0
-        prepaid_amount = cleaned_data.get('prepaid_amount') or 0
-
-        # 🔐 VALIDATE: tiền trả trước không được âm
-        if prepaid_amount < 0:
-            raise forms.ValidationError({
-                'prepaid_amount': 'Số tiền trả trước không được nhỏ hơn 0'
-            })
-
-        # 🔐 VALIDATE: tiền trả trước không được lớn hơn giá trị hợp đồng
-        if prepaid_amount > contract_value:
-            raise forms.ValidationError({
-                'prepaid_amount': 'Số tiền trả trước không được lớn hơn giá trị hợp đồng'
-            })
-
-        return cleaned_data
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -199,8 +199,36 @@ class ContractForm(forms.ModelForm):
         self.fields['contract_value'].required = True
         self.fields['payment_type'].required = True
 
-        # prepaid_amount KHÔNG bắt buộc
+        # Không bắt buộc
         self.fields['prepaid_amount'].required = False
+        self.fields['number_of_installments'].required = False
+        self.fields['installment_interval_days'].required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+        contract_value = cleaned_data.get('contract_value') or 0
+        prepaid_amount = cleaned_data.get('prepaid_amount') or 0
+        payment_type = cleaned_data.get('payment_type')
+        number_of_installments = cleaned_data.get('number_of_installments') or 1
+
+        # Validate số tiền trả trước
+        if prepaid_amount < 0:
+            raise forms.ValidationError({
+                'prepaid_amount': 'Số tiền trả trước không được nhỏ hơn 0'
+            })
+
+        if prepaid_amount > contract_value:
+            raise forms.ValidationError({
+                'prepaid_amount': 'Số tiền trả trước không được lớn hơn giá trị hợp đồng'
+            })
+
+        # 🆕 Validate số đợt trả góp
+        if payment_type == 'installment' and number_of_installments < 1:
+            raise forms.ValidationError({
+                'number_of_installments': 'Số đợt trả góp phải lớn hơn 0'
+            })
+
+        return cleaned_data
 
 
 # ======================================================
@@ -219,6 +247,7 @@ class TrademarkForm(forms.ModelForm):
             'app_no': 'Số đơn',
             'filing_date': 'Ngày nộp đơn',
             'trademark_image': 'Hình ảnh nhãn hiệu',
+            'valid_date': 'Ngày hợp lệ hình thức đơn',
             'classification': 'Nhóm sản phẩm/dịch vụ',
             'publish_date': 'Ngày công bố',
             'decision_date': 'Ngày cấp',
@@ -231,6 +260,7 @@ class TrademarkForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'app_no': forms.TextInput(attrs={'class': 'form-control'}),
+            'valid_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'filing_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'classification': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'publish_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),

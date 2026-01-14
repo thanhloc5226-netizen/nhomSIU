@@ -76,86 +76,179 @@
       </div>
     </div>
 
-    <!-- PAYMENT INFO CARD -->
-    {% if contract.payment_type == 'installment' and contract.remaining_amount > 0 %}
-      <div class="payment-section no-print mb-4">
-        <h6>💳 CẬP NHẬT THANH TOÁN</h6>
-        {% for ins in installments %}
-          {% if not ins.is_paid %}
-            <form method="post" class="installment-item mb-2" style="border: 1px solid #eee; padding: 15px; border-radius: 8px;">
-              {% csrf_token %}
-              <div style="display:flex; gap:16px; align-items:center; flex-wrap: wrap;">
-                <div style="font-size:13px;">
-                  Đã trả: <b>{{ contract.total_paid|intcomma }}</b>
-                </div>
-                <div style="font-size:13px; color:#dc3545;">
-                  Thiếu: <b>{{ contract.remaining_amount|intcomma }}</b>
-                </div>
-
-                <input type="datetime-local" name="paid_date" class="form-control" style="width:220px;" required value="{{ now|date:'Y-m-d\TH:i' }}" />
-
-                <input type="number" name="paid_amount" class="form-control" min="1" placeholder="Số tiền nộp" style="width:160px;" required />
-                <input type="hidden" name="installment_id" value="{{ ins.id }}" />
-
-                <button type="submit" class="btn btn-sm btn-primary">💾 Thanh toán</button>
-              </div>
-            </form>
-          {% endif %}
-        {% endfor %}
-      </div>
-
-      <!-- STATUS -->
-    {% elif contract.status == 'completed' %}
-      <div class="alert alert-success">✓ Hợp đồng đã thanh toán xong</div>
-    {% endif %}
-
-    <!-- Payment Logs -->
-    <div class="mt-5">
-      <h6>📑 NHẬT KÝ GIAO DỊCH CHI TIẾT</h6>
-      <div class="table-responsive">
-        <table class="table table-sm table-bordered" style="font-size: 13px;">
-          <thead class="table-success">
-            <tr>
-              <th>Thời gian</th>
-              <th>Đợt</th>
-              <th>Số tiền nộp</th>
-              <th>Người thu</th>
-              <th>Hóa đơn đỏ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for log in contract.payment_logs.all %}
-              <tr>
-                <td>{{ log.paid_at|date:'d/m/Y H:i' }}</td>
-                <td>ID giao dịch: {{ log.installment.id }}</td>
-                <td class="text-primary fw-bold">+ {{ log.amount_paid|intcomma }} VNĐ</td>
-                <td>{{ user.username }}</td>
-                <td class="text-center" style="vertical-align: middle;">
-                  {% if log.is_exported_bill %}
-                    <div class="badge bg-light text-success border border-success" style="cursor: pointer; font-size: 11px; line-height: 1.4; padding: 5px 8px; min-width: 80px;" title="Nhấn để xem chi tiết" onclick="showFullInfo('{{ log.bill_exported_at|date:'H:i' }}', '{{ log.bill_exported_at|date:'d/m/Y' }}')">
-                      <i class="bi bi-check-circle-fill d-block mb-1" style="font-size: 14px;"></i>
-                      <strong>{{ log.bill_exported_at|date:'H:i' }}</strong><br />
-                      {{ log.bill_exported_at|date:'d/m/Y' }}
-                    </div>
-                  {% else %}
-                    <form method="post" id="form-bill-{{ log.id }}" style="margin:0;">
-                      {% csrf_token %}
-                      <input type="hidden" name="action" value="log_toggle_bill" />
-                      <input type="hidden" name="log_id" value="{{ log.id }}" />
-                      <input type="checkbox" onchange="if(confirm('Xác nhận đã xuất hóa đơn cho giao dịch này?')) document.getElementById('form-bill-{{ log.id }}').submit();" style="transform: scale(1.3); cursor: pointer; accent-color: #198754;" />
-                    </form>
-                  {% endif %}
-                </td>
-              </tr>
-            {% empty %}
-              <tr>
-                <td colspan="5" class="text-center text-muted">Chưa có giao dịch nào được ghi lại.</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+  {% if contract.payment_type == 'installment' %}
+<div class="card mt-4">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">💰 Lịch thanh toán trả góp</h5>
+        <small>Đã thanh toán: {{ paid_count }}/{{ installments.count }} đợt</small>
     </div>
+    <div class="card-body">
+        <!-- Thanh tiến độ -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between mb-2">
+                <span><strong>Tiến độ thanh toán:</strong></span>
+                <span><strong>{{ contract.payment_progress }}%</strong></span>
+            </div>
+            <div class="progress" style="height: 25px;">
+                <div class="progress-bar bg-success" role="progressbar"
+                     style="width: {{ contract.payment_progress }}%">
+                    {{ contract.total_paid|floatformat:0 }} / {{ contract.contract_value|floatformat:0 }} VNĐ
+                </div>
+            </div>
+            <div class="mt-2 text-end">
+                <small class="text-muted">Còn lại: <strong>{{ contract.remaining_amount|floatformat:0 }} VNĐ</strong></small>
+            </div>
+        </div>
+
+        <!-- Danh sách các đợt -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="20%">Đợt thanh toán</th>
+                        <th width="15%">Số tiền</th>
+                        <th width="15%">Đã trả</th>
+                        <th width="15%">Còn lại</th>
+                        <th width="12%">Hạn trả</th>
+                        <th width="10%">Trạng thái</th>
+                        <th width="8%">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ins in installments %}
+                    <tr class="{% if ins.is_paid %}table-success{% elif ins.due_date < today %}table-danger{% endif %}">
+                        <td class="text-center">{{ forloop.counter }}</td>
+                        <td>{{ ins.notes }}</td>
+                        <td class="text-end">{{ ins.amount|floatformat:0 }} VNĐ</td>
+                        <td class="text-end">{{ ins.paid_amount|floatformat:0 }} VNĐ</td>
+                        <td class="text-end">
+                            <strong>{{ ins.remaining_amount|floatformat:0 }} VNĐ</strong>
+                        </td>
+                        <td class="text-center">
+                            {% if ins.due_date %}
+                                {{ ins.due_date|date:"d/m/Y" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if ins.is_paid %}
+                                <span class="badge bg-success">✓ Đã trả</span>
+                                {% if ins.paid_date %}
+                                <br><small class="text-muted">{{ ins.paid_date|date:"d/m/Y" }}</small>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge bg-warning">⏳ Chưa trả</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if not ins.is_paid %}
+                                <!-- Nút thanh toán toàn bộ đợt -->
+                                <form method="POST" style="display:inline;"
+                                      onsubmit="return confirm('Xác nhận thanh toán đợt này?\n\nSố tiền: {{ ins.remaining_amount|floatformat:0 }} VNĐ');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="pay_installment">
+                                    <input type="hidden" name="installment_id" value="{{ ins.id }}">
+                                    <button type="submit" class="btn btn-success btn-sm" title="Thanh toán đợt này">
+                                        ✓ Trả
+                                    </button>
+                                </form>
+
+                                <!-- Nút thanh toán từng phần (modal) -->
+                                <button type="button" class="btn btn-outline-primary btn-sm mt-1"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#partialPayModal{{ ins.id }}"
+                                        title="Thanh toán một phần">
+                                    $ Trả 1 phần
+                                </button>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    <!-- Modal thanh toán từng phần -->
+                    <div class="modal fade" id="partialPayModal{{ ins.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="partial_payment">
+                                    <input type="hidden" name="installment_id" value="{{ ins.id }}">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Thanh toán từng phần - {{ ins.notes }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Tổng đợt:</strong> {{ ins.amount|floatformat:0 }} VNĐ</p>
+                                        <p><strong>Đã trả:</strong> {{ ins.paid_amount|floatformat:0 }} VNĐ</p>
+                                        <p><strong>Còn lại:</strong> {{ ins.remaining_amount|floatformat:0 }} VNĐ</p>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Số tiền thanh toán lần này:</label>
+                                            <input type="number" name="paid_amount" class="form-control"
+                                                   min="1" max="{{ ins.remaining_amount }}"
+                                                   placeholder="Nhập số tiền" required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                        <button type="submit" class="btn btn-primary">Xác nhận thanh toán</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Lịch sử thanh toán -->
+        {% if contract.payment_logs.exists %}
+        <div class="mt-4">
+            <h6>📜 Lịch sử thanh toán</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>Thời gian</th>
+                            <th>Đợt</th>
+                            <th>Số tiền</th>
+                            <th>Hóa đơn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in contract.payment_logs.all %}
+                        <tr>
+                            <td>{{ log.paid_at|date:"d/m/Y H:i" }}</td>
+                            <td>{{ log.installment.notes }}</td>
+                            <td class="text-end">{{ log.amount_paid|floatformat:0 }} VNĐ</td>
+                            <td>
+                                <form method="POST" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="log_toggle_bill">
+                                    <input type="hidden" name="log_id" value="{{ log.id }}">
+                                    <input type="checkbox"
+                                           {% if log.is_exported_bill %}checked disabled{% endif %}
+                                           onchange="this.form.submit()">
+                                    {% if log.is_exported_bill %}
+                                        <small class="text-success">✓ {{ log.bill_exported_at|date:"d/m H:i" }}</small>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
 
     <!-- Service Details Card -->
     <div class="service-card">
@@ -230,7 +323,11 @@
                       <span class="detail-label">Ngày công bố</span>
                       <span class="detail-value">{{ s.publish_date|date:'d/m/Y' }}</span>
                     </div>
-
+                         <!-- 🆕 THÊM DÒNG NÀY -->
+     <div class="detail-item">
+        <span class="detail-label">✅ Ngày hợp lệ hình thức đơn</span>
+        <span class="detail-value">{{ s.valid_date|date:'d/m/Y'|default:'Chưa có' }}</span>
+     </div>
                     <div class="detail-item">
                       <span class="detail-label">Ngày cấp</span>
                       <span class="detail-value">{{ s.decision_date|date:'d/m/Y' }}</span>
@@ -278,7 +375,7 @@
                         </div>
                       </form>
                   {% if s.certificates.exists %}
-                    
+
                       <div style="display: flex; flex-direction: column; gap: 10px;">
                         {% for cert in s.certificates.all %}
                           <div class="attachment-item" style="display: flex; align-items: center; padding: 10px; background: white; border-radius: 6px; border: 1px solid #dee2e6;">

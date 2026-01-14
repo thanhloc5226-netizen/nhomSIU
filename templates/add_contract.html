@@ -50,13 +50,61 @@
             {{ contract_form.as_p }}
 
             <!-- Trường ngày thanh toán (chỉ hiện khi chọn trả dứt điểm) -->
-            <div id="payment_date_field" style="display: none;">
-              <label for="id_payment_date">Ngày thanh toán <span style="color: #ef4444;">*</span></label>
-              <input type="date" name="payment_date" id="id_payment_date" class="form-control" />
-              <small class="form-text text-muted">Chỉ nhập nếu đã thanh toán dứt điểm</small>
+           <!-- Thông tin thanh toán -->
+<div class="card mt-3">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">💰 Thông tin thanh toán</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <!-- Giá trị hợp đồng -->
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Giá trị hợp đồng <span class="text-danger">*</span></label>
+                {{ contract_form.contract_value }}
             </div>
-          </div>
+
+            <!-- Hình thức thanh toán -->
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Hình thức thanh toán <span class="text-danger">*</span></label>
+                {{ contract_form.payment_type }}
+            </div>
+
+            <!-- Số tiền trả trước -->
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Số tiền trả trước (VNĐ)</label>
+                {{ contract_form.prepaid_amount }}
+                <small class="form-text text-muted">Để trống nếu chưa trả trước</small>
+            </div>
         </div>
+
+        <!-- 🆕 PHẦN TRẢ GÓP (ẨN MẶC ĐỊNH) -->
+        <div id="installment-section" style="display: none;">
+            <hr>
+            <h6 class="text-primary mb-3">⚙️ Cấu hình trả góp</h6>
+            <div class="row">
+                <!-- Số đợt trả góp -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Số đợt trả góp</label>
+                    {{ contract_form.number_of_installments }}
+                    <small class="form-text text-muted">Ví dụ: 3, 6, 12 đợt...</small>
+                </div>
+
+                <!-- Khoảng cách giữa các đợt -->
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Khoảng cách giữa các đợt (ngày)</label>
+                    {{ contract_form.installment_interval_days }}
+                    <small class="form-text text-muted">30 ngày = 1 tháng, 90 ngày = 3 tháng...</small>
+                </div>
+            </div>
+
+            <!-- Preview các đợt -->
+            <div id="installment-preview" class="alert alert-info" style="display: none;">
+                <h6>📋 Xem trước lịch trả góp:</h6>
+                <div id="preview-content"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
         <!-- THÔNG TIN DỊCH VỤ -->
         <div class="form-section">
@@ -335,7 +383,68 @@
 
   <!-- ✅ CHỈ LOAD FILE JS - KHÔNG CÓ INLINE SCRIPT NỮA -->
   <script src="{% static 'js/add_contract.js' %}"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentTypeSelect = document.getElementById('id_payment_type');
+    const installmentSection = document.getElementById('installment-section');
+    const contractValueInput = document.getElementById('id_contract_value');
+    const numberOfInstallmentsInput = document.getElementById('id_number_of_installments');
+    const intervalDaysInput = document.getElementById('id_installment_interval_days');
+    const previewDiv = document.getElementById('installment-preview');
+    const previewContent = document.getElementById('preview-content');
 
+    // Hiển thị/ẩn phần trả góp
+    function toggleInstallmentSection() {
+        if (paymentTypeSelect.value === 'installment') {
+            installmentSection.style.display = 'block';
+            updatePreview();
+        } else {
+            installmentSection.style.display = 'none';
+            previewDiv.style.display = 'none';
+        }
+    }
+
+    // Cập nhật preview
+    function updatePreview() {
+        const contractValue = parseFloat(contractValueInput.value) || 0;
+        const numInstallments = parseInt(numberOfInstallmentsInput.value) || 1;
+        const intervalDays = parseInt(intervalDaysInput.value) || 30;
+
+        if (contractValue > 0 && numInstallments > 0) {
+            const amountPerInstallment = contractValue / numInstallments;
+            const today = new Date();
+
+            let html = '<table class="table table-sm table-bordered"><thead><tr><th>Đợt</th><th>Số tiền</th><th>Ngày đến hạn (dự kiến)</th></tr></thead><tbody>';
+
+            for (let i = 0; i < numInstallments; i++) {
+                const dueDate = new Date(today);
+                dueDate.setDate(dueDate.getDate() + (intervalDays * i));
+
+                html += `<tr>
+                    <td>Đợt ${i + 1}/${numInstallments}</td>
+                    <td class="text-end">${amountPerInstallment.toLocaleString('vi-VN')} VNĐ</td>
+                    <td class="text-center">${dueDate.toLocaleDateString('vi-VN')}</td>
+                </tr>`;
+            }
+
+            html += '</tbody></table>';
+            previewContent.innerHTML = html;
+            previewDiv.style.display = 'block';
+        } else {
+            previewDiv.style.display = 'none';
+        }
+    }
+
+    // Event listeners
+    paymentTypeSelect.addEventListener('change', toggleInstallmentSection);
+    contractValueInput.addEventListener('input', updatePreview);
+    numberOfInstallmentsInput.addEventListener('input', updatePreview);
+    intervalDaysInput.addEventListener('input', updatePreview);
+
+    // Khởi tạo
+    toggleInstallmentSection();
+});
+</script>
   <script>
     // ✅ Logic hiển thị trường ngày thanh toán
     $(document).ready(function () {

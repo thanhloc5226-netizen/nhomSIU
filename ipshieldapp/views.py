@@ -386,15 +386,17 @@ def add_contract(request):
                     print("⚠️ No service data provided")
                     messages.warning(request, "⚠️ Hợp đồng đã lưu nhưng chưa có thông tin dịch vụ")
 
+            # Thay thế phần xử lý PREPAID PAYMENT trong add_contract view
+
             # ===== HANDLE PREPAID PAYMENT =====
             if contract.payment_type == 'installment':
-                # Luôn tạo ít nhất 1 đợt thanh toán mặc định khi tạo hợp đồng trả góp
-                PaymentInstallment.objects.create(
-                    contract=contract,
-                    amount=contract.contract_value,
-                    paid_amount=contract.prepaid_amount if contract.prepaid_amount else 0,
-                    is_paid=contract.prepaid_amount >= contract.contract_value if contract.prepaid_amount else False
-                )
+                # 🆕 TỰ ĐỘNG TẠO CÁC ĐỢT THANH TOÁN
+                contract.create_installments()
+                print(f"✅ Created {contract.number_of_installments} installments")
+            else:
+                # Trả dứt điểm - tự động hoàn thành
+                contract.status = 'completed'
+                contract.save(update_fields=['status'])
 
             # ===== UPDATE CUSTOMER STATUS =====
             customer = contract.customer
@@ -545,19 +547,17 @@ from datetime import date
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.db.models import QuerySet
+
+
 def contract_detail(request, id):
     contract = get_object_or_404(Contract, id=id)
     installments = contract.installments.all()
 
-    # ✅ ĐẾM SỐ ĐỢT ĐÃ TRẢ
+    # ✅ ĐếM SỐ ĐỢT ĐÃ TRẢ
     paid_count = installments.filter(is_paid=True).count()
 
-    # ==========================
-    # LẤY DỊCH VỤ
-    # ==========================
-
-
-    service: QuerySet
+    # Lấy dịch vụ
+    service = None
     if contract.service_type == "nhanhieu":
         service = contract.trademarks.all()
     elif contract.service_type == "banquyen":
@@ -569,86 +569,112 @@ def contract_detail(request, id):
     else:
         service = OtherService.objects.filter(contract=contract)
 
-    # ==========================
-    # 🔥 AUTO HOÀN THÀNH – TRẢ ĐỨT
-    # ==========================
+    # Auto hoàn thành nếu trả dứt
     if contract.payment_type == "full" and contract.status != "completed":
         contract.status = "completed"
         contract.save(update_fields=["status"])
 
-    # ==========================
-    # 🔥 CẬP NHẬT THANH TOÁN – TRẢ GÓP
-    # ==========================.
+    # 🆕 XỬ LÝ THANH TOÁN ĐƠN GIẢN
     if request.method == "POST":
-    # 1. TÁCH RIÊNG: Xử lý lưu CHECKBOX HÓA ĐƠN ĐỎ (Không liên quan đến tiền)
-        if request.POST.get("action") == "log_toggle_bill":
+        action = request.POST.get("action")
+
+        # 1️⃣ ĐÁNH DẤU ĐÃ XUẤT HÓA ĐƠN
+        if action == "log_toggle_bill":
             log_id = request.POST.get("log_id")
             log_entry = get_object_or_404(PaymentLog, id=log_id)
-            
+
             if not log_entry.is_exported_bill:
                 log_entry.is_exported_bill = True
                 log_entry.bill_exported_at = timezone.now()
                 log_entry.save()
-                messages.success(request, f"✅ Đã lưu trạng thái hóa đơn cho giao dịch {log_id}")
+                messages.success(request, f"✅ Đã đánh dấu xuất hóa đơn")
             return redirect("contract_detail", id=contract.id)
-    
-        if contract.payment_type == "installment":
+
+        # 2️⃣ THANH TOÁN ĐỢT (CHỈ CẦN 1 CLICK)
+        elif action == "pay_installment":
             installment_id = request.POST.get("installment_id")
-            paid_amount_raw = request.POST.get("paid_amount")
-            custom_date = request.POST.get("paid_date") # Lấy ngày từ form người dùng nhập
-            
-            # Kiểm tra dữ liệu đầu vào
-            if not installment_id or not paid_amount_raw:
-                messages.error(request, "❌ Thiếu thông tin thanh toán")
-                return redirect("contract_detail", id=contract.id)
-            
-            # CHỖ NÀY LÀ ĐỂ LƯU CHECKBOX
-            if request.POST.get("action") == "log_toggle_bill":
-                log_id = request.POST.get("log_id")
-                log_entry = get_object_or_404(PaymentLog, id=log_id)
-                
-                if not log_entry.is_exported_bill:
-                    log_entry.is_exported_bill = True
-                    log_entry.bill_exported_at = timezone.now() # Lưu giờ bấm
-                    log_entry.save()
-                    messages.success(request, "✅ Đã lưu trạng thái hóa đơn.")
-                return redirect("contract_detail", id=contract.id)
-            
+
             try:
-                paid_amount = Decimal(paid_amount_raw)
-                
-                # Tìm đợt thanh toán
-                ins = contract.installments.filter(id=installment_id).first()
-                
-                if ins:
-                    # 1. Cập nhật số tiền vào đợt trả góp
-                    ins.paid_amount += paid_amount
-                    if ins.paid_amount >= ins.amount:
-                        ins.is_paid = True
-                        ins.paid_date = custom_date if custom_date else date.today()
-                    ins.save()
+                ins = contract.installments.get(id=installment_id)
 
-                    # 2. 🔥 GHI LỊCH SỬ (Dòng code bạn hỏi gắn ở đây)
-                    PaymentLog.objects.create(
-                        contract=contract,
-                        installment=ins,
-                        amount_paid=paid_amount,
-                        paid_at=custom_date if custom_date else date.today()
-                    )
-
-                    # 3. Cập nhật status contract 
-                    # (Vì remaining_amount là @property nên nó sẽ tự tính lại sau khi ins.save())
-                    if contract.remaining_amount <= 0:
-                        contract.status = "completed"
-                        contract.save(update_fields=["status"])
-
-                    messages.success(request, "✅ Đã lưu thanh toán và lịch sử giao dịch")
+                if ins.is_paid:
+                    messages.warning(request, "⚠️ Đợt này đã được thanh toán rồi")
                     return redirect("contract_detail", id=contract.id)
 
+                # Tính số tiền còn phải trả
+                remaining = ins.amount - ins.paid_amount
+
+                # Cập nhật thanh toán
+                ins.paid_amount = ins.amount
+                ins.is_paid = True
+                ins.paid_date = timezone.now().date()
+                ins.save()
+
+                # Ghi log
+                PaymentLog.objects.create(
+                    contract=contract,
+                    installment=ins,
+                    amount_paid=remaining,
+                    paid_at=timezone.now()
+                )
+
+                # Cập nhật status contract nếu đã trả hết
+                if contract.remaining_amount <= 0:
+                    contract.status = "completed"
+                    contract.save(update_fields=["status"])
+
+                messages.success(request, f"✅ Đã thanh toán đợt {ins.notes} - Số tiền: {remaining:,.0f} VNĐ")
+                return redirect("contract_detail", id=contract.id)
+
+            except PaymentInstallment.DoesNotExist:
+                messages.error(request, "❌ Không tìm thấy đợt thanh toán")
+                return redirect("contract_detail", id=contract.id)
             except Exception as e:
                 messages.error(request, f"❌ Có lỗi xảy ra: {str(e)}")
                 return redirect("contract_detail", id=contract.id)
 
+        # 3️⃣ THANH TOÁN TỪNG PHẦN (NẾU CẦN)
+        elif action == "partial_payment":
+            installment_id = request.POST.get("installment_id")
+            paid_amount_raw = request.POST.get("paid_amount")
+
+            if not paid_amount_raw:
+                messages.error(request, "❌ Vui lòng nhập số tiền thanh toán")
+                return redirect("contract_detail", id=contract.id)
+
+            try:
+                paid_amount = Decimal(paid_amount_raw)
+                ins = contract.installments.get(id=installment_id)
+
+                # Cập nhật số tiền
+                ins.paid_amount += paid_amount
+
+                # Kiểm tra xem đã đủ chưa
+                if ins.paid_amount >= ins.amount:
+                    ins.is_paid = True
+                    ins.paid_date = timezone.now().date()
+
+                ins.save()
+
+                # Ghi log
+                PaymentLog.objects.create(
+                    contract=contract,
+                    installment=ins,
+                    amount_paid=paid_amount,
+                    paid_at=timezone.now()
+                )
+
+                # Cập nhật status
+                if contract.remaining_amount <= 0:
+                    contract.status = "completed"
+                    contract.save(update_fields=["status"])
+
+                messages.success(request, f"✅ Đã ghi nhận thanh toán: {paid_amount:,.0f} VNĐ")
+                return redirect("contract_detail", id=contract.id)
+
+            except Exception as e:
+                messages.error(request, f"❌ Có lỗi xảy ra: {str(e)}")
+                return redirect("contract_detail", id=contract.id)
 
     return render(request, "contract_detail.html", {
         "contract": contract,
