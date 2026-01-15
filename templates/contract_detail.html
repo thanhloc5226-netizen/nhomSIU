@@ -4,7 +4,7 @@
   {% load static %}
   <link href="{% static 'css/contract_detail.css' %}" rel="stylesheet" />
 
-  <div class="container mt-4">
+  <div class="container mt-4 ">
     <!-- Header -->
     <div class="contract-header">
       <div class="header-left">
@@ -316,7 +316,7 @@
                     </div>
                          <!-- 🆕 THÊM DÒNG NÀY -->
      <div class="detail-item">
-        <span class="detail-label">✅ Ngày hợp lệ hình thức đơn</span>
+        <span class="detail-label">Ngày hợp lệ hình thức đơn</span>
         <span class="detail-value">{{ s.valid_date|date:'d/m/Y'|default:'Chưa có' }}</span>
      </div>
                     <div class="detail-item">
@@ -581,7 +581,7 @@
                     </div>
                   {% endif %}
                   {% if s.registration_certificate %}
-                    <div class="detail-item">
+                    <div class="detail-item registration_certificate">
                       <span class="detail-label">Giấy chứng nhận đăng ký kinh doanh</span>
                       <a href="{% url 'register_certificate' s.id %}">Xem giấy đăng ký kinh doanh</a>
                     </div>

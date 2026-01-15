@@ -592,6 +592,11 @@
     .nav-tabs,
     .site-footer,
     #realtime-clock,
+    .contract-header,
+    .info-card,
+    .card-header,
+    .progress,
+    .table-responsive,
     .language-selector {
         display: none !important;
     }

@@ -592,6 +592,13 @@
     .nav-tabs,
     .site-footer,
     #realtime-clock,
+    .container .contract-header,
+    .info-card,
+    .card-header,
+    .card-body .mb-4,
+    .attachment-box,
+    h1,
+    .registration_certificate,
     .language-selector {
         display: none !important;
     }
