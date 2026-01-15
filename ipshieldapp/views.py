@@ -675,6 +675,35 @@ def contract_detail(request, id):
             except Exception as e:
                 messages.error(request, f"❌ Có lỗi xảy ra: {str(e)}")
                 return redirect("contract_detail", id=contract.id)
+        
+        # 4️⃣ XUẤT HÓA ĐƠN
+        if action == 'export_bill':
+            installment_id = request.POST.get('installment_id')
+            print(f"DEBUG: installment_id = {installment_id}")
+            
+            try:
+                installment = PaymentInstallment.objects.get(id=installment_id)
+                print(f"DEBUG: TRƯỚC KHI LƯU - is_exported_bill = {installment.is_exported_bill}")
+                
+                if installment.is_paid:
+                    installment.is_exported_bill = True
+                    installment.bill_exported_at = timezone.now()
+                    installment.save()
+                    
+                    # Kiểm tra lại
+                    installment.refresh_from_db()
+                    print(f"DEBUG: SAU KHI LƯU - is_exported_bill = {installment.is_exported_bill}")
+                    print(f"DEBUG: bill_exported_at = {installment.bill_exported_at}")
+                    
+                    messages.success(request, f'✅ Đã xuất hóa đơn đỏ!')
+                else:
+                    messages.error(request, '⚠️ Đợt này chưa thanh toán!')
+                    print(f"DEBUG: is_paid = {installment.is_paid}")
+                    
+            except PaymentInstallment.DoesNotExist:
+                messages.error(request, '❌ Không tìm thấy đợt thanh toán!')
+            
+            return redirect('contract_detail', id=id)
 
     return render(request, "contract_detail.html", {
         "contract": contract,

@@ -93,10 +93,6 @@ class MascotAdmin(admin.ModelAdmin):
     list_display = ('title', 'order', 'is_active')
     list_editable = ('order', 'is_active')
 
-@admin.register(PaymentLog)
-class PaymentLogAdmin(admin.ModelAdmin):
-    list_display = ('contract', 'installment', 'amount_paid', 'paid_at')
-    list_filter = ('paid_at',)
 
 
 

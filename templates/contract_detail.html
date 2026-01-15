@@ -76,9 +76,10 @@
       </div>
     </div>
 
-  {% if contract.payment_type == 'installment' %}
-
-   <!-- Thêm vào đầu card lịch thanh toán, sau dòng card-header -->
+    {% if contract.payment_type == 'full' %}
+    <h1>Hợp đồng trả dứt điểm</h1>
+  {% elif contract.payment_type == 'installment' %}
+     <!-- Thêm vào đầu card lịch thanh toán, sau dòng card-header -->
 <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
     <div>
         <h5 class="mb-0">💰 Lịch thanh toán trả góp</h5>
@@ -95,12 +96,17 @@
                 <span><strong>Tiến độ thanh toán:</strong></span>
                 <span><strong>{{ contract.payment_progress }}%</strong></span>
             </div>
-            <div class="progress" style="height: 25px;">
-                <div class="progress-bar bg-success" role="progressbar"
-                     style="width: {{ contract.payment_progress }}%">
-                    {{ contract.total_paid|floatformat:0 }} / {{ contract.contract_value|floatformat:0 }} VNĐ
-                </div>
-            </div>
+            <div style="position: relative;">
+    <div class="progress" style="height: 25px;">
+        <div class="progress-bar bg-success" role="progressbar" style="width: {{ contract.payment_progress|default:0|floatformat:0 }}%;">
+        </div>
+    </div>
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                display: flex; align-items: center; justify-content: center;
+                font-weight: 500; color: white;">
+        {{ contract.total_paid|floatformat:0 }} / {{ contract.contract_value|floatformat:0 }} VNĐ
+    </div>
+</div>
             <div class="mt-2 text-end">
                 <small class="text-muted">Còn lại: <strong>{{ contract.remaining_amount|floatformat:0 }} VNĐ</strong></small>
             </div>
@@ -114,11 +120,10 @@
                         <th width="5%">#</th>
                         <th width="20%">Đợt thanh toán</th>
                         <th width="15%">Số tiền</th>
-                        <th width="15%">Đã trả</th>
-                        <th width="15%">Còn lại</th>
                         <th width="12%">Hạn trả</th>
                         <th width="10%">Trạng thái</th>
                         <th width="8%">Thao tác</th>
+                        <th width="5%">Xuất hóa đơn</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -127,10 +132,6 @@
                         <td class="text-center">{{ forloop.counter }}</td>
                         <td>{{ ins.notes }}</td>
                         <td class="text-end">{{ ins.amount|floatformat:0 }} VNĐ</td>
-                        <td class="text-end">{{ ins.paid_amount|floatformat:0 }} VNĐ</td>
-                        <td class="text-end">
-                            <strong>{{ ins.remaining_amount|floatformat:0 }} VNĐ</strong>
-                        </td>
                         <td class="text-center">
                             {% if ins.due_date %}
                                 {{ ins.due_date|date:"d/m/Y" }}
@@ -172,6 +173,33 @@
                                 <span class="text-muted">-</span>
                             {% endif %}
                         </td>
+                        <td>
+    {% if ins.is_exported_bill %}
+        <!-- ĐÃ XUẤT HÓA ĐƠN -->
+        <span class="badge bg-danger">
+            🧾 Đã xuất HĐ
+        </span>
+        {% if ins.bill_exported_at %}
+            <br><small class="text-muted">{{ ins.bill_exported_at|date:"d/m/Y H:i" }}</small>
+        {% endif %}
+        
+    {% elif ins.is_paid %}
+        <!-- ĐÃ TRẢ NHƯNG CHƯA XUẤT HĐ -->
+        <form method="POST" style="display:inline;"
+              onsubmit="return confirm('Xác nhận xuất hóa đơn đỏ?');">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="export_bill">
+            <input type="hidden" name="installment_id" value="{{ ins.id }}">
+            <button type="submit" class="btn btn-danger btn-sm">
+                📄 Xuất HĐ đỏ
+            </button>
+        </form>
+        
+    {% else %}
+        <!-- CHƯA THANH TOÁN -->
+        <span class="text-muted">Chưa thanh toán</span>
+    {% endif %}
+                        </td>
                     </tr>
 
                     <!-- Modal thanh toán từng phần -->
@@ -211,7 +239,6 @@
                 </tbody>
             </table>
         </div>
-
 {% endif %}
 
     <!-- Service Details Card -->

@@ -299,9 +299,6 @@ class Contract(models.Model):
 # ============================
 # ĐỢT THANH TOÁN (PaymentInstallment Model)
 # ============================
-# ============================
-# ĐỢT THANH TOÁN (PaymentInstallment Model)
-# ============================
 class PaymentInstallment(models.Model):
     contract = models.ForeignKey(
         Contract,
@@ -349,7 +346,18 @@ class PaymentInstallment(models.Model):
         blank=True,
         verbose_name='Ghi chú'
     )
+    # 🔴🔴🔴 THÊM 2 DÒNG NÀY 🔴🔴🔴
+    is_exported_bill = models.BooleanField(
+        default=False,
+        verbose_name='Đã xuất hóa đơn'
+    )
 
+    bill_exported_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='Thời gian xuất hóa đơn'
+    )
+    # 🔴🔴🔴 KẾT THÚC 🔴🔴🔴
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

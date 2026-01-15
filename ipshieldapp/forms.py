@@ -143,8 +143,6 @@ class ContractForm(forms.ModelForm):
             'contract_value': 'Giá trị hợp đồng',
             'payment_type': 'Hình thức thanh toán',
             'prepaid_amount': 'Số tiền trả trước (VNĐ)',
-            'number_of_installments': 'Số đợt trả góp',  # 🆕
-            'installment_interval_days': 'Khoảng cách giữa các đợt (ngày)',  # 🆕
         }
 
         widgets = {
