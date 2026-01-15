@@ -39,6 +39,8 @@ urlpatterns = [
     path('<int:pk>/change-status/', views.customer_change_status, name='customer_change_status'),
     path("contracts/edit/<int:id>", views.contract_edit, name="contract_edit"),
     path('api/search-customer/', views.search_customer, name='search_customer'),
+# Thêm vào urls.py
+path('contract/<int:contract_id>/edit-installments/', views.edit_installment_amounts, name='edit_installment_amounts'),
     # CERTIFICATE (GIẤY CHỨNG NHẬN)
     path(
         'certificate/download/<int:id>/',

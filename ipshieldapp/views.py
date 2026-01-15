@@ -684,6 +684,69 @@ def contract_detail(request, id):
     })
 
 
+
+
+from .forms import InstallmentFormSet
+
+
+@login_required
+def edit_installment_amounts(request, contract_id):
+    """View để nhập số tiền cho từng đợt thanh toán"""
+    contract = get_object_or_404(Contract, id=contract_id)
+
+    if contract.payment_type != 'installment':
+        messages.error(request, "❌ Hợp đồng này không phải trả góp")
+        return redirect('contract_detail', id=contract_id)
+
+    installments = contract.installments.all().order_by('due_date')
+
+    if request.method == 'POST':
+        formset = InstallmentFormSet(request.POST, queryset=installments)
+
+        if formset.is_valid():
+            # Tính tổng số tiền đã nhập
+            total_entered = 0
+            for form in formset:
+                if form.cleaned_data:  # ✅ Kiểm tra cleaned_data tồn tại
+                    amount = form.cleaned_data.get('amount', 0)
+                    if amount:
+                        total_entered += amount
+
+            # Kiểm tra tổng có khớp với giá trị hợp đồng không
+            if total_entered != contract.contract_value:
+                messages.warning(
+                    request,
+                    f"⚠️ Tổng số tiền các đợt ({total_entered:,.0f} VNĐ) "
+                    f"khác với giá trị hợp đồng ({contract.contract_value:,.0f} VNĐ)"
+                )
+
+            # Lưu các đợt
+            instances = formset.save(commit=False)
+            for instance in instances:
+                # ✅ Không cần kiểm tra paid_amount ở đây
+                instance.save()
+
+            messages.success(request, "✅ Đã cập nhật số tiền các đợt thanh toán!")
+            return redirect('contract_detail', id=contract_id)
+        else:
+            # ✅ Hiển thị lỗi đúng cách
+            messages.error(request, "❌ Có lỗi trong form, vui lòng kiểm tra lại")
+            # In ra console để debug
+            print("Formset errors:", formset.errors)
+            print("Non-form errors:", formset.non_form_errors())
+    else:
+        formset = InstallmentFormSet(queryset=installments)
+
+    # Tính tổng hiện tại
+    current_total = sum(ins.amount for ins in installments)
+
+    return render(request, 'edit_installment_amounts.html', {
+        'contract': contract,
+        'formset': formset,
+        'installments': installments,
+        'current_total': current_total,
+    })
+
 # ===============================================
 # CONTRACT EDIT (ĐÃ SỬA - CẬP NHẬT TRẠNG THÁI)
 # ===============================================

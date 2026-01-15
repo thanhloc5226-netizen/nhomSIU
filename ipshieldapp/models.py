@@ -239,19 +239,17 @@ class Contract(models.Model):
         self.full_clean()
         super().save(*args, **kwargs)
 
-    # 🆕 TỰ ĐỘNG TẠO CÁC ĐỢT THANH TOÁN
+    # Trong class Contract, thay thế phương thức create_installments():
+
     def create_installments(self):
-        """Tự động tạo các đợt thanh toán khi hợp đồng được tạo"""
+        """Tự động tạo các đợt thanh toán RỖNG (chưa có số tiền)"""
         if self.payment_type != 'installment':
             return
 
-        # Xóa các đợt cũ nếu có (để tránh trùng lặp)
+        # Xóa các đợt cũ nếu có
         self.installments.all().delete()
 
-        # Tính số tiền mỗi đợt
-        amount_per_installment = self.contract_value / self.number_of_installments
-
-        # Tạo các đợt thanh toán
+        # Tạo các đợt thanh toán RỖNG
         from datetime import timedelta
         current_date = timezone.now().date()
 
@@ -259,17 +257,16 @@ class Contract(models.Model):
             # Tính ngày đến hạn cho từng đợt
             due_date = current_date + timedelta(days=self.installment_interval_days * i)
 
-            # Đợt đầu tiên có số tiền đã trả trước
+            # Đợt đầu tiên có số tiền đã trả trước (nếu có)
             paid_amount = self.prepaid_amount if i == 0 else 0
-            is_paid = paid_amount >= amount_per_installment if i == 0 else False
 
             PaymentInstallment.objects.create(
                 contract=self,
-                amount=amount_per_installment,
+                amount=0,  # 🔥 ĐỂ TRỐNG, CHỜ NHẬP TAY
                 paid_amount=paid_amount,
                 due_date=due_date,
-                is_paid=is_paid,
-                paid_date=current_date if is_paid else None,
+                is_paid=False,
+                paid_date=None,
                 notes=f"Đợt {i + 1}/{self.number_of_installments}"
             )
 
@@ -299,6 +296,9 @@ class Contract(models.Model):
         return f"{self.contract_no} - {self.get_service_type_display()}"
 
 
+# ============================
+# ĐỢT THANH TOÁN (PaymentInstallment Model)
+# ============================
 # ============================
 # ĐỢT THANH TOÁN (PaymentInstallment Model)
 # ============================
@@ -363,21 +363,16 @@ class PaymentInstallment(models.Model):
             models.Index(fields=['due_date']),
         ]
 
-    def clean(self):
-        super().clean()
-
-        if self.amount <= 0:
-            raise ValidationError({'amount': 'Số tiền đợt phải > 0'})
-
-        if self.paid_amount < 0:
-            raise ValidationError({'paid_amount': 'Số tiền đã trả không hợp lệ'})
-
-        if self.paid_amount > self.amount:
-            raise ValidationError({'paid_amount': 'Số tiền trả vượt quá số tiền đợt'})
 
     def save(self, *args, **kwargs):
-        # Tự động cập nhật trạng thái
-        if self.paid_amount >= self.amount:
+        # ✅ BỎ QUA validation nếu chỉ update một số field nhất định
+        if 'update_fields' in kwargs:
+            # Không gọi full_clean() khi chỉ update specific fields
+            super(PaymentInstallment, self).save(*args, **kwargs)
+            return
+
+        # ✅ Tự động cập nhật trạng thái (chỉ khi amount > 0)
+        if self.amount > 0 and self.paid_amount >= self.amount:
             self.is_paid = True
             if not self.paid_date:
                 self.paid_date = timezone.now().date()

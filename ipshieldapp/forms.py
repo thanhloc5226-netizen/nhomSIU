@@ -425,3 +425,62 @@ CopyrightFormSet = modelformset_factory(
     can_delete=True
 )
 
+# Thêm vào cuối file forms.py
+
+from .models import PaymentInstallment
+
+
+# Trong forms.py
+
+class InstallmentAmountForm(forms.ModelForm):
+    """Form để nhập số tiền cho từng đợt"""
+
+    class Meta:
+        model = PaymentInstallment
+        fields = ['amount', 'due_date', 'notes']
+
+        labels = {
+            'amount': 'Số tiền đợt này (VNĐ)',
+            'due_date': 'Ngày đến hạn',
+            'notes': 'Ghi chú',
+        }
+
+        widgets = {
+            'amount': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Nhập số tiền',
+                'min': 0,
+            }),
+            'due_date': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
+            'notes': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'VD: Đợt 1/3'
+            }),
+        }
+
+    def clean(self):
+        """Override clean để validate riêng, không gọi model.clean()"""
+        cleaned_data = super().clean()
+        amount = cleaned_data.get('amount')
+
+        # Chỉ validate amount
+        if amount is not None and amount < 0:
+            raise forms.ValidationError({'amount': 'Số tiền không được âm'})
+
+        return cleaned_data
+
+
+
+
+# Tạo formset
+InstallmentFormSet = modelformset_factory(
+    PaymentInstallment,
+    form=InstallmentAmountForm,
+    extra=0,
+    can_delete=False
+)
+
+

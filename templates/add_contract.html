@@ -57,45 +57,71 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <!-- Giá trị hợp đồng -->
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Giá trị hợp đồng <span class="text-danger">*</span></label>
-                {{ contract_form.contract_value }}
+           <!-- Trong form contract -->
+
+<!-- Giá trị hợp đồng -->
+<div class="mb-3">
+    <label for="{{ contract_form.contract_value.id_for_label }}" class="form-label">
+        {{ contract_form.contract_value.label }} <span class="text-danger">*</span>
+    </label>
+    {{ contract_form.contract_value }}
+    {% if contract_form.contract_value.errors %}
+        <div class="text-danger">{{ contract_form.contract_value.errors }}</div>
+    {% endif %}
+</div>
+
+
+
+<!-- 🔥 CÁC TRƯỜNG TRẢ GÓP (ẨN MẶC ĐỊNH) -->
+<div id="installment_fields" style="display: none;">
+    <div class="card mb-3" style="background: #f8f9fa; border-left: 4px solid #0d6efd;">
+        <div class="card-body">
+            <h6 class="card-title">⚙️ Cấu hình trả góp</h6>
+
+            <!-- Số đợt trả góp -->
+            <div class="mb-3">
+                <label for="{{ contract_form.number_of_installments.id_for_label }}" class="form-label">
+                    {{ contract_form.number_of_installments.label }}
+                </label>
+                {{ contract_form.number_of_installments }}
+                <small class="form-text text-muted">
+                    Số lần chia nhỏ để thanh toán (VD: 3, 6, 12...)
+                </small>
+                {% if contract_form.number_of_installments.errors %}
+                    <div class="text-danger">{{ contract_form.number_of_installments.errors }}</div>
+                {% endif %}
             </div>
 
-            <!-- Hình thức thanh toán -->
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Hình thức thanh toán <span class="text-danger">*</span></label>
-                {{ contract_form.payment_type }}
-            </div>
-
-            <!-- Số tiền trả trước -->
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Số tiền trả trước (VNĐ)</label>
-                {{ contract_form.prepaid_amount }}
-                <small class="form-text text-muted">Để trống nếu chưa trả trước</small>
+            <!-- Khoảng cách giữa các đợt -->
+            <div class="mb-3">
+                <label for="{{ contract_form.installment_interval_days.id_for_label }}" class="form-label">
+                    {{ contract_form.installment_interval_days.label }}
+                </label>
+                {{ contract_form.installment_interval_days }}
+                <small class="form-text text-muted">
+                    Số ngày giữa mỗi lần trả (VD: 30 = 1 tháng, 90 = 3 tháng)
+                </small>
+                {% if contract_form.installment_interval_days.errors %}
+                    <div class="text-danger">{{ contract_form.installment_interval_days.errors }}</div>
+                {% endif %}
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- 🆕 PHẦN TRẢ GÓP (ẨN MẶC ĐỊNH) -->
-        <div id="installment-section" style="display: none;">
-            <hr>
-            <h6 class="text-primary mb-3">⚙️ Cấu hình trả góp</h6>
-            <div class="row">
-                <!-- Số đợt trả góp -->
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Số đợt trả góp</label>
-                    {{ contract_form.number_of_installments }}
-                    <small class="form-text text-muted">Ví dụ: 3, 6, 12 đợt...</small>
-                </div>
-
-                <!-- Khoảng cách giữa các đợt -->
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Khoảng cách giữa các đợt (ngày)</label>
-                    {{ contract_form.installment_interval_days }}
-                    <small class="form-text text-muted">30 ngày = 1 tháng, 90 ngày = 3 tháng...</small>
-                </div>
-            </div>
+<!-- Số tiền trả trước (hiện cho cả 2 loại) -->
+<div class="mb-3">
+    <label for="{{ contract_form.prepaid_amount.id_for_label }}" class="form-label">
+        {{ contract_form.prepaid_amount.label }}
+    </label>
+    {{ contract_form.prepaid_amount }}
+    <small class="form-text text-muted" id="prepaid-hint">
+        Số tiền đã thanh toán trước (nếu có)
+    </small>
+    {% if contract_form.prepaid_amount.errors %}
+        <div class="text-danger">{{ contract_form.prepaid_amount.errors }}</div>
+    {% endif %}
+</div>
 
             <!-- Preview các đợt -->
             <div id="installment-preview" class="alert alert-info" style="display: none;">
@@ -383,66 +409,56 @@
 
   <!-- ✅ CHỈ LOAD FILE JS - KHÔNG CÓ INLINE SCRIPT NỮA -->
   <script src="{% static 'js/add_contract.js' %}"></script>
-    <script>
+   <script>
 document.addEventListener('DOMContentLoaded', function() {
     const paymentTypeSelect = document.getElementById('id_payment_type');
-    const installmentSection = document.getElementById('installment-section');
-    const contractValueInput = document.getElementById('id_contract_value');
-    const numberOfInstallmentsInput = document.getElementById('id_number_of_installments');
-    const intervalDaysInput = document.getElementById('id_installment_interval_days');
-    const previewDiv = document.getElementById('installment-preview');
-    const previewContent = document.getElementById('preview-content');
+    const installmentFields = document.getElementById('installment_fields'); // div chứa các trường trả góp
+    const prepaidField = document.querySelector('[name="prepaid_amount"]').closest('.mb-3');
 
-    // Hiển thị/ẩn phần trả góp
-    function toggleInstallmentSection() {
-        if (paymentTypeSelect.value === 'installment') {
-            installmentSection.style.display = 'block';
-            updatePreview();
-        } else {
-            installmentSection.style.display = 'none';
-            previewDiv.style.display = 'none';
-        }
-    }
+    function toggleInstallmentFields() {
+        const paymentType = paymentTypeSelect.value;
 
-    // Cập nhật preview
-    function updatePreview() {
-        const contractValue = parseFloat(contractValueInput.value) || 0;
-        const numInstallments = parseInt(numberOfInstallmentsInput.value) || 1;
-        const intervalDays = parseInt(intervalDaysInput.value) || 30;
+        if (paymentType === 'installment') {
+            // Hiện các trường trả góp
+            installmentFields.style.display = 'block';
+            prepaidField.style.display = 'block';
 
-        if (contractValue > 0 && numInstallments > 0) {
-            const amountPerInstallment = contractValue / numInstallments;
-            const today = new Date();
-
-            let html = '<table class="table table-sm table-bordered"><thead><tr><th>Đợt</th><th>Số tiền</th><th>Ngày đến hạn (dự kiến)</th></tr></thead><tbody>';
-
-            for (let i = 0; i < numInstallments; i++) {
-                const dueDate = new Date(today);
-                dueDate.setDate(dueDate.getDate() + (intervalDays * i));
-
-                html += `<tr>
-                    <td>Đợt ${i + 1}/${numInstallments}</td>
-                    <td class="text-end">${amountPerInstallment.toLocaleString('vi-VN')} VNĐ</td>
-                    <td class="text-center">${dueDate.toLocaleDateString('vi-VN')}</td>
-                </tr>`;
+            // Thêm thông báo
+            if (!document.getElementById('installment-notice')) {
+                const notice = document.createElement('div');
+                notice.id = 'installment-notice';
+                notice.className = 'alert alert-info mt-2';
+                notice.innerHTML = `
+                    <strong>ℹ️ Lưu ý:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Hệ thống sẽ tạo <strong>${document.querySelector('[name="number_of_installments"]').value || 1} đợt</strong> thanh toán rỗng (chưa có số tiền)</li>
+                        <li>Sau khi tạo hợp đồng, bạn cần vào <strong>"Nhập số tiền đợt"</strong> để nhập số tiền cho từng đợt</li>
+                        <li>Số tiền trả trước sẽ được ghi nhận vào đợt đầu tiên</li>
+                    </ul>
+                `;
+                installmentFields.appendChild(notice);
             }
-
-            html += '</tbody></table>';
-            previewContent.innerHTML = html;
-            previewDiv.style.display = 'block';
         } else {
-            previewDiv.style.display = 'none';
+            // Ẩn các trường trả góp
+            installmentFields.style.display = 'none';
+            prepaidField.style.display = 'none';
+
+            // Xóa thông báo
+            const notice = document.getElementById('installment-notice');
+            if (notice) notice.remove();
         }
     }
 
-    // Event listeners
-    paymentTypeSelect.addEventListener('change', toggleInstallmentSection);
-    contractValueInput.addEventListener('input', updatePreview);
-    numberOfInstallmentsInput.addEventListener('input', updatePreview);
-    intervalDaysInput.addEventListener('input', updatePreview);
+    // Cập nhật thông báo khi thay đổi số đợt
+    document.querySelector('[name="number_of_installments"]').addEventListener('input', function() {
+        const notice = document.getElementById('installment-notice');
+        if (notice && this.value) {
+            notice.querySelector('strong').textContent = `${this.value} đợt`;
+        }
+    });
 
-    // Khởi tạo
-    toggleInstallmentSection();
+    paymentTypeSelect.addEventListener('change', toggleInstallmentFields);
+    toggleInstallmentFields(); // Chạy ngay khi load
 });
 </script>
   <script>

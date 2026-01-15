@@ -77,11 +77,17 @@
     </div>
 
   {% if contract.payment_type == 'installment' %}
-<div class="card mt-4">
-    <div class="card-header bg-info text-white">
+
+   <!-- Thêm vào đầu card lịch thanh toán, sau dòng card-header -->
+<div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+    <div>
         <h5 class="mb-0">💰 Lịch thanh toán trả góp</h5>
         <small>Đã thanh toán: {{ paid_count }}/{{ installments.count }} đợt</small>
     </div>
+    <a href="{% url 'edit_installment_amounts' contract.id %}" class="btn btn-light btn-sm">
+        ✏️ Nhập số tiền đợt
+    </a>
+</div>
     <div class="card-body">
         <!-- Thanh tiến độ -->
         <div class="mb-4">
@@ -206,48 +212,6 @@
             </table>
         </div>
 
-        <!-- Lịch sử thanh toán -->
-        {% if contract.payment_logs.exists %}
-        <div class="mt-4">
-            <h6>📜 Lịch sử thanh toán</h6>
-            <div class="table-responsive">
-                <table class="table table-sm table-striped">
-                    <thead>
-                        <tr>
-                            <th>Thời gian</th>
-                            <th>Đợt</th>
-                            <th>Số tiền</th>
-                            <th>Hóa đơn</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for log in contract.payment_logs.all %}
-                        <tr>
-                            <td>{{ log.paid_at|date:"d/m/Y H:i" }}</td>
-                            <td>{{ log.installment.notes }}</td>
-                            <td class="text-end">{{ log.amount_paid|floatformat:0 }} VNĐ</td>
-                            <td>
-                                <form method="POST" style="display:inline;">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="action" value="log_toggle_bill">
-                                    <input type="hidden" name="log_id" value="{{ log.id }}">
-                                    <input type="checkbox"
-                                           {% if log.is_exported_bill %}checked disabled{% endif %}
-                                           onchange="this.form.submit()">
-                                    {% if log.is_exported_bill %}
-                                        <small class="text-success">✓ {{ log.bill_exported_at|date:"d/m H:i" }}</small>
-                                    {% endif %}
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-</div>
 {% endif %}
 
     <!-- Service Details Card -->
