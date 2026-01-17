@@ -11,17 +11,28 @@
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
     <script src="{% static 'js/base.js' %}" defer></script>
     <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.jpg' %}">
+<style>
 
+
+.header-logo img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius:20px;
+}
+
+
+</style>
 </head>
 
 
     <div class="container">
         <div class="header">
-            <div class="header-logo">
-                <br>LOGO
-            </div>
+
+                <img src="{% static 'images/SiuCuoiNgua.png' %}" alt="Logo" style="width:150px">
+
             <div class="header-title">
-                <h1>IPSHIELD</h1>
+
                 <h2>QUẢN LÝ HỢP ĐỒNG</h2>
             </div>
 {% if user.is_authenticated %}
@@ -60,19 +71,9 @@
                 <img src="{{ slider.image.url }}"
                      class="d-block w-100"
                      alt="{{ slider.title }}"
-                     style="height:320px; object-fit:cover; filter:brightness(0.85);">
+                     style="height:520px; object-fit:cover; filter:brightness(0.85);  ">
 
-                <div class="carousel-caption d-none d-md-block"
-                     style="background:linear-gradient(135deg, rgba(190,30,45,.95), rgba(150,20,35,.9));
-                            padding:15px 30px;
-                            border-radius:8px;
-                            bottom:30px;
-                            left:50%;
-                            transform:translateX(-50%);
-                            max-width:80%;">
-                    <h4>{{ slider.title }}</h4>
-                    <p>{{ slider.description }}</p>
-                </div>
+
             </div>
             {% endfor %}
         </div>
@@ -116,7 +117,7 @@
         <div class="footer-content">
             <div class="footer-section">
                 <div class="footer-logo">
-                    <img src="https://ipleader.vn/wp-content/uploads/2021/01/IPLEADER-LOGO-WHITE-01.png" alt="IP Leader Logo" width="180px">
+                    <img src="{% static 'images/Siu.PNG' %}" alt="IP Leader Logo" width="130px" style="margin-top:-12%">
                 </div>
                 <p class="company-name">CÔNG TY TNHH IP LEADER</p>
                 <p class="company-desc">Công ty chuyên cung cấp dịch vụ tư vấn và đại diện đăng ký bảo hộ quyền sở hữu trí tuệ cho các cá nhân, doanh nghiệp</p>
@@ -147,19 +148,17 @@
                     <li><a href="#">📋 Tuyển Cộng tác Viên</a></li>
                     <li><a href="#">🔍 Tra cứu hồ sơ</a></li>
                 </ul>
-                <div class="certification-badge">
 
-                </div>
             </div>
 
             <div class="footer-section">
                 <h5>Chính sách</h5>
                 <ul>
-                    <li><a href="#">📄 Dịch vụ của chúng tôi</a></li>
-                    <li><a href="#">🔒 Chính sách bảo mật</a></li>
-                    <li><a href="#">💳 Chính sách thanh toán</a></li>
-                    <li><a href="#">↩️ Chính sách hoàn trả</a></li>
-                    <li><a href="#">❓ Câu hỏi thường gặp</a></li>
+
+                    <li><a href="https://ipleader.vn/chinh-sach-bao-mat/">🔒 Chính sách bảo mật</a></li>
+                    <li><a href="https://ipleader.vn/chinh-sach-thanh-toan/">💳 Chính sách thanh toán</a></li>
+                    <li><a href="https://ipleader.vn/chinh-sach-hoan-tra/">↩️ Chính sách hoàn trả</a></li>
+                    <li><a href="https://ipleader.vn/2487-2/">📋 FAQ</a></li>
                 </ul>
             </div>
 
@@ -169,7 +168,7 @@
                     <p><span class="contact-icon">📞</span> <strong>Hotline:</strong> (+84) 076 455 2008</p>
                     <p><span class="contact-icon">☎️</span> <strong>Telephone:</strong>(+84) 028 6271 0346</p>
                     <p><span class="contact-icon">✉️</span> <strong>E-mail:</strong> info.ipleader@gmail.com</p>
-                    <p><span class="contact-icon">📍</span> <strong>Địa chỉ:</strong>18 Nguyễn Thái Sơn Street, Ward3, Gò Vấp District, Hồ Chí Minh City</p>
+                    <p><span class="contact-icon">📍</span> <strong>Địa chỉ:</strong>Căn 3.04 Tầng 3 Khu Thương mại – Dịch Vụ – Văn phòng – Officetel, Số 38 Trương Quốc Dung, P. Phú Nhuận, TP Hồ Chí Minh, Việt Nam</p>
 
 
 

@@ -3,7 +3,617 @@
   {% load humanize %}
   {% load static %}
   <link href="{% static 'css/contract_detail.css' %}" rel="stylesheet" />
+<style>
+    /* Payment Header - Full Payment */
+.payment-header {
+    margin-bottom: 24px;
+}
 
+.payment-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.payment-type-badge svg {
+    flex-shrink: 0;
+}
+
+/* Installment Card */
+.installment-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+/* Installment Header */
+.installment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #BE1E2D 0%, #a01827 100%);
+    color: white;
+}
+
+.header-info {
+    flex: 1;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.header-title svg {
+    flex-shrink: 0;
+}
+
+.header-title h5 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.payment-stats {
+    display: flex;
+    gap: 16px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.stat-item svg {
+    flex-shrink: 0;
+}
+
+.btn-edit-installment {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: white;
+    color: #BE1E2D;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-edit-installment:hover {
+    background: #f9fafb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #BE1E2D;
+}
+
+/* Installment Body */
+.installment-body {
+    padding: 24px;
+}
+
+/* Progress Section */
+.progress-section {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.progress-label {
+    font-weight: 700;
+    color: #374151;
+    font-size: 15px;
+}
+
+.progress-percentage {
+    font-weight: 800;
+    color: #BE1E2D;
+    font-size: 20px;
+}
+
+.progress-bar-wrapper {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.custom-progress {
+    height: 32px;
+    background: #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #BE1E2D 0%, #e63946 100%);
+    border-radius: 16px;
+    transition: width 0.6s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shine 2s infinite;
+}
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.progress-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    font-size: 13px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.progress-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+}
+
+.remaining-label {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.remaining-amount {
+    color: #BE1E2D;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+/* Installments Table */
+.installments-table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.installments-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.installments-table thead {
+    background: linear-gradient(135deg, #BE1E2D 0%, #a01827 100%);
+}
+
+.installments-table th {
+    padding: 14px 12px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.installments-table tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+    transition: all 0.2s ease;
+}
+
+.installments-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.installment-row.paid {
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.installment-row.overdue {
+    background: rgba(220, 38, 38, 0.05);
+}
+
+.installments-table td {
+    padding: 14px 12px;
+    font-size: 14px;
+    color: #374151;
+}
+
+.row-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    font-weight: 700;
+    color: #BE1E2D;
+}
+
+.installment-notes {
+    font-weight: 500;
+}
+
+.amount {
+    font-weight: 700;
+    color: #BE1E2D;
+}
+
+.due-date {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #f3f4f6;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-badge.paid {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.unpaid {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.paid-date {
+    display: block;
+    margin-top: 4px;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.btn-pay,
+.btn-partial {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-pay {
+    background: #10b981;
+    color: white;
+}
+
+.btn-pay:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.btn-partial {
+    background: white;
+    color: #BE1E2D;
+    border: 2px solid #BE1E2D;
+}
+
+.btn-partial:hover {
+    background: #BE1E2D;
+    color: white;
+}
+
+/* Bill Export */
+.bill-exported {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.bill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    background: #fee2e2;
+    color: #BE1E2D;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.bill-date {
+    color: #6b7280;
+    font-size: 11px;
+}
+
+.btn-export-bill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: #BE1E2D;
+    color: white;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-export-bill:hover {
+    background: #a01827;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(190, 30, 45, 0.4);
+}
+
+/* Custom Modal */
+.custom-modal {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.modal-header-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #BE1E2D 0%, #a01827 100%);
+    color: white;
+    border: none;
+}
+
+.modal-title-custom {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.btn-close-custom {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-close-custom:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.btn-close-custom svg {
+    color: white;
+}
+
+.modal-body-custom {
+    padding: 24px;
+}
+
+.payment-summary {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-item.highlight {
+    background: white;
+    margin: 8px -8px -8px;
+    padding: 12px 8px;
+    border-radius: 8px;
+    border: 2px solid #BE1E2D;
+}
+
+.summary-label {
+    color: #6b7280;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.summary-value {
+    color: #374151;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.summary-value.paid {
+    color: #10b981;
+}
+
+.summary-item.highlight .summary-value {
+    color: #BE1E2D;
+    font-size: 18px;
+}
+
+.form-group-custom {
+    margin-bottom: 0;
+}
+
+.form-label-custom {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-input-custom {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+.form-input-custom:focus {
+    outline: none;
+    border-color: #BE1E2D;
+    box-shadow: 0 0 0 3px rgba(190, 30, 45, 0.1);
+}
+
+.modal-footer-custom {
+    display: flex;
+    gap: 12px;
+    padding: 20px 24px;
+    background: #f9fafb;
+    border: none;
+}
+
+.btn-modal-cancel,
+.btn-modal-confirm {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-modal-cancel {
+    background: white;
+    color: #374151;
+    border: 2px solid #e5e7eb;
+}
+
+.btn-modal-cancel:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+.btn-modal-confirm {
+    background: #BE1E2D;
+    color: white;
+    box-shadow: 0 2px 8px rgba(190, 30, 45, 0.3);
+}
+
+.btn-modal-confirm:hover {
+    background: #a01827;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(190, 30, 45, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .installment-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+
+    .btn-edit-installment {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .installments-table {
+        font-size: 12px;
+    }
+
+    .installments-table th,
+    .installments-table td {
+        padding: 10px 8px;
+    }
+
+    .action-buttons {
+        flex-direction: row;
+    }
+
+    .modal-footer-custom {
+        flex-direction: column;
+    }
+}
+</style>
   <div class="container mt-4 ">
     <!-- Header -->
     <div class="contract-header">
@@ -77,45 +687,75 @@
     </div>
 
     {% if contract.payment_type == 'full' %}
-    <h1>Hợp đồng trả dứt điểm</h1>
-  {% elif contract.payment_type == 'installment' %}
-     <!-- Thêm vào đầu card lịch thanh toán, sau dòng card-header -->
-<div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-    <div>
-        <h5 class="mb-0">💰 Lịch thanh toán trả góp</h5>
-        <small>Đã thanh toán: {{ paid_count }}/{{ installments.count }} đợt</small>
+<div class="payment-header">
+    <div class="payment-type-badge full">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <span>Hợp đồng trả dứt điểm</span>
     </div>
-    <a href="{% url 'edit_installment_amounts' contract.id %}" class="btn btn-light btn-sm">
-        ✏️ Nhập số tiền đợt
-    </a>
 </div>
-    <div class="card-body">
-        <!-- Thanh tiến độ -->
-        <div class="mb-4">
-            <div class="d-flex justify-content-between mb-2">
-                <span><strong>Tiến độ thanh toán:</strong></span>
-                <span><strong>{{ contract.payment_progress }}%</strong></span>
+
+{% elif contract.payment_type == 'installment' %}
+
+<!-- Card Header -->
+<div class="installment-card">
+    <div class="installment-header">
+        <div class="header-info">
+            <div class="header-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+                <h5>Lịch thanh toán trả góp</h5>
             </div>
-            <div style="position: relative;">
-    <div class="progress" style="height: 25px;">
-        <div class="progress-bar bg-success" role="progressbar" style="width: {{ contract.payment_progress|default:0|floatformat:0 }}%;">
+            <div class="payment-stats">
+                <span class="stat-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Đã thanh toán: <strong>{{ paid_count }}/{{ installments.count }}</strong> đợt
+                </span>
+            </div>
         </div>
+        <a href="{% url 'edit_installment_amounts' contract.id %}" class="btn-edit-installment">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+            </svg>
+            Nhập số tiền đợt
+        </a>
     </div>
-    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-                display: flex; align-items: center; justify-content: center;
-                font-weight: 500; color: white;">
-        {{ contract.total_paid|floatformat:0 }} / {{ contract.contract_value|floatformat:0 }} VNĐ
-    </div>
-</div>
-            <div class="mt-2 text-end">
-                <small class="text-muted">Còn lại: <strong>{{ contract.remaining_amount|floatformat:0 }} VNĐ</strong></small>
+
+    <div class="installment-body">
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-label">Tiến độ thanh toán</span>
+                <span class="progress-percentage">{{ contract.payment_progress }}%</span>
+            </div>
+
+            <div class="progress-bar-wrapper">
+                <div class="custom-progress">
+                    <div class="progress-fill" style="width: {{ contract.payment_progress|default:0|floatformat:0 }}%;">
+                        <div class="progress-shine"></div>
+                    </div>
+                </div>
+                <div class="progress-text">
+                    {{ contract.total_paid|floatformat:0 }} / {{ contract.contract_value|floatformat:0 }} VNĐ
+                </div>
+            </div>
+
+            <div class="progress-footer">
+                <span class="remaining-label">Còn lại:</span>
+                <span class="remaining-amount">{{ contract.remaining_amount|floatformat:0 }} VNĐ</span>
             </div>
         </div>
 
-        <!-- Danh sách các đợt -->
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="table-light">
+        <!-- Installments Table -->
+        <div class="installments-table-wrapper">
+            <table class="installments-table">
+                <thead>
                     <tr>
                         <th width="5%">#</th>
                         <th width="20%">Đợt thanh toán</th>
@@ -128,108 +768,179 @@
                 </thead>
                 <tbody>
                     {% for ins in installments %}
-                    <tr class="{% if ins.is_paid %}table-success{% elif ins.due_date < today %}table-danger{% endif %}">
-                        <td class="text-center">{{ forloop.counter }}</td>
-                        <td>{{ ins.notes }}</td>
-                        <td class="text-end">{{ ins.amount|floatformat:0 }} VNĐ</td>
+                    <tr class="installment-row {% if ins.is_paid %}paid{% elif ins.due_date < today %}overdue{% endif %}">
+                        <td class="text-center">
+                            <span class="row-number">{{ forloop.counter }}</span>
+                        </td>
+                        <td>
+                            <span class="installment-notes">{{ ins.notes }}</span>
+                        </td>
+                        <td class="text-end">
+                            <span class="amount">{{ ins.amount|floatformat:0 }} VNĐ</span>
+                        </td>
                         <td class="text-center">
                             {% if ins.due_date %}
-                                {{ ins.due_date|date:"d/m/Y" }}
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            {% if ins.is_paid %}
-                                <span class="badge bg-success">✓ Đã trả</span>
-                                {% if ins.paid_date %}
-                                <br><small class="text-muted">{{ ins.paid_date|date:"d/m/Y" }}</small>
-                                {% endif %}
-                            {% else %}
-                                <span class="badge bg-warning">⏳ Chưa trả</span>
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            {% if not ins.is_paid %}
-                                <!-- Nút thanh toán toàn bộ đợt -->
-                                <form method="POST" style="display:inline;"
-                                      onsubmit="return confirm('Xác nhận thanh toán đợt này?\n\nSố tiền: {{ ins.remaining_amount|floatformat:0 }} VNĐ');">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="action" value="pay_installment">
-                                    <input type="hidden" name="installment_id" value="{{ ins.id }}">
-                                    <button type="submit" class="btn btn-success btn-sm" title="Thanh toán đợt này">
-                                        ✓ Trả
-                                    </button>
-                                </form>
-
-                                <!-- Nút thanh toán từng phần (modal) -->
-                                <button type="button" class="btn btn-outline-primary btn-sm mt-1"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#partialPayModal{{ ins.id }}"
-                                        title="Thanh toán một phần">
-                                    $ Trả 1 phần
-                                </button>
+                                <span class="due-date">{{ ins.due_date|date:"d/m/Y" }}</span>
                             {% else %}
                                 <span class="text-muted">-</span>
                             {% endif %}
                         </td>
-                        <td>
-    {% if ins.is_exported_bill %}
-        <!-- ĐÃ XUẤT HÓA ĐƠN -->
-        <span class="badge bg-danger">
-            🧾 Đã xuất HĐ
-        </span>
-        {% if ins.bill_exported_at %}
-            <br><small class="text-muted">{{ ins.bill_exported_at|date:"d/m/Y H:i" }}</small>
-        {% endif %}
-        
-    {% elif ins.is_paid %}
-        <!-- ĐÃ TRẢ NHƯNG CHƯA XUẤT HĐ -->
-        <form method="POST" style="display:inline;"
-              onsubmit="return confirm('Xác nhận xuất hóa đơn đỏ?');">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="export_bill">
-            <input type="hidden" name="installment_id" value="{{ ins.id }}">
-            <button type="submit" class="btn btn-danger btn-sm">
-                📄 Xuất HĐ đỏ
-            </button>
-        </form>
-        
-    {% else %}
-        <!-- CHƯA THANH TOÁN -->
-        <span class="text-muted">Chưa thanh toán</span>
-    {% endif %}
+                        <td class="text-center">
+                            {% if ins.is_paid %}
+                                <div class="status-badge paid">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Đã trả
+                                </div>
+                                {% if ins.paid_date %}
+                                <small class="paid-date">{{ ins.paid_date|date:"d/m/Y" }}</small>
+                                {% endif %}
+                            {% else %}
+                                <div class="status-badge unpaid">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    Chưa trả
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if not ins.is_paid %}
+                                <div class="action-buttons">
+                                    <!-- Thanh toán toàn bộ -->
+                                    <form method="POST" style="display:inline;"
+                                          onsubmit="return confirm('Xác nhận thanh toán đợt này?\n\nSố tiền: {{ ins.remaining_amount|floatformat:0 }} VNĐ');">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="pay_installment">
+                                        <input type="hidden" name="installment_id" value="{{ ins.id }}">
+                                        <button type="submit" class="btn-pay" title="Thanh toán đợt này">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            Trả
+                                        </button>
+                                    </form>
+
+                                    <!-- Thanh toán từng phần -->
+                                    <button type="button" class="btn-partial"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#partialPayModal{{ ins.id }}"
+                                            title="Thanh toán một phần">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        </svg>
+                                        Trả 1 phần
+                                    </button>
+                                </div>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if ins.is_exported_bill %}
+                                <!-- Đã xuất hóa đơn -->
+                                <div class="bill-exported">
+                                    <span class="bill-badge">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                        </svg>
+                                        Đã xuất HĐ
+                                    </span>
+                                    {% if ins.bill_exported_at %}
+                                    <small class="bill-date">{{ ins.bill_exported_at|date:"d/m/Y H:i" }}</small>
+                                    {% endif %}
+                                </div>
+
+                            {% elif ins.is_paid %}
+                                <!-- Đã trả nhưng chưa xuất HĐ -->
+                                <form method="POST" style="display:inline;"
+                                      onsubmit="return confirm('Xác nhận xuất hóa đơn đỏ?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="export_bill">
+                                    <input type="hidden" name="installment_id" value="{{ ins.id }}">
+                                    <button type="submit" class="btn-export-bill">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                            <polyline points="14 2 14 8 20 8"></polyline>
+                                        </svg>
+                                        Xuất HĐ đỏ
+                                    </button>
+                                </form>
+
+                            {% else %}
+                                <!-- Chưa thanh toán -->
+                                <span class="text-muted">Chưa thanh toán</span>
+                            {% endif %}
                         </td>
                     </tr>
 
                     <!-- Modal thanh toán từng phần -->
                     <div class="modal fade" id="partialPayModal{{ ins.id }}" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content custom-modal">
                                 <form method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="action" value="partial_payment">
                                     <input type="hidden" name="installment_id" value="{{ ins.id }}">
 
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Thanh toán từng phần - {{ ins.notes }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    <div class="modal-header-custom">
+                                        <h5 class="modal-title-custom">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="12" y1="1" x2="12" y2="23"></line>
+                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                            </svg>
+                                            Thanh toán từng phần - {{ ins.notes }}
+                                        </h5>
+                                        <button type="button" class="btn-close-custom" data-bs-dismiss="modal">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </button>
                                     </div>
-                                    <div class="modal-body">
-                                        <p><strong>Tổng đợt:</strong> {{ ins.amount|floatformat:0 }} VNĐ</p>
-                                        <p><strong>Đã trả:</strong> {{ ins.paid_amount|floatformat:0 }} VNĐ</p>
-                                        <p><strong>Còn lại:</strong> {{ ins.remaining_amount|floatformat:0 }} VNĐ</p>
 
-                                        <div class="mb-3">
-                                            <label class="form-label">Số tiền thanh toán lần này:</label>
-                                            <input type="number" name="paid_amount" class="form-control"
+                                    <div class="modal-body-custom">
+                                        <div class="payment-summary">
+                                            <div class="summary-item">
+                                                <span class="summary-label">Tổng đợt:</span>
+                                                <span class="summary-value">{{ ins.amount|floatformat:0 }} VNĐ</span>
+                                            </div>
+                                            <div class="summary-item">
+                                                <span class="summary-label">Đã trả:</span>
+                                                <span class="summary-value paid">{{ ins.paid_amount|floatformat:0 }} VNĐ</span>
+                                            </div>
+                                            <div class="summary-item highlight">
+                                                <span class="summary-label">Còn lại:</span>
+                                                <span class="summary-value">{{ ins.remaining_amount|floatformat:0 }} VNĐ</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group-custom">
+                                            <label class="form-label-custom">Số tiền thanh toán lần này:</label>
+                                            <input type="number" name="paid_amount" class="form-input-custom"
                                                    min="1" max="{{ ins.remaining_amount }}"
                                                    placeholder="Nhập số tiền" required>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                        <button type="submit" class="btn btn-primary">Xác nhận thanh toán</button>
+
+                                    <div class="modal-footer-custom">
+                                        <button type="button" class="btn-modal-cancel" data-bs-dismiss="modal">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                            Hủy
+                                        </button>
+                                        <button type="submit" class="btn-modal-confirm">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            Xác nhận thanh toán
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -239,6 +950,9 @@
                 </tbody>
             </table>
         </div>
+    </div>
+</div>
+
 {% endif %}
 
     <!-- Service Details Card -->
