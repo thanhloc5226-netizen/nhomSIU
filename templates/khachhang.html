@@ -220,149 +220,293 @@
     </div>
 </section>
 <style>
-    /* =====================================================
-   CSS MASCOT SECTION - OPTIMIZED SPACING
-===================================================== */
-
-.mascot-header {
-    text-align: center;
-    padding: 2rem 1rem;
-}
-
-.mascot-title {
-    color: white;
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    margin-top: 4%;
-}
-
 .mascot_body {
-    color: white;
-    min-height: 100vh;
-    min-height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    overflow: hidden;
-    margin-top: -15%;
-    margin-bottom: 3rem; /* Khoảng cách với section tiếp theo */
-}
 
-.carousel_mascot {
-    position: relative;
-    width: 100%;
-    max-width: 800px;
-    height: 500px;
-    perspective: 1200px;
-    -webkit-perspective: 1200px;
-}
+            color: white;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow: hidden;
+        }
 
-.carousel_mascot:hover .card_mascot {
-    animation-play-state: paused;
-}
+        .carousel_mascot {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 350px;
+            perspective: 800px;
+            -webkit-perspective: 800px;
+        }
 
-.card_mascot {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 180px;
-    height: 260px;
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
-    animation: orbit-x 30s linear infinite;
-    transition: transform 0.3s ease;
-    will-change: transform;
-    backface-visibility: visible;
-    -webkit-backface-visibility: visible;
-    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.4));
-}
+        .carousel_mascot:active .card_mascot {
+            animation-play-state: paused;
+        }
 
-.card_mascot:nth-child(1) { animation-delay: calc(-30s / 8 * 0); }
-.card_mascot:nth-child(2) { animation-delay: calc(-30s / 8 * 1); }
-.card_mascot:nth-child(3) { animation-delay: calc(-30s / 8 * 2); }
-.card_mascot:nth-child(4) { animation-delay: calc(-30s / 8 * 3); }
-.card_mascot:nth-child(5) { animation-delay: calc(-30s / 8 * 4); }
-.card_mascot:nth-child(6) { animation-delay: calc(-30s / 8 * 5); }
-.card_mascot:nth-child(7) { animation-delay: calc(-30s / 8 * 6); }
-.card_mascot:nth-child(8) { animation-delay: calc(-30s / 8 * 7); }
+        .card_mascot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120px;
+            height: 180px;
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+            animation: orbit-x 30s linear infinite;
+            transition: transform 0.3s ease;
+            will-change: transform;
+            backface-visibility: visible;
+            -webkit-backface-visibility: visible;
+        }
 
-.card_mascot img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 16px;
-    display: block;
-    transition: transform 0.3s ease;
+        /* Set delay cho từng card */
+        .card_mascot:nth-child(1) { animation-delay: calc(-30s / 8 * 0); }
+        .card_mascot:nth-child(2) { animation-delay: calc(-30s / 8 * 1); }
+        .card_mascot:nth-child(3) { animation-delay: calc(-30s / 8 * 2); }
+        .card_mascot:nth-child(4) { animation-delay: calc(-30s / 8 * 3); }
+        .card_mascot:nth-child(5) { animation-delay: calc(-30s / 8 * 4); }
+        .card_mascot:nth-child(6) { animation-delay: calc(-30s / 8 * 5); }
+        .card_mascot:nth-child(7) { animation-delay: calc(-30s / 8 * 6); }
+        .card_mascot:nth-child(8) { animation-delay: calc(-30s / 8 * 7); }
 
-}
+        .card_mascot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
 
-.card_mascot:hover {
-    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.6));
-}
 
-.card_mascot:hover img {
-    transform: scale(1.05);
+            display: block;
+            transition: transform 0.3s ease;
+        }
 
-}
+        .card_mascot:active img {
+            transform: scale(1.05);
+        }
 
-.speech_mascot {
-    position: absolute;
-    bottom: calc(110% + 15px);
-    left: 50%;
-    transform: translateX(-50%);
-    max-width: 200px;
-    min-width: 140px;
-    background: white;
-    color: #333;
-    padding: 12px 18px;
-    border-radius: 14px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    text-align: center;
-    white-space: normal;
-    word-wrap: break-word;
-    line-height: 1.5;
-    box-shadow:
-        0 6px 20px rgba(0, 0, 0, 0.25),
-        0 2px 8px rgba(0, 0, 0, 0.15);
-    opacity: 0;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    pointer-events: none;
-    z-index: 999;
-}
+        /* Speech bubble - tối ưu cho mobile */
+        .speech_mascot {
+            position: absolute;
+            bottom: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 220px;
+            min-width: 150px;
+            background: white;
+            color: #333;
+            padding: 14px 20px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: center;
+            white-space: normal;
+            word-wrap: break-word;
+            line-height: 1.5;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 999;
+        }
 
-.speech_mascot::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 20%;
-    transform: translateX(-50%);
-    border: 12px solid transparent;
-    border-top-color: white;
-    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
-}
+        .speech_mascot::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 12px solid transparent;
+            border-top-color: white;
+        }
 
-.card_mascot:hover .speech_mascot {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-5px);
-}
+        .card_mascot:active .speech_mascot {
+            opacity: 1;
+        }
 
-@keyframes orbit-x {
-    0% {
-        transform: translate(-50%, -50%) rotateY(0deg) translateZ(300px);
-    }
-    100% {
-        transform: translate(-50%, -50%) rotateY(-360deg) translateZ(300px);
-    }
-}
-/* Fix cho Safari iOS */
-@supports (-webkit-touch-callout: none) {
-    .card_mascot {
-        -webkit-transform-style: preserve-3d;
-    }
-}
+        /* Animation với hiệu ứng mờ dần và z-index */
+        @keyframes orbit-x {
+            0% {
+                transform: translate(-50%, -50%) rotateY(0deg) translateZ(220px);
+                opacity: 1;
+                z-index: 100;
+            }
+            25% {
+                transform: translate(-50%, -50%) rotateY(-90deg) translateZ(220px);
+                opacity: 0.6;
+                z-index: 50;
+            }
+            50% {
+                transform: translate(-50%, -50%) rotateY(-180deg) translateZ(220px);
+                opacity: 0.3;
+                z-index: 1;
+            }
+            75% {
+                transform: translate(-50%, -50%) rotateY(-270deg) translateZ(220px);
+                opacity: 0.6;
+                z-index: 50;
+            }
+            100% {
+                transform: translate(-50%, -50%) rotateY(-360deg) translateZ(220px);
+                opacity: 1;
+                z-index: 100;
+            }
+        }
+
+        /* Tablet */
+        @media (min-width: 601px) and (max-width: 900px) {
+            .carousel_mascot {
+                height: 400px;
+            }
+
+            .card_mascot {
+                width: 140px;
+                height: 200px;
+            }
+
+            @keyframes orbit-x {
+                0% {
+                    transform: translate(-50%, -50%) rotateY(0deg) translateZ(240px);
+                    opacity: 1;
+                    z-index: 100;
+                }
+                25% {
+                    transform: translate(-50%, -50%) rotateY(-90deg) translateZ(240px);
+                    opacity: 0.6;
+                    z-index: 50;
+                }
+                50% {
+                    transform: translate(-50%, -50%) rotateY(-180deg) translateZ(240px);
+                    opacity: 0.3;
+                    z-index: 1;
+                }
+                75% {
+                    transform: translate(-50%, -50%) rotateY(-270deg) translateZ(240px);
+                    opacity: 0.6;
+                    z-index: 50;
+                }
+                100% {
+                    transform: translate(-50%, -50%) rotateY(-360deg) translateZ(240px);
+                    opacity: 1;
+                    z-index: 100;
+                }
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 901px) {
+            .carousel_mascot {
+                max-width: 800px;
+                height: 450px;
+                perspective: 1000px;
+                -webkit-perspective: 1000px;
+            }
+
+            .carousel_mascot:hover .card_mascot {
+                animation-play-state: paused;
+            }
+
+            .card_mascot {
+                width: 150px;
+                height: 220px;
+            }
+
+            .card_mascot:hover img {
+                transform: scale(1.1);
+            }
+
+            .card_mascot:hover .speech_mascot {
+                opacity: 1;
+            }
+
+            .speech_mascot {
+                max-width: 200px;
+                min-width: 140px;
+                padding: 12px 18px;
+                font-size: 0.9rem;
+            }
+
+            @keyframes orbit-x {
+                0% {
+                    transform: translate(-50%, -50%) rotateY(0deg) translateZ(280px);
+                    opacity: 1;
+                    z-index: 100;
+                }
+                25% {
+                    transform: translate(-50%, -50%) rotateY(-90deg) translateZ(280px);
+                    opacity: 0.6;
+                    z-index: 50;
+                }
+                50% {
+                    transform: translate(-50%, -50%) rotateY(-180deg) translateZ(280px);
+                    opacity: 0.3;
+                    z-index: 1;
+                }
+                75% {
+                    transform: translate(-50%, -50%) rotateY(-270deg) translateZ(280px);
+                    opacity: 0.6;
+                    z-index: 50;
+                }
+                100% {
+                    transform: translate(-50%, -50%) rotateY(-360deg) translateZ(280px);
+                    opacity: 1;
+                    z-index: 100;
+                }
+            }
+        }
+
+        /* Fix cho Safari cũ */
+        @supports (-webkit-touch-callout: none) {
+            .card_mascot {
+                -webkit-transform-style: preserve-3d;
+            }
+        }
+
+        /* Tối ưu cho iPhone nhỏ */
+        @media (max-width: 475px) {
+            .carousel_mascot {
+                height: 300px;
+            }
+
+            .card_mascot {
+                width: 110px;
+                height: 150px;
+            }
+
+            .speech_mascot {
+                max-width: 180px;
+                min-width: 130px;
+                padding: 12px 16px;
+                font-size: 0.85rem;
+            }
+
+            @keyframes orbit-x {
+                0% {
+                    transform: translate(-50%, -50%) rotateY(0deg) translateZ(180px);
+                    opacity: 1;
+                    z-index: 100;
+                }
+                25% {
+                    transform: translate(-50%, -50%) rotateY(-90deg) translateZ(180px);
+                    opacity: 0.6;
+                    z-index: 50;
+                }
+                50% {
+                    transform: translate(-50%, -50%) rotateY(-180deg) translateZ(180px);
+                    opacity: 0.3;
+                    z-index: 1;
+                }
+                75% {
+                    transform: translate(-50%, -50%) rotateY(-270deg) translateZ(180px);
+                    opacity: 0.6;
+                    z-index: 50;
+                }
+                100% {
+                    transform: translate(-50%, -50%) rotateY(-360deg) translateZ(180px);
+                    opacity: 1;
+                    z-index: 100;
+                }
+            }
+        }
 </style>
 
 
@@ -379,358 +523,179 @@
 
 <style>
 
-
 /* =====================================================
-   CSS NHÃN HIỆU ĐỘC QUYỀN – CAROUSEL LOGO
-===================================================== */
+           CSS NHÃN HIỆU ĐỘC QUYỀN – CAROUSEL LOGO (PHÓNG TO)
+        ===================================================== */
 
-.khtt-header {
-    text-align: center;
-    padding: 2rem 1rem;
-    margin-top: 0; /* Xóa margin âm */
-}
-
-.khtt-title {
-    color: white;
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.khtt-section {
-    margin-top: 0;
-    padding-bottom: 3rem;
-}
-
-.carousel-container_nhdq {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    background: var(--bg-color, #fff);
-    padding: 24px 0;
-}
-
-.gradient_nhdq {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 60px;
-    z-index: 5;
-    pointer-events: none;
-}
-
-.left-gradient_nhdq {
-    left: 0;
-    background: linear-gradient(to right, var(--bg-color, #fff), transparent);
-}
-
-.right-gradient_nhdq {
-    right: 0;
-    background: linear-gradient(to left, var(--bg-color, #fff), transparent);
-}
-
-.carousel_nhdq {
-    display: flex;
-    width: max-content;
-    animation: scroll_nhdq 22s linear infinite;
-    will-change: transform;
-}
-
-.logos-slide_nhdq {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
-
-.logo-item_nhdq {
-    width: 320px;
-    height: 180px;
-    margin: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    border-radius: 12px;
-    transition: all 0.4s ease;
-}
-
-.logo-item_nhdq::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 12px;
-    padding: 2px;
-    background: linear-gradient(135deg, transparent, transparent);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.logo-item_nhdq:hover::before {
-    background: linear-gradient(135deg, #BE1E2D, #E63946, #BE1E2D);
-    opacity: 1;
-}
-
-.logo_nhdq {
-    max-width: 90%;
-    max-height: 90%;
-    object-fit: contain;
-    opacity: 0.88;
-    transition: all 0.4s ease;
-    position: relative;
-    z-index: 1;
-}
-
-.logo-item_nhdq:hover {
-    background: linear-gradient(135deg, rgba(190, 30, 45, 0.02), rgba(190, 30, 45, 0.05));
-    box-shadow: 0 8px 24px rgba(190, 30, 45, 0.12),
-                0 4px 8px rgba(0, 0, 0, 0.06);
-}
-
-.logo-item_nhdq:hover .logo_nhdq {
-    transform: scale(1.08);
-    opacity: 1;
-    filter: contrast(1.05) brightness(1.02);
-}
-
-@keyframes scroll_nhdq {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(-50%);
-    }
-}
-
-/* =====================================================
-   RESPONSIVE - TABLET (768px)
-===================================================== */
-@media (max-width: 768px) {
-    /* MASCOT */
-    .mascot-title {
-        font-size: 2rem;
-        margin-top: 2%;
-    }
-
-    .mascot_body {
-        margin-top: -5%;
-        margin-bottom: 4rem; /* Tăng khoảng cách với section tiếp theo */
-        min-height: 70vh; /* Giảm chiều cao để không chiếm quá nhiều không gian */
-    }
-
-    .carousel_mascot {
-        height: 400px;
-        perspective: 900px;
-    }
-
-    .card_mascot {
-        width: 140px;
-        height: 200px;
-        filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
-    }
-
-    .speech_mascot {
-        max-width: 160px;
-        min-width: 120px;
-        font-size: 0.85rem;
-        padding: 10px 14px;
-    }
-
-    @keyframes orbit-x {
-        0% {
-            transform: translate(-50%, -50%) rotateY(0deg) translateZ(220px);
+        .khtt-header {
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 0;
         }
-        100% {
-            transform: translate(-50%, -50%) rotateY(-360deg) translateZ(220px);
+
+        .khtt-title {
+            color: white;
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1rem;
         }
-    }
 
-    /* NHÃN HIỆU */
-    .khtt-header {
-        padding: 2.5rem 1rem 1.5rem; /* Tăng padding-top để tạo khoảng cách */
-        margin-top: 0;
-    }
-
-    .khtt-title {
-        font-size: 2rem;
-    }
-
-    .khtt-section {
-        padding-bottom: 2.5rem;
-    }
-
-    .carousel-container_nhdq {
-        padding: 15px 0;
-    }
-
-    .logo-item_nhdq {
-        width: 200px;
-        height: 120px;
-        margin: 0 12px;
-        border-radius: 8px;
-    }
-
-    .logo-item_nhdq::before {
-        border-radius: 8px;
-    }
-
-    .carousel_nhdq {
-        animation-duration: 16s;
-    }
-
-    .gradient_nhdq {
-        display: none;
-    }
-
-    .logo-item_nhdq:hover {
-        box-shadow: 0 6px 16px rgba(190, 30, 45, 0.1),
-                    0 3px 6px rgba(0, 0, 0, 0.05);
-    }
-
-    .logo-item_nhdq:hover .logo_nhdq {
-        transform: scale(1.05);
-    }
-}
-
-/* =====================================================
-   RESPONSIVE - MOBILE (480px)
-===================================================== */
-@media (max-width: 480px) {
-    /* MASCOT */
-    .mascot-header {
-        padding: 1.5rem 1rem 0.5rem;
-    }
-
-    .mascot-title {
-        font-size: 1.6rem;
-        margin-top: 0;
-        margin-bottom: 1rem;
-    }
-
-    .mascot_body {
-        margin-top: 0;
-        margin-bottom: 5rem; /* Khoảng cách lớn hơn trên mobile */
-        min-height: 60vh; /* Giảm chiều cao */
-        padding: 0.5rem;
-    }
-
-    .carousel_mascot {
-        height: 320px;
-        perspective: 700px;
-    }
-
-    .card_mascot {
-        width: 110px;
-        height: 160px;
-        filter: drop-shadow(0 6px 15px rgba(0, 0, 0, 0.4));
-    }
-
-    .card_mascot img {
-        border-radius: 12px;
-        box-shadow:
-            0 3px 10px rgba(0, 0, 0, 0.2),
-            0 6px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .speech_mascot {
-        max-width: 140px;
-        min-width: 100px;
-        font-size: 0.75rem;
-        padding: 8px 12px;
-        border-radius: 10px;
-        bottom: calc(110% + 10px);
-    }
-
-    .speech_mascot::after {
-        border-width: 8px;
-    }
-
-    @keyframes orbit-x {
-        0% {
-            transform: translate(-50%, -50%) rotateY(0deg) translateZ(160px);
+        .khtt-section {
+            margin-top: 0;
+            padding-bottom: 4rem;
         }
-        100% {
-            transform: translate(-50%, -50%) rotateY(-360deg) translateZ(160px);
+
+        .carousel-container_nhdq {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            background: var(--bg-color, #fff);
+            padding: 40px 0; /* Tăng từ 24px lên 40px */
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
-    }
 
-    /* NHÃN HIỆU */
-    .khtt-header {
-        padding: 3rem 1rem 1rem; /* Padding lớn để tạo khoảng cách rõ ràng */
-        margin-top: 0;
-    }
-
-    .khtt-title {
-        font-size: 1.6rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .khtt-section {
-        padding-bottom: 2rem;
-    }
-
-    .logo-item_nhdq {
-        width: 180px;
-        height: 110px;
-    }
-}
-
-/* =====================================================
-   RESPONSIVE - MOBILE NHỎ (360px)
-===================================================== */
-@media (max-width: 360px) {
-    /* MASCOT */
-    .mascot-title {
-        font-size: 1.4rem;
-    }
-
-    .mascot_body {
-        margin-bottom: 4rem;
-        min-height: 50vh;
-    }
-
-    .carousel_mascot {
-        height: 280px;
-    }
-
-    .card_mascot {
-        width: 90px;
-        height: 130px;
-    }
-
-    .speech_mascot {
-        font-size: 0.7rem;
-        padding: 6px 10px;
-    }
-
-    @keyframes orbit-x {
-        0% {
-            transform: translate(-50%, -50%) rotateY(0deg) translateZ(130px);
+        .gradient_nhdq {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 80px; /* Tăng từ 60px lên 80px */
+            z-index: 5;
+            pointer-events: none;
         }
-        100% {
-            transform: translate(-50%, -50%) rotateY(-360deg) translateZ(130px);
+
+        .left-gradient_nhdq {
+            left: 0;
+            background: linear-gradient(to right, var(--bg-color, #fff), transparent);
         }
-    }
 
-    /* NHÃN HIỆU */
-    .khtt-header {
-        padding: 2.5rem 1rem 1rem;
-    }
+        .right-gradient_nhdq {
+            right: 0;
+            background: linear-gradient(to left, var(--bg-color, #fff), transparent);
+        }
 
-    .khtt-title {
-        font-size: 1.3rem;
-    }
+        .carousel_nhdq {
+            display: flex;
+            width: max-content;
+            animation: scroll_nhdq 50s linear infinite; /* Tăng từ 22s lên 30s cho mượt hơn */
+            will-change: transform;
+        }
 
-    .logo-item_nhdq {
-        width: 150px;
-        height: 90px;
-        margin: 0 8px;
-    }
-}
+        .logos-slide_nhdq {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
 
+        .logo-item_nhdq {
+            width: 450px; /* Tăng từ 320px lên 450px */
+            height: 260px; /* Tăng từ 180px lên 260px */
+            margin: 0 30px; /* Tăng từ 20px lên 30px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-radius: 16px; /* Tăng từ 12px lên 16px */
+            transition: all 0.4s ease;
+            background: rgba(255, 255, 255, 0.5);
+        }
 
+        .logo-item_nhdq::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            padding: 3px; /* Tăng từ 2px lên 3px */
+            background: linear-gradient(135deg, transparent, transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .logo-item_nhdq:hover::before {
+            background: linear-gradient(135deg, #BE1E2D, #E63946, #BE1E2D);
+            opacity: 1;
+        }
+
+        .logo_nhdq {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            opacity: 0.88;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-item_nhdq:hover {
+            background: linear-gradient(135deg, rgba(190, 30, 45, 0.02), rgba(190, 30, 45, 0.05));
+            box-shadow: 0 12px 32px rgba(190, 30, 45, 0.15),
+                        0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo-item_nhdq:hover .logo_nhdq {
+            transform: scale(1.08); /* Tăng từ 1.08 lên 1.12 */
+            opacity: 1;
+            filter: contrast(1.05) brightness(1.02);
+        }
+
+        @keyframes scroll_nhdq {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* =====================================================
+           RESPONSIVE - TABLET (768px)
+        ===================================================== */
+        @media (max-width: 768px) {
+            .khtt-title {
+                font-size: 2.5rem;
+            }
+
+            .carousel-container_nhdq {
+                padding: 30px 0;
+            }
+
+            .logo-item_nhdq {
+                width: 300px;
+                height: 180px;
+                margin: 0 20px;
+            }
+
+            .gradient_nhdq {
+                width: 60px;
+            }
+        }
+
+        /* =====================================================
+           RESPONSIVE - MOBILE (480px)
+        ===================================================== */
+        @media (max-width: 480px) {
+            .khtt-title {
+                font-size: 2rem;
+            }
+
+            .carousel-container_nhdq {
+                padding: 20px 0;
+            }
+
+            .logo-item_nhdq {
+                width: 220px;
+                height: 140px;
+                margin: 0 15px;
+            }
+
+            .gradient_nhdq {
+                width: 40px;
+            }
+        }
 </style>
 
 <section class="khtt-section" style="margin-top:0%">
@@ -877,11 +842,5 @@ tieu de mascot
 
 
 </style>
-
-
-
-
-
-
 
 {% endblock %}
