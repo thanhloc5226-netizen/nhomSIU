@@ -1005,9 +1005,10 @@
     <div class="row">
         <div class="col-md-6">
             <div class="detail-grid">
+
                 <div class="detail-item">
-                    <span class="detail-label">Chủ đơn</span>
-                    <span class="detail-value">{{ contract.customer.name }}</span>
+                    <span class="detail-label">Số đơn</span>
+                    <span class="highlight-text">{{ s.app_no }}</span>
                 </div>
 
                 <div class="detail-item">
@@ -1016,18 +1017,8 @@
                 </div>
 
                 <div class="detail-item">
-                    <span class="detail-label">Địa chỉ</span>
-                    <span class="detail-value">{{ s.address }}</span>
-                </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">SĐT</span>
-                    <span class="detail-value">{{ s.phone }}</span>
-                </div>
-
-                <div class="detail-item">
-                    <span class="detail-label">Số đơn</span>
-                    <span class="highlight-text">{{ s.app_no }}</span>
+                    <span class="detail-label">Chủ đơn</span>
+                    <span class="detail-value">{{ contract.customer.name }}</span>
                 </div>
 
                 <div class="detail-item">
@@ -1036,8 +1027,18 @@
                 </div>
 
                 <div class="detail-item">
-                    <span class="detail-label">Phân loại dịch vụ</span>
-                    <span class="detail-value">{{ s.classification }}</span>
+                    <span class="detail-label">SĐT</span>
+                    <span class="detail-value">{{ s.phone }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Ngày cấp</span>
+                    <span class="detail-value">{{ s.decision_date|date:'d/m/Y' }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value">{{ s.email }}</span>
                 </div>
 
                 <div class="detail-item">
@@ -1046,14 +1047,20 @@
                 </div>
 
                 <div class="detail-item">
+                    <span class="detail-label">Địa chỉ</span>
+                    <span class="detail-value">{{ s.address }}</span>
+                </div>
+
+                <div class="detail-item">
                     <span class="detail-label">Ngày hợp lệ hình thức đơn</span>
                     <span class="detail-value">{{ s.valid_date|date:'d/m/Y'|default:'Chưa có' }}</span>
                 </div>
 
                 <div class="detail-item">
-                    <span class="detail-label">Ngày cấp</span>
-                    <span class="detail-value">{{ s.decision_date|date:'d/m/Y' }}</span>
+                    <span class="detail-label">Phân loại dịch vụ</span>
+                    <span class="detail-value">{{ s.classification }}</span>
                 </div>
+
             </div>
         </div>
 
@@ -1164,6 +1171,12 @@
                 </div>
 
                 <div class="detail-grid">
+
+                    <div class="detail-item">
+                        <span class="detail-label">Số giấy chứng nhận</span>
+                        <span class="highlight-text">{{ s.certificate_no }}</span>
+                    </div>
+                    
                     <div class="detail-item">
                         <span class="detail-label">Tác phẩm</span>
                         <span class="detail-value">{{ s.work_name }}</span>
@@ -1189,67 +1202,60 @@
                         <span class="detail-value">{{ s.type }}</span>
                     </div>
 
-                    <div class="detail-item">
-                        <span class="detail-label">Số giấy chứng nhận</span>
-                        <span class="highlight-text">{{ s.certificate_no }}</span>
-                    </div>
                 </div>
                 <!-- 🔥 HIỂN THỊ TÀI LIỆU ĐÍNH KÈM -->
-                {% if s.certificates.exists %}
                 <div class="attachment-box"
-                     style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                    <h6 style="margin-bottom: 15px;">📎 Tài liệu đính kèm ({{ s.certificates.count }})</h6>
-                    <div style="display: flex; flex-direction: column; gap: 10px;">
-                        {% for cert in s.certificates.all %}
-                        <div class="attachment-item"
-                             style="display: flex; align-items: center; padding: 10px; background: white; border-radius: 6px; border: 1px solid #dee2e6;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2" style="margin-right: 10px; color: #6c757d;">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
+                 style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                <h6 style="margin-bottom: 15px;">📎 Tài liệu đính kèm ({{ s.certificates.count }})</h6>
 
-                            <div style="flex: 1;">
-                                <strong>{{ cert.name }}</strong>
-                                {% if cert.description %}
-                                <br/><small style="color: #6c757d;">{{ cert.description }}</small>
-                                {% endif %}
-                                <br/><small style="color: #6c757d;">{{ cert.uploaded_at|date:'d/m/Y H:i' }}</small>
-                            </div>
+                <!-- FORM UPLOAD -->
+                <form method="post" action="{% url 'upload_certificate' %}" enctype="multipart/form-data"
+                      style="margin-bottom: 15px;">
+                    {% csrf_token %}
 
-                            <a href="{{ cert.file.url }}" download class="btn btn-sm btn-primary"
-                               style="white-space: nowrap;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                Tải xuống
-                            </a>
-                            <a href="{% url 'delete_certificate' cert.id %}" class="delete-attachment"
-                               onclick="return confirm('Xoá file này?');">❌ Xoá</a>
-                        </div>
-                        {% endfor %}
+                    <input type="hidden" name="service_type" value="{{ contract.service_type }}"/>
+                    <input type="hidden" name="service_id" value="{{ s.id }}"/>
+                    <input type="hidden" name="contract_id" value="{{ contract.id }}"/>
+
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <input type="text" name="name" class="form-control" placeholder="Tên tài liệu"
+                               required style="max-width:200px;"/>
+
+                        <input type="file" name="file" class="form-control" required
+                               style="max-width:260px;"/>
+
+                        <button type="submit" class="btn btn-sm btn-success">➕ Thêm tài liệu</button>
                     </div>
-                </div>
-                {% endif %}
+                </form>
 
-                <!-- 👇 NÚT TẢI Ở CUỐI FORM -->
-                {% if s.certificate_file %}
-                <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
-                    <a href="{% url 'download_copyright_certificate' s.id %}" class="btn-view-detail"
-                       style="background: #28a745;">
+                {% if s.certificates.exists %}
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    {% for cert in s.certificates.all %}
+                    <div class="attachment-item"
+                         style="display: flex; align-items: center; padding: 10px; background: white; border-radius: 6px; border: 1px solid #dee2e6;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                             stroke-width="2" style="margin-right: 10px;">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                            <polyline points="13 2 13 9 20 9"></polyline>
                         </svg>
-                        Tải giấy chứng nhận
-                    </a>
+
+                        <div style="flex: 1;">
+                            <strong>{{ cert.name }}</strong>
+                            {% if cert.description %}
+                            <br/><small>{{ cert.description }}</small>
+                            {% endif %}
+                            <br/><small style="color: #6c757d;">{{ cert.uploaded_at|date:'d/m/Y H:i' }}</small>
+                        </div>
+
+                        <a href="{{ cert.file.url }}" download class="btn btn-sm btn-primary">⬇️ Tải xuống</a>
+                        <a href="{% url 'delete_certificate' cert.id %}" class="delete-attachment"
+                           onclick="return confirm('Xoá file này?');">❌ Xoá</a>
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endif %}
+            </div>
+            <!-- ✅ ĐÃ ĐÓNG attachment-box Ở ĐÂY -->
             </div>
             {% empty %}
             <p>❌ Chưa có bản quyền nào</p>
@@ -1286,8 +1292,20 @@
                     </div>
 
                     <div class="detail-item">
+                        <span class="detail-label">Người đại diện pháp luật</span>
+                        <span class="detail-value">{{ s.legal_representative }}</span>
+                    </div>
+
+                    <div class="detail-item">
                         <span class="detail-label">Loại hình kinh doanh</span>
                         <span class="detail-value">{{ s.business_type }}</span>
+                    </div>
+
+
+
+                    <div class="detail-item">
+                        <span class="detail-label">Chức danh</span>
+                        <span class="detail-value">{{ s.position }}</span>
                     </div>
 
                     <div class="detail-item">
@@ -1295,6 +1313,11 @@
                         <span class="highlight-text">{{ s.tax_code|default:'Chưa cập nhật' }}</span>
                     </div>
 
+                    <div class="detail-item">
+                        <span class="detail-label">Số điện thoại</span>
+                        <span class="detail-value">{{ s.phone }}</span>
+                    </div>
+                    
                     <div class="detail-item">
                         <span class="detail-label">Địa chỉ</span>
                         <span class="detail-value">{{ s.address }}</span>
@@ -1305,67 +1328,66 @@
                         <span class="detail-value">{{ s.email }}</span>
                     </div>
 
-                    <div class="detail-item">
-                        <span class="detail-label">Số điện thoại</span>
-                        <span class="detail-value">{{ s.phone }}</span>
-                    </div>
-
-                    <div class="detail-item">
-                        <span class="detail-label">Người đại diện pháp luật</span>
-                        <span class="detail-value">{{ s.legal_representative }}</span>
-                    </div>
-
-                    <div class="detail-item">
-                        <span class="detail-label">Chức danh</span>
-                        <span class="detail-value">{{ s.position }}</span>
-                    </div>
+                    
 
                     <div class="detail-item">
                         <span class="detail-label">Vốn điều lệ</span>
                         <span class="detail-value">{{ s.charter_capital }}</span>
                     </div>
-                    {% if s.certificates.exists %}
-                    <div class="attachment-box"
-                         style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                        <h6>📎 Tài liệu đính kèm ({{ s.certificates.count }})</h6>
-                        {% for cert in s.certificates.all %}
-                        <div class="attachment-item"
-                             style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; margin-bottom: 8px; border-radius: 6px;">
-                            <div>
-                                <strong>{{ cert.name }}</strong>
-                                <br/><small>{{ cert.uploaded_at|date:'d/m/Y H:i' }}</small>
-                            </div>
-                            <a href="{{ cert.file.url }}" download class="btn btn-sm btn-primary">Tải xuống</a>
-                            <a href="{% url 'delete_certificate' cert.id %}" class="delete-attachment"
-                               onclick="return confirm('Xoá file này?');">❌ Xoá</a>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    {% if s.registration_certificate %}
-                    <div class="detail-item registration_certificate">
-                        <span class="detail-label">Giấy chứng nhận đăng ký kinh doanh</span>
-                        <a href="{% url 'register_certificate' s.id %}">Xem giấy đăng ký kinh doanh</a>
-                    </div>
-                    {% endif %}
-                </div>
+            </div>
+             <!-- 🔥 HIỂN THỊ TÀI LIỆU ĐÍNH KÈM -->
+                <div class="attachment-box"
+                 style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                <h6 style="margin-bottom: 15px;">📎 Tài liệu đính kèm ({{ s.certificates.count }})</h6>
 
-                <!-- 👇 NÚT TẢI Ở CUỐI FORM -->
-                {% if s.certificate_file %}
-                <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
-                    <a href="{% url 'download_business_certificate' s.id %}" class="btn-view-detail"
-                       style="background: #28a745;">
+                <!-- FORM UPLOAD -->
+                <form method="post" action="{% url 'upload_certificate' %}" enctype="multipart/form-data"
+                      style="margin-bottom: 15px;">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="service_type" value="{{ contract.service_type }}"/>
+                    <input type="hidden" name="service_id" value="{{ s.id }}"/>
+                    <input type="hidden" name="contract_id" value="{{ contract.id }}"/>
+
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <input type="text" name="name" class="form-control" placeholder="Tên tài liệu"
+                               required style="max-width:200px;"/>
+
+                        <input type="file" name="file" class="form-control" required
+                               style="max-width:260px;"/>
+
+                        <button type="submit" class="btn btn-sm btn-success">➕ Thêm tài liệu</button>
+                    </div>
+                </form>
+
+                {% if s.certificates.exists %}
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    {% for cert in s.certificates.all %}
+                    <div class="attachment-item"
+                         style="display: flex; align-items: center; padding: 10px; background: white; border-radius: 6px; border: 1px solid #dee2e6;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                             stroke-width="2" style="margin-right: 10px;">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                            <polyline points="13 2 13 9 20 9"></polyline>
                         </svg>
-                        Tải giấy chứng nhận
-                    </a>
+
+                        <div style="flex: 1;">
+                            <strong>{{ cert.name }}</strong>
+                            {% if cert.description %}
+                            <br/><small>{{ cert.description }}</small>
+                            {% endif %}
+                            <br/><small style="color: #6c757d;">{{ cert.uploaded_at|date:'d/m/Y H:i' }}</small>
+                        </div>
+
+                        <a href="{{ cert.file.url }}" download class="btn btn-sm btn-primary">⬇️ Tải xuống</a>
+                        <a href="{% url 'delete_certificate' cert.id %}" class="delete-attachment"
+                           onclick="return confirm('Xoá file này?');">❌ Xoá</a>
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endif %}
             </div>
+            <!-- ✅ ĐÃ ĐÓNG attachment-box Ở ĐÂY -->
             {% endwith %}
             {% else %}
             <p>❌ Chưa có thông tin đăng ký kinh doanh</p>
@@ -1383,7 +1405,7 @@
                              stroke-width="2">
                             <line x1="12" y1="1" x2="12" y2="23"></line>
                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                        </svg>
+                        </svg>Dự án: 
                         {{ s.project_name }}
                     </h6>
                     <a href="{% url 'investment_detail' s.id %}" class="btn-view-detail">
@@ -1412,7 +1434,7 @@
                         <span class="detail-value">{{ s.project_name }}</span>
                     </div>
 
-                    <div class="detail-item full-width">
+                    <div class="detail-item">
                         <span class="detail-label">Mục tiêu dự án</span>
                         <span class="detail-value">{{ s.objective }}</span>
                     </div>
@@ -1427,39 +1449,59 @@
                         <span class="detail-value">{{ s.total_capital }}</span>
                     </div>
                 </div>
-                {% if s.certificates.exists %}
+                 <!-- 🔥 HIỂN THỊ TÀI LIỆU ĐÍNH KÈM -->
                 <div class="attachment-box"
-                     style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                    <h6>📎 Tài liệu đính kèm ({{ s.certificates.count }})</h6>
+                 style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                <h6 style="margin-bottom: 15px;">📎 Tài liệu đính kèm ({{ s.certificates.count }})</h6>
+
+                <!-- FORM UPLOAD -->
+                <form method="post" action="{% url 'upload_certificate' %}" enctype="multipart/form-data"
+                      style="margin-bottom: 15px;">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="service_type" value="{{ contract.service_type }}"/>
+                    <input type="hidden" name="service_id" value="{{ s.id }}"/>
+                    <input type="hidden" name="contract_id" value="{{ contract.id }}"/>
+
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <input type="text" name="name" class="form-control" placeholder="Tên tài liệu"
+                               required style="max-width:200px;"/>
+
+                        <input type="file" name="file" class="form-control" required
+                               style="max-width:260px;"/>
+
+                        <button type="submit" class="btn btn-sm btn-success">➕ Thêm tài liệu</button>
+                    </div>
+                </form>
+
+                {% if s.certificates.exists %}
+                <div style="display: flex; flex-direction: column; gap: 10px;">
                     {% for cert in s.certificates.all %}
                     <div class="attachment-item"
-                         style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; margin-bottom: 8px; border-radius: 6px;">
-                        <div>
+                         style="display: flex; align-items: center; padding: 10px; background: white; border-radius: 6px; border: 1px solid #dee2e6;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" style="margin-right: 10px;">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                            <polyline points="13 2 13 9 20 9"></polyline>
+                        </svg>
+
+                        <div style="flex: 1;">
                             <strong>{{ cert.name }}</strong>
-                            <br/><small>{{ cert.uploaded_at|date:'d/m/Y H:i' }}</small>
+                            {% if cert.description %}
+                            <br/><small>{{ cert.description }}</small>
+                            {% endif %}
+                            <br/><small style="color: #6c757d;">{{ cert.uploaded_at|date:'d/m/Y H:i' }}</small>
                         </div>
-                        <a href="{{ cert.file.url }}" download class="btn btn-sm btn-primary">Tải xuống</a>
+
+                        <a href="{{ cert.file.url }}" download class="btn btn-sm btn-primary">⬇️ Tải xuống</a>
                         <a href="{% url 'delete_certificate' cert.id %}" class="delete-attachment"
                            onclick="return confirm('Xoá file này?');">❌ Xoá</a>
                     </div>
                     {% endfor %}
                 </div>
                 {% endif %}
-                <!-- 👇 NÚT TẢI Ở CUỐI FORM -->
-                {% if s.certificate_file %}
-                <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
-                    <a href="{% url 'download_investment_certificate' s.id %}" class="btn-view-detail"
-                       style="background: #28a745;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                        Tải giấy chứng nhận
-                    </a>
-                </div>
-                {% endif %}
+            </div>
+            <!-- ✅ ĐÃ ĐÓNG attachment-box Ở ĐÂY -->
             </div>
             {% endwith %}
             {% else %}
@@ -1509,39 +1551,59 @@
                         <span class="detail-value">{{ s.description }}</span>
                     </div>
                 </div>
-                {% if s.certificates.exists %}
+                 <!-- 🔥 HIỂN THỊ TÀI LIỆU ĐÍNH KÈM -->
                 <div class="attachment-box"
-                     style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                    <h6>📎 Tài liệu đính kèm ({{ s.certificates.count }})</h6>
+                 style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                <h6 style="margin-bottom: 15px;">📎 Tài liệu đính kèm ({{ s.certificates.count }})</h6>
+
+                <!-- FORM UPLOAD -->
+                <form method="post" action="{% url 'upload_certificate' %}" enctype="multipart/form-data"
+                      style="margin-bottom: 15px;">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="service_type" value="{{ contract.service_type }}"/>
+                    <input type="hidden" name="service_id" value="{{ s.id }}"/>
+                    <input type="hidden" name="contract_id" value="{{ contract.id }}"/>
+
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <input type="text" name="name" class="form-control" placeholder="Tên tài liệu"
+                               required style="max-width:200px;"/>
+
+                        <input type="file" name="file" class="form-control" required
+                               style="max-width:260px;"/>
+
+                        <button type="submit" class="btn btn-sm btn-success">➕ Thêm tài liệu</button>
+                    </div>
+                </form>
+
+                {% if s.certificates.exists %}
+                <div style="display: flex; flex-direction: column; gap: 10px;">
                     {% for cert in s.certificates.all %}
                     <div class="attachment-item"
-                         style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; margin-bottom: 8px; border-radius: 6px;">
-                        <div>
+                         style="display: flex; align-items: center; padding: 10px; background: white; border-radius: 6px; border: 1px solid #dee2e6;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" style="margin-right: 10px;">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                            <polyline points="13 2 13 9 20 9"></polyline>
+                        </svg>
+
+                        <div style="flex: 1;">
                             <strong>{{ cert.name }}</strong>
-                            <br/><small>{{ cert.uploaded_at|date:'d/m/Y H:i' }}</small>
+                            {% if cert.description %}
+                            <br/><small>{{ cert.description }}</small>
+                            {% endif %}
+                            <br/><small style="color: #6c757d;">{{ cert.uploaded_at|date:'d/m/Y H:i' }}</small>
                         </div>
-                        <a href="{{ cert.file.url }}" download class="btn btn-sm btn-primary">Tải xuống</a>
+
+                        <a href="{{ cert.file.url }}" download class="btn btn-sm btn-primary">⬇️ Tải xuống</a>
                         <a href="{% url 'delete_certificate' cert.id %}" class="delete-attachment"
                            onclick="return confirm('Xoá file này?');">❌ Xoá</a>
                     </div>
                     {% endfor %}
                 </div>
                 {% endif %}
-                <!-- 👇 NÚT TẢI Ở CUỐI FORM -->
-                {% if s.certificate_file %}
-                <div style="margin-top: 20px; text-align: right; padding-top: 15px; border-top: 1px solid #eee;">
-                    <a href="{% url 'download_other_certificate' s.id %}" class="btn-view-detail"
-                       style="background: #28a745;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                        </svg>
-                        Tải file đính kèm
-                    </a>
-                </div>
-                {% endif %}
+            </div>
+            <!-- ✅ ĐÃ ĐÓNG attachment-box Ở ĐÂY -->
             </div>
             {% empty %}
             <p>❌ Chưa có dịch vụ khác</p>

@@ -33,54 +33,75 @@
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>Quay lại
         </a>
-           <style>
-                .btn-back {
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 8px;
-
-                        padding: 10px 18px;
-                        background-color: #ffffff;
-                        color: #333;
-
-                        border: 1.5px solid #e5e7eb;
-                        border-radius: 8px;
-
-                        font-size: 14px;
-                        font-weight: 500;
-                        text-decoration: none;
-
-                        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-                        transition: all 0.25s ease;
-                    }
-
-                    /* Icon */
-                    .btn-back svg {
-                        transition: transform 0.25s ease;
-                    }
-
-                    /* Hover */
-                    .btn-back:hover {
-                        background-color: #f9fafb;
-                        border-color: #d1d5db;
-                        color: #111;
-
-                        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-                        transform: translateY(-2px);
-                    }
-
-                    /* Icon hover */
-                    .btn-back:hover svg {
-                        transform: translateX(-4px);
-                    }
-
-                    /* Click */
-                    .btn-back:active {
-                        transform: translateY(0);
-                        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-                    }
-
-            </style>
+        <style>
+          .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+          
+            padding: 10px 18px;
+            background-color: #ffffff;
+            color: #333;
+          
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+          
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+          
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            transition: all 0.25s ease;
+          }
+          
+          /* Icon */
+          .btn-back svg {
+            transition: transform 0.25s ease;
+          }
+          
+          /* Hover */
+          .btn-back:hover {
+            background-color: #f9fafb;
+            border-color: #d1d5db;
+            color: #111;
+          
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+          }
+          
+          /* Icon hover */
+          .btn-back:hover svg {
+            transform: translateX(-4px);
+          }
+          
+          /* Click */
+          .btn-back:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+          }
+          @media print {
+            /* 1. Ẩn toàn bộ nội dung */
+            body * {
+              visibility: hidden !important;
+            }
+          
+            /* 2. Chỉ hiển thị info-card */
+            .info-card,
+            .info-card * {
+              visibility: visible !important;
+            }
+          
+            /* 3. Đưa info-card lên góc trang */
+            .info-card {
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 100%;
+              box-shadow: none !important;
+              border: 1px solid #000 !important;
+            }
+          }
+        </style>
       </div>
     </div>
 
@@ -91,8 +112,7 @@
           <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
           <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
         </svg>
-        <h5 class="mb-0">{{ business.company_name }}
-</h5>
+        <h5 class="mb-0">{{ business.company_name }}</h5>
       </div>
       <div class="card-body">
         <div class="row">
@@ -119,19 +139,14 @@
               </div>
 
               <div class="detail-item">
-                <span class="detail-label">Email</span>
-                <span class="detail-value">{{ business.email }}</span>
+                <span class="detail-label">Vốn điều lệ</span>
+                <span class="detail-value">{{ business.charter_capital }}</span>
               </div>
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="detail-grid">
-              <div class="detail-item">
-                <span class="detail-label">Số điện thoại</span>
-                <span class="detail-value">{{ business.phone }}</span>
-              </div>
-
               <div class="detail-item">
                 <span class="detail-label">Người đại diện pháp luật</span>
                 <span class="detail-value">{{ business.legal_representative }}</span>
@@ -143,8 +158,13 @@
               </div>
 
               <div class="detail-item">
-                <span class="detail-label">Vốn điều lệ</span>
-                <span class="detail-value">{{ business.charter_capital }}</span>
+                <span class="detail-label">Số điện thoại</span>
+                <span class="detail-value">{{ business.phone }}</span>
+              </div>
+
+              <div class="detail-item">
+                <span class="detail-label">Email</span>
+                <span class="detail-value">{{ business.email }}</span>
               </div>
             </div>
           </div>
@@ -153,51 +173,43 @@
     </div>
     <!-- Download Certificate Section -->
     {% if business.certificates %}
-<div class="card mb-4 download-card">
-    <div class="card-header">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="card mb-4 download-card">
+        <div class="card-header">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-        </svg>
-        <h5 class="mb-0">📎 Tài liệu đính kèm</h5>
-    </div>
-
-    <div class="card-body">
-        {% for cert in business.certificates.all %}
-        <div class="attachment-item"
-             style="display:flex; justify-content:space-between; align-items:center;
-                    padding:12px; border:1px solid #e5e7eb; border-radius:8px; margin-bottom:10px;">
-            <div>
-                <strong>{{ cert.name|default:"Giấy đăng ký kinh doanh" }}</strong><br>
-                <small class="text-muted">
-                    {{ cert.uploaded_at|date:'d/m/Y H:i' }}
-                </small>
-            </div>
-
-            <div>
-                <a href="{{ cert.file.url }}"
-                   class="btn btn-sm btn-primary"
-                   download>
-                    ⬇️ Tải xuống
-                </a>
-
-                <a href="{% url 'delete_certificate' cert.id %}"
-                   onclick="return confirm('Xoá file này?');"
-                   class="btn btn-sm btn-danger">
-                    ❌ Xoá
-                </a>
-            </div>
+          </svg>
+          <h5 class="mb-0">📎 Tài liệu đính kèm</h5>
         </div>
-        {% endfor %}
-    </div>
-</div>
+
+        <div class="card-body">
+          {% for cert in business.certificates.all %}
+            <div class="attachment-item" style="display:flex; justify-content:space-between; align-items:center;
+                    padding:12px; border:1px solid #e5e7eb; border-radius:8px; margin-bottom:10px;">
+              <div style="flex: 1;">
+                <strong>{{ cert.name }}</strong>
+                {% if cert.description %}
+                  <br /><small>{{ cert.description }}</small>
+                {% endif %}
+                <br /><small style="color: #6c757d;">{{ cert.uploaded_at|date:'d/m/Y H:i' }}</small>
+              </div>
+
+              <div>
+                <a href="{{ cert.file.url }}" class="btn btn-sm btn-primary" download>⬇️ Tải xuống</a>
+
+                <a href="{% url 'delete_certificate' cert.id %}" onclick="return confirm('Xoá file này?');" class="btn btn-sm btn-danger">❌ Xoá</a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
     {% endif %}
   </div>
 
   <style>
     /* ========================================
-       BUSINESS DETAIL PAGE - CLEAN WHITE & RED
-       ======================================== */
-
+           BUSINESS DETAIL PAGE - CLEAN WHITE & RED
+           ======================================== */
+    
     :root {
       --primary-red: #be1e2d;
       --primary-red-dark: #a01827;
@@ -216,7 +228,7 @@
       --success: #10b981;
       --warning: #f59e0b;
     }
-
+    
     /* Header */
     .business-header {
       display: flex;
@@ -228,13 +240,13 @@
       border-radius: 16px;
       box-shadow: 0 8px 24px rgba(190, 30, 45, 0.25);
     }
-
+    
     .header-left {
       display: flex;
       align-items: center;
       gap: 16px;
     }
-
+    
     .header-left h2 {
       color: var(--white);
       font-weight: 700;
@@ -242,7 +254,7 @@
       margin: 0;
       letter-spacing: -0.5px;
     }
-
+    
     .icon-wrapper {
       display: flex;
       align-items: center;
@@ -253,16 +265,16 @@
       border-radius: 14px;
       backdrop-filter: blur(10px);
     }
-
+    
     .icon-wrapper svg {
       color: var(--white);
     }
-
+    
     .header-actions {
       display: flex;
       gap: 12px;
     }
-
+    
     /* Buttons */
     .btn {
       display: inline-flex;
@@ -278,39 +290,39 @@
       border: none;
       cursor: pointer;
     }
-
+    
     .btn-back {
       background: var(--white);
       color: var(--primary-red);
       border: 2px solid rgba(255, 255, 255, 0.3);
     }
-
+    
     .btn-back:hover {
       background: var(--gray-50);
       color: var(--primary-red-dark);
       transform: translateX(-4px);
       text-decoration: none;
     }
-
+    
     .btn-outline {
       background: transparent;
       color: var(--white);
       border: 2px solid rgba(255, 255, 255, 0.3);
     }
-
+    
     .btn-outline:hover {
       background: rgba(255, 255, 255, 0.15);
       border-color: rgba(255, 255, 255, 0.5);
       color: var(--white);
       text-decoration: none;
     }
-
+    
     .btn-primary {
       background: var(--white);
       color: var(--primary-red);
       font-weight: 700;
     }
-
+    
     .btn-primary:hover {
       background: var(--gray-50);
       transform: translateY(-2px);
@@ -318,12 +330,12 @@
       color: var(--primary-red-dark);
       text-decoration: none;
     }
-
+    
     .btn-sm {
       padding: 8px 16px;
       font-size: 13px;
     }
-
+    
     .btn-download {
       background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-dark) 100%);
       color: var(--white);
@@ -333,7 +345,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(190, 30, 45, 0.2);
     }
-
+    
     .btn-download:hover {
       background: linear-gradient(135deg, var(--primary-red-dark) 0%, #8a1522 100%);
       transform: translateY(-3px);
@@ -341,7 +353,7 @@
       color: var(--white);
       text-decoration: none;
     }
-
+    
     /* Cards */
     .card {
       background: var(--white);
@@ -351,12 +363,12 @@
       overflow: hidden;
       transition: all 0.3s ease;
     }
-
+    
     .card:hover {
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       border-color: var(--gray-300);
     }
-
+    
     .info-card {
       background: var(--white);
       border: 1px solid var(--gray-200);
@@ -364,7 +376,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
       overflow: hidden;
     }
-
+    
     .card-header {
       display: flex;
       align-items: center;
@@ -373,19 +385,19 @@
       background: var(--gray-50);
       border-bottom: 2px solid var(--gray-200);
     }
-
+    
     .card-header svg {
       color: var(--primary-red);
       flex-shrink: 0;
     }
-
+    
     .card-header h5 {
       margin: 0;
       font-weight: 700;
       font-size: 18px;
       color: var(--gray-800);
     }
-
+    
     .card-body {
       padding: 28px;
     }
@@ -426,112 +438,112 @@
       color: var(--gray-500);
       font-weight: 500;
     }
-
-   /* ===============================
-   BUSINESS INFO CARD – UI PRO
-   =============================== */
-
-.info-card {
-  border: 1.5px solid #e5e7eb;
-  border-radius: 16px;
-  background: #ffffff;
-  transition: all 0.3s ease;
-}
-
-.info-card:hover {
-  border-color: #dc2626;
-  box-shadow: 0 10px 30px rgba(220, 38, 38, 0.15);
-  transform: translateY(-2px);
-}
-
-/* ===== Header ===== */
-.info-card .card-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px 20px;
-  background: transparent;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.info-card .card-header svg {
-  color: #dc2626;
-}
-
-.info-card .card-header h5 {
-  margin: 0;
-  font-weight: 600;
-  color: #111827;
-}
-
-/* ===== Body ===== */
-.info-card .card-body {
-  padding: 24px 28px;
-}
-
-/* ===== Detail Grid ===== */
-.detail-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-
-/* ===== Detail Item ===== */
-.detail-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  transition: all 0.25s ease;
-}
-
-.detail-item:hover {
-  background: #fef2f2;
-}
-
-/* ===== Label ===== */
-.detail-label {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #6b7280;
-}
-
-/* ===== Value ===== */
-.detail-value {
-  font-size: 15px;
-  font-weight: 500;
-  color: #111827;
-  word-break: break-word;
-}
-
-/* ===== Highlight Company Name / Tax Code ===== */
-.detail-value.fw-bold,
-.detail-value.text-primary {
-  color: #dc2626 !important;
-  font-weight: 700;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .info-card .card-body {
-    padding: 20px;
-  }
-
-  .detail-item {
-    padding: 10px 12px;
-  }
-
-  .detail-label {
-    font-size: 11px;
-  }
-
-  .detail-value {
-    font-size: 14px;
-  }
-}
-
+    
+    /* ===============================
+       BUSINESS INFO CARD – UI PRO
+       =============================== */
+    
+    .info-card {
+      border: 1.5px solid #e5e7eb;
+      border-radius: 16px;
+      background: #ffffff;
+      transition: all 0.3s ease;
+    }
+    
+    .info-card:hover {
+      border-color: #dc2626;
+      box-shadow: 0 10px 30px rgba(220, 38, 38, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    /* ===== Header ===== */
+    .info-card .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 20px;
+      background: transparent;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .info-card .card-header svg {
+      color: #dc2626;
+    }
+    
+    .info-card .card-header h5 {
+      margin: 0;
+      font-weight: 600;
+      color: #111827;
+    }
+    
+    /* ===== Body ===== */
+    .info-card .card-body {
+      padding: 24px 28px;
+    }
+    
+    /* ===== Detail Grid ===== */
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    
+    /* ===== Detail Item ===== */
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      transition: all 0.25s ease;
+    }
+    
+    .detail-item:hover {
+      background: #fef2f2;
+    }
+    
+    /* ===== Label ===== */
+    .detail-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6b7280;
+    }
+    
+    /* ===== Value ===== */
+    .detail-value {
+      font-size: 15px;
+      font-weight: 500;
+      color: #111827;
+      word-break: break-word;
+    }
+    
+    /* ===== Highlight Company Name / Tax Code ===== */
+    .detail-value.fw-bold,
+    .detail-value.text-primary {
+      color: #dc2626 !important;
+      font-weight: 700;
+    }
+    
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .info-card .card-body {
+        padding: 20px;
+      }
+    
+      .detail-item {
+        padding: 10px 12px;
+      }
+    
+      .detail-label {
+        font-size: 11px;
+      }
+    
+      .detail-value {
+        font-size: 14px;
+      }
+    }
+    
     /* Info Box for Contract Section */
     .info-box {
       display: flex;
