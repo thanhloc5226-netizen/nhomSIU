@@ -494,7 +494,7 @@
     }
 
     .detail-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -515,12 +515,28 @@
         justify-content: center;
     }
 
+    /* GIỮ NGUYÊN 2 CỘT CHO INFO GRID */
     .info-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
     }
 
+    /* GIỮ NGUYÊN 2 CỘT CHO DETAIL GRID */
     .detail-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    /* Giảm font size để vừa 2 cột trên mobile */
+    .info-label,
+    .detail-label {
+        font-size: 11px;
+    }
+
+    .info-value,
+    .detail-value {
+        font-size: 13px;
+        word-break: break-word;
     }
 
     .service-content {
@@ -577,6 +593,17 @@
     .btn-view-detail svg {
         width: 16px;
         height: 16px;
+    }
+
+    /* Giảm font size thêm cho màn hình rất nhỏ */
+    .info-label,
+    .detail-label {
+        font-size: 10px;
+    }
+
+    .info-value,
+    .detail-value {
+        font-size: 12px;
     }
 }
 
@@ -697,5 +724,26 @@
     /* Ẩn animation khi in */
     .service-item-card {
         animation: none !important;
+    }
+
+    /* TÀI LIỆU ĐÍNH KÈM - KHÔNG XẾP DỌC KHI IN */
+    .attachment-box,
+    .certificates-list,
+    .certificate-item {
+        display: inline-block !important;
+        page-break-inside: avoid !important;
+        vertical-align: top !important;
+        width: auto !important;
+    }
+
+    /* Căn chỉnh các item tài liệu theo chiều ngang */
+    .certificate-item {
+        margin-right: 15px !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Ẩn các form upload khi in */
+    form[enctype="multipart/form-data"] {
+        display: none !important;
     }
 }
