@@ -1,0 +1,318 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{% block title %}IPSystem{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#d41132",
+                        "secondary": "#7a1522",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221013",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+        /* ===== PAGE TRANSITION ===== */
+        #page-transition-overlay {
+            position: fixed;
+            inset: 0;
+            background: #d41132;
+            z-index: 9999;
+            pointer-events: none;
+
+            /* Bắt đầu: che toàn màn hình (clip từ trái sang phải) */
+            clip-path: inset(0 0 0 0);
+            transition: clip-path 0.5s cubic-bezier(0.77, 0, 0.18, 1);
+        }
+
+        /* Trạng thái đã load xong: thu về bên phải */
+        #page-transition-overlay.slide-out {
+            clip-path: inset(0 0 0 100%);
+        }
+
+        /* Trạng thái chuẩn bị rời trang: kéo từ phải sang phủ toàn màn */
+        #page-transition-overlay.slide-in {
+            clip-path: inset(0 0 0 0);
+            transition: clip-path 0.4s cubic-bezier(0.77, 0, 0.18, 1);
+        }
+
+        /* Nội dung trang fade in sau khi overlay kéo đi */
+        main {
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.45s ease 0.25s, transform 0.45s ease 0.25s;
+        }
+        main.page-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.65s ease, transform 0.65s ease;
+        }
+        .reveal.reveal--left  { transform: translateX(-48px); }
+        .reveal.reveal--right { transform: translateX(48px); }
+        .reveal.reveal--scale { transform: scale(0.92); }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0) translateX(0) scale(1);
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+
+<!-- ===== PAGE TRANSITION OVERLAY ===== -->
+<div id="page-transition-overlay"></div>
+<!-- ===== END OVERLAY ===== -->
+
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+
+    <!-- ===== NAVBAR ===== -->
+    <header class="sticky top-0 z-50 w-full bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 lg:px-10 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="{% url 'home' %}" class="flex items-center gap-3 text-primary">
+                <span class="material-symbols-outlined text-4xl font-bold">terminal</span>
+                <h2 class="text-slate-900 dark:text-slate-100 text-2xl font-black leading-tight tracking-tight">IPSystem</h2>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-10">
+                <a class="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors {% if request.resolver_match.url_name == 'home' %}text-primary{% endif %}"
+                    href="{% url 'home' %}">Trang chủ</a>
+                <a class="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors {% if request.resolver_match.url_name == 'service' %}text-primary{% endif %}"
+                    href="{% url 'service:service' %}">Dịch vụ</a>
+                <a class="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors {% if request.resolver_match.url_name == 'about' %}text-primary{% endif %}"
+                    href="{% url 'about:about' %}">Về IPSystem</a>
+                <a class="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors {% if request.resolver_match.url_name == 'portfolio' %}text-primary{% endif %}"
+                    href="{% url 'portfolio:portfolio' %}">Dự án</a>
+                <a class="text-slate-700 dark:text-slate-300 text-sm font-semibold hover:text-primary transition-colors {% if request.resolver_match.url_name == 'contact' %}text-primary{% endif %}"
+                    href="{% url 'contact:contact' %}">Liên hệ</a>
+            </nav>
+
+            <!-- Mobile hamburger -->
+            <button id="menu-btn" class="md:hidden p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <span class="material-symbols-outlined" id="menu-icon">menu</span>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark px-6 py-4 space-y-3">
+            <a class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-primary transition-colors" href="{% url 'home' %}">Trang chủ</a>
+            <a class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-primary transition-colors" href="{% url 'service:service' %}">Dịch vụ</a>
+            <a class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-primary transition-colors" href="{% url 'about:about' %}">Về IPSystem</a>
+            <a class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-primary transition-colors" href="{% url 'portfolio:portfolio' %}">Dự án</a>
+            <a class="block py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-primary transition-colors" href="{% url 'contact:contact' %}">Liên hệ</a>
+        </div>
+    </header>
+    <!-- ===== END NAVBAR ===== -->
+
+    <!-- ===== PAGE CONTENT ===== -->
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+    <!-- ===== END PAGE CONTENT ===== -->
+
+    <!-- ===== FLOATING BUTTONS ===== -->
+    <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+        <button
+            class="p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full shadow-lg text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+            onclick="document.documentElement.classList.toggle('dark')">
+            <span class="material-symbols-outlined block dark:hidden">dark_mode</span>
+            <span class="material-symbols-outlined hidden dark:block">light_mode</span>
+        </button>
+        <button onclick="window.scrollTo({top:0,behavior:'smooth'})"
+            class="p-3 bg-primary text-white rounded-full shadow-lg hover:bg-secondary transition-colors">
+            <span class="material-symbols-outlined">expand_less</span>
+        </button>
+    </div>
+    <!-- ===== END FLOATING BUTTONS ===== -->
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="bg-slate-950 text-slate-400 py-16 px-6" id="lien-he">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <div class="flex flex-col gap-6">
+                <div class="flex items-center gap-3 text-primary">
+                    <span class="material-symbols-outlined text-3xl font-bold">terminal</span>
+                    <h2 class="text-white text-2xl font-black">IPSystem</h2>
+                </div>
+                <p class="leading-relaxed">
+                    Chuyên gia thiết kế phần mềm và giải pháp công nghệ cao cấp cho doanh nghiệp hiện đại.
+                </p>
+                <div class="flex gap-4">
+                    <a class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+                        <span class="material-symbols-outlined text-white text-sm">public</span>
+                    </a>
+                    <a class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+                        <span class="material-symbols-outlined text-white text-sm">group</span>
+                    </a>
+                    <a class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+                        <span class="material-symbols-outlined text-white text-sm">mail</span>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-8 uppercase tracking-widest text-sm">Công ty</h4>
+                <ul class="space-y-4">
+                    <li><a class="hover:text-primary transition-colors" href="{% url 'about:about' %}">Về chúng tôi</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="{% url 'portfolio:portfolio' %}">Dự án</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#">Tuyển dụng</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#">Tin tức</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-8 uppercase tracking-widest text-sm">Dịch vụ</h4>
+                <ul class="space-y-4">
+                    {% for category in category %}
+                    <li><a class="hover:text-primary transition-colors" href="{% url 'service:service' %}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-8 uppercase tracking-widest text-sm">Liên hệ</h4>
+                <ul class="space-y-4">
+                    <li class="flex gap-3">
+                        <span class="material-symbols-outlined text-primary">pin_drop</span>
+                        <span>Đường Trương Quốc Dung, Phú Nhuận, TP. Hồ Chí Minh</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="material-symbols-outlined text-primary">call</span>
+                        <span>+84 (28) IPSYSTEM</span>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="material-symbols-outlined text-primary">mail</span>
+                        <span>lienhe@ipsystem.vn</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
+            <p>© 2024 IPSystem Agency. Bảo lưu mọi quyền.</p>
+            <div class="flex gap-8">
+                <a class="hover:text-white transition-colors" href="#">Chính sách bảo mật</a>
+                <a class="hover:text-white transition-colors" href="#">Điều khoản dịch vụ</a>
+            </div>
+        </div>
+    </footer>
+    <!-- ===== END FOOTER ===== -->
+
+</div>
+
+<script>
+    // ===== MOBILE MENU =====
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+    menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        menuIcon.textContent = mobileMenu.classList.contains('hidden') ? 'menu' : 'close';
+    });
+
+    // ===== PAGE TRANSITION =====
+    const overlay = document.getElementById('page-transition-overlay');
+    const mainEl = document.querySelector('main');
+
+    // Khi trang load xong: kéo overlay ra khỏi màn hình + hiện nội dung
+    window.addEventListener('DOMContentLoaded', () => {
+        // Nhỏ delay để browser vẽ xong trước khi animate
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                overlay.classList.add('slide-out');
+                mainEl.classList.add('page-visible');
+            });
+        });
+    });
+
+    // Khi click vào link nội bộ: kéo overlay vào trước khi chuyển trang
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a[href]');
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+
+        // Bỏ qua: link ngoài, anchor (#), target blank, javascript:
+        if (
+            !href ||
+            href.startsWith('#') ||
+            href.startsWith('http') ||
+            href.startsWith('mailto') ||
+            href.startsWith('tel') ||
+            link.target === '_blank'
+        ) return;
+
+        e.preventDefault();
+
+        // Kéo overlay vào che màn hình
+        overlay.classList.remove('slide-out');
+        overlay.classList.add('slide-in');
+
+        // Sau khi animation xong thì chuyển trang
+        setTimeout(() => {
+            window.location.href = href;
+        }, 420);
+    });
+</script>
+
+<script>
+    // ===== SCROLL REVEAL =====
+    const revealEls = document.querySelectorAll('.reveal');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Stagger: delay dựa trên vị trí trong nhóm anh em
+                const siblings = [...entry.target.parentElement.querySelectorAll('.reveal')];
+                const index = siblings.indexOf(entry.target);
+                const delay = index * 90;
+
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                }, delay);
+            } else {
+                // Lướt ra khỏi viewport → ẩn lại
+                entry.target.classList.remove('visible');
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -48px 0px'
+    });
+
+    revealEls.forEach(el => revealObserver.observe(el));
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

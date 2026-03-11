@@ -1,0 +1,108 @@
+{% extends 'ipsystemapp/base.html' %}
+{% load static %}
+
+{% block title %}
+  Liên hệ IPSystem | Thiết kế Web Chuyên Nghiệp
+{% endblock %}
+
+{% block content %}
+  <section class="mx-auto max-w-7xl px-6 py-12 lg:px-10 lg:py-20">
+    <div class="mb-12 reveal">
+      <h2 class="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-6xl">Liên hệ <span class="text-primary">với chúng tôi</span></h2>
+      <p class="mt-4 max-w-2xl text-lg text-slate-600 dark:text-slate-400">Chúng tôi luôn sẵn sàng lắng nghe bạn. Dù bạn có thắc mắc về tính năng, giá cả hay bất cứ điều gì khác, đội ngũ của chúng tôi luôn sẵn lòng giải đáp.</p>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="p-3 rounded-lg bg-green-500 text-white">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-2">
+      <!-- Contact Form -->
+      <div class="rounded-2xl bg-white p-8 shadow-xl reveal reveal--left shadow-primary/5 dark:bg-slate-900/50 border border-primary/5">
+        <form action="{% url 'contact:contact' %}" method="POST" class="space-y-6">
+          {% csrf_token %}
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Họ và tên</label>
+            <input name="name" class="w-full rounded-lg border border-primary/20 bg-background-light/50 p-3 focus:border-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-700 focus:outline-none focus:ring-1" placeholder="Nguyễn Văn A" type="text" required />
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Email</label>
+            <input name="email" class="w-full rounded-lg border border-primary/20 bg-background-light/50 p-3 focus:border-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-700 focus:outline-none focus:ring-1" placeholder="email@vi-du.com" type="email" required />
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Số điện thoại</label>
+            <input name="phone" class="w-full rounded-lg border border-primary/20 bg-background-light/50 p-3 focus:border-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-700 focus:outline-none focus:ring-1" placeholder="090 000 0000" type="tel" />
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Lời nhắn</label>
+            <textarea name="message" class="w-full rounded-lg border border-primary/20 bg-background-light/50 p-3 focus:border-primary focus:ring-primary dark:bg-slate-800 dark:border-slate-700 focus:outline-none focus:ring-1" placeholder="Hãy cho chúng tôi biết về dự án của bạn..." rows="4" required></textarea>
+          </div>
+          <button class="w-full rounded-lg bg-primary py-4 text-center text-base font-bold text-white hover:bg-primary/90 transition-all shadow-md" type="submit">Gửi yêu cầu</button>
+        </form>
+      </div>
+
+      <!-- Contact Info + Map -->
+      <div class="flex flex-col gap-8 reveal reveal--right">
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div class="flex items-start gap-4 rounded-xl border border-primary/10 bg-white/50 p-6 dark:bg-slate-800/30">
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <span class="material-symbols-outlined">location_on</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 dark:text-white">Địa chỉ</h4>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Đường Trương Quốc Dung, Phú Nhuận, TP Hồ Chí Minh, Việt Nam</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 rounded-xl border border-primary/10 bg-white/50 p-6 dark:bg-slate-800/30">
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <span class="material-symbols-outlined">call</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 dark:text-white">Số điện thoại</h4>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                +84 (28) IPSYSTEM<br />Thứ 2 - Thứ 6: 9h - 18h
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 rounded-xl border border-primary/10 bg-white/50 p-6 dark:bg-slate-800/30">
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <span class="material-symbols-outlined">mail</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 dark:text-white">Email liên hệ</h4>
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                hotro.ipsystem@gmail.com
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 rounded-xl border border-primary/10 bg-white/50 p-6 dark:bg-slate-800/30">
+            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <span class="material-symbols-outlined">share</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 dark:text-white">Theo dõi</h4>
+              <div class="mt-2 flex gap-3">
+                <a class="text-primary hover:text-primary/80 transition-colors" href="#"><span class="material-symbols-outlined text-xl">public</span></a>
+                <a class="text-primary hover:text-primary/80 transition-colors" href="#"><span class="material-symbols-outlined text-xl">group</span></a>
+                <a class="text-primary hover:text-primary/80 transition-colors" href="#"><span class="material-symbols-outlined text-xl">alternate_email</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map -->
+        <div class="relative mt-auto h-72 w-full overflow-hidden rounded-2xl border border-primary/10 bg-slate-200 shadow-inner dark:bg-slate-800">
+          <div class="absolute inset-0 bg-cover bg-center grayscale opacity-60 hover:grayscale-0 transition-all duration-700" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDobqFcjAVhYX1bt9Rt3iLHQsYrV6ccQ9uQ8eeSQ0OrW3WIt8vuFpAEu45BO7kPDFLHMCCf2WOuWIr6IvNIHfbnRjm551tT4tJT2iXeXnfVfQ3sOmuaBGRuk1UKKl8GrvmzXY8m9loMMG2QtWJdA8oetRUk2R7D2p3MaI8FDNYGPH2Crz8jCu3JrVm6_h15yC3AJjGysv7_uDf7gjAUPHVd9Z6bn1Jc7GGTkBZWVGi6e3syHvGENJOXgArsN1_OAsbQQIIKRDR2wf0');"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white shadow-xl animate-bounce">
+              <span class="material-symbols-outlined">location_on</span>
+            </div>
+          </div>
+          <div class="absolute bottom-4 left-4 rounded-lg bg-white/90 px-3 py-1.5 text-xs font-bold text-slate-800 shadow-sm backdrop-blur dark:bg-slate-900/90 dark:text-white">Trụ sở IPSystem - TP. Hồ Chí Minh</div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
