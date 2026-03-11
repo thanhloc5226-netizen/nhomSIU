@@ -1,0 +1,289 @@
+{% extends 'ipsystemapp/base.html' %}
+{% load static %}
+
+{% block title %}IPSystem | Thiết kế Phần mềm Chuyên Nghiệp{% endblock %}
+
+{% block extra_css %}
+<style>
+    .carousel-container {
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        overflow-x: hidden;
+    }
+    .carousel-container::-webkit-scrollbar { display: none; }
+    .carousel-item {
+        scroll-snap-align: start;
+        flex-shrink: 0;
+    }
+    .dot { transition: all 0.3s ease; }
+    .dot.active { background-color: #d41132 !important; width: 2.5rem !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ===== CAROUSEL ===== -->
+<section class="relative w-full h-[600px] lg:h-[750px] overflow-hidden group">
+    <div id="carousel" class="carousel-container flex w-full h-full">
+
+        <!-- Slide 1 -->
+        <div class="carousel-item w-full h-full relative" style="min-width:100%">
+            <img alt="Custom Software Development" class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCOPn_rLgd0D4hmQ4HaiKtmNUe6xzQ4SQuaX-p6MHhXlfOG5qPShSpuR_RSfMv2pTJdaStnrWIO4c4jS3nTJ5-iJUxJdwrrGxXRfFy4JUc2DpjKw_ZfETtTEUFpnpGOUapvtA2wR4I6eLnZE-6VNuY43VVv3GggE1bIL0T1C95gQHIYRGsqTrKFWVxkqcQW1YHQl9-8q3MqkZ6dMuus58i5qKuZl7-mFgTV0ymCE8a-JeYaYfGggxYDKHW_ffj1MoJoXv_Y4v8mso" />
+            <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex items-center justify-center text-center">
+                <div class="max-w-2xl px-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary text-white text-xs font-bold uppercase tracking-wider mb-6">
+                        <span class="material-symbols-outlined text-sm">developer_mode</span>
+                        Đội ngũ chuyên gia
+                    </div>
+                    <h1 class="text-white text-5xl lg:text-7xl font-black leading-tight mb-6">
+                        Chuyên gia Thiết kế <br /><span class="text-primary">Phần mềm Tùy chỉnh</span>
+                    </h1>
+                    <p class="text-slate-300 text-lg lg:text-xl mb-10 max-w-xl mx-auto">
+                        Chúng tôi biến những ý tưởng phức tạp thành các giải pháp phần mềm tinh gọn, hiệu quả và được may đo riêng cho từng doanh nghiệp.
+                    </p>
+                    <div class="flex flex-wrap gap-4 justify-center">
+                        <a href="{% url 'contact:contact' %}" class="bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all shadow-xl shadow-primary/20">Bắt đầu ngay</a>
+                        <a href="{% url 'portfolio:portfolio' %}" class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all">Xem dự án</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-item w-full h-full relative" style="min-width:100%">
+            <img alt="Enterprise Web Solutions" class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxw7aiQaFZmALJsE0GJLD1kogPgG3BL4btwINopa8NZC6cbnWnojtZN4PtZfkSM8ijSZGkSrAc7qdW0ev_VAT2SydqsznjcW4GKr4dZhg1joDgBAwaCR7eH_WqT1ilPIBPoexfF2KE2S8U7Vuweuxnjoxmo7q_59by7U7AMkJ6kUtpCYdNcApdGA0ThuRGqjMOQ6MdqjlrkEy404vVD0dmPl7I2IeHtY6I8iQRU9392FlVu9udWWV4McIP0IqYRJ6ul74wEeQGsg4" />
+            <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex items-center justify-center text-center">
+                <div class="max-w-2xl px-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary text-white text-xs font-bold uppercase tracking-wider mb-6">
+                        <span class="material-symbols-outlined text-sm">language</span>
+                        Web đẳng cấp quốc tế
+                    </div>
+                    <h1 class="text-white text-5xl lg:text-7xl font-black leading-tight mb-6">
+                        Giải pháp Website <br /><span class="text-primary">Doanh nghiệp Đẳng cấp</span>
+                    </h1>
+                    <p class="text-slate-300 text-lg lg:text-xl mb-10 max-w-xl mx-auto">
+                        Nâng tầm thương hiệu với website chuyên nghiệp, tốc độ cao và tối ưu trải nghiệm người dùng trên mọi thiết bị.
+                    </p>
+                    <div class="flex flex-wrap gap-4 justify-center">
+                        <a href="{% url 'service:service' %}" class="bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all shadow-xl shadow-primary/20">Khám phá dịch vụ</a>
+                        <a href="{% url 'contact:contact' %}" class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all">Tư vấn miễn phí</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-item w-full h-full relative" style="min-width:100%">
+            <img alt="Digital Transformation" class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRNXqG3hs7rLH_FsrhPeTJSP8vhyAVVBNVOyfbiBe0DYv6HP1Vtn4KGvX_tqO0bNXehkQDK8tz8T3OH-ah_vpKn4ma84dYpcbLQ3Ics7nQ1TA93PhbTFn4uIvuFnHPks6-JAI25X-WS3qkFkcxcBytbwk2l9evfvhiEczOXpo106hx4pWSu1hEdFDPo_OHxhRpitXW0Pr0t7C1_sgd7XWNE3OtRvCTrgt9t7KeY0ZKuJUshxYLpEB4GDNbA2cSEIRiqAExpGyM9Mw" />
+            <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent flex items-center justify-center text-center">
+                <div class="max-w-2xl px-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary text-white text-xs font-bold uppercase tracking-wider mb-6">
+                        <span class="material-symbols-outlined text-sm">transform</span>
+                        Tối ưu quy trình
+                    </div>
+                    <h1 class="text-white text-5xl lg:text-7xl font-black leading-tight mb-6">
+                        Chuyển đổi số &amp; <br /><span class="text-primary">Tối ưu vận hành</span>
+                    </h1>
+                    <p class="text-slate-300 text-lg lg:text-xl mb-10 max-w-xl mx-auto">
+                        Tự động hoá quy trình làm việc, loại bỏ rào cản vận hành và đột phá năng suất thông qua hệ thống ERP &amp; SaaS hiện đại.
+                    </p>
+                    <div class="flex flex-wrap gap-4 justify-center">
+                        <a href="{% url 'service:service' %}" class="bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary/90 transition-all shadow-xl shadow-primary/20">Giải pháp ERP</a>
+                        <a href="{% url 'contact:contact' %}" class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all">Liên hệ ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prev/Next Buttons -->
+    <button id="prevBtn" class="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 z-10">
+        <span class="material-symbols-outlined">chevron_left</span>
+    </button>
+    <button id="nextBtn" class="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 z-10">
+        <span class="material-symbols-outlined">chevron_right</span>
+    </button>
+
+    <!-- Dots -->
+    <div id="dots" class="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+        <div class="dot active w-10 h-1.5 rounded-full bg-white/30 cursor-pointer" data-index="0"></div>
+        <div class="dot w-4 h-1.5 rounded-full bg-white/30 cursor-pointer hover:bg-white/50" data-index="1"></div>
+        <div class="dot w-4 h-1.5 rounded-full bg-white/30 cursor-pointer hover:bg-white/50" data-index="2"></div>
+    </div>
+</section>
+<!-- ===== END CAROUSEL ===== -->
+
+<!-- ===== HERO SECTION ===== -->
+<section class="relative py-20 lg:py-32 px-6 overflow-hidden">
+    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        <div class="flex flex-col gap-8 reveal reveal--left">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
+                <span class="material-symbols-outlined text-sm">developer_mode</span>
+                Chuyên gia giải pháp phần mềm
+            </div>
+            <h1 class="text-slate-900 dark:text-slate-100 text-5xl lg:text-7xl font-black leading-[1.1] tracking-tight reveal">
+                IPSystem - <span class="text-primary">Chuyên gia</span> Thiết kế Phần mềm
+            </h1>
+            <p class="text-slate-600 dark:text-slate-400 text-lg lg:text-xl leading-relaxed max-w-xl">
+                Chúng tôi tập trung vào chuyên môn phần mềm, cung cấp các giải pháp tùy chỉnh vượt trội nhằm tối ưu hóa quy trình vận hành và thúc đẩy sự tăng trưởng bền vững cho doanh nghiệp.
+            </p>
+            <div class="flex flex-wrap gap-4 mt-4">
+                <a href="{% url 'contact:contact' %}" class="flex min-w-[180px] items-center justify-center rounded-xl h-14 px-8 bg-primary text-white text-lg font-bold hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/30">
+                    Tư vấn giải pháp
+                </a>
+                <a href="{% url 'about:about' %}" class="flex min-w-[180px] items-center justify-center rounded-xl h-14 px-8 border-2 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 text-lg font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                    Tìm hiểu thêm
+                </a>
+            </div>
+        </div>
+        <div class="relative">
+            <div class="absolute -top-10 -right-10 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+            <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl border border-slate-200/50 dark:border-slate-700/50 aspect-video lg:aspect-square">
+                <img alt="Phát triển phần mềm chuyên nghiệp" class="w-full h-full object-cover"
+                    src="{% static 'images/ipsystem_hero.png' %}" />
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ===== END HERO SECTION ===== -->
+
+<!-- ===== SERVICES SECTION ===== -->
+<section class="py-24 px-6 bg-white dark:bg-slate-900/50" id="dich-vu">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+            <h2 class="text-primary font-bold tracking-widest uppercase text-sm mb-4">Dịch vụ phần mềm</h2>
+            <h3 class="text-3xl lg:text-4xl font-black text-slate-900 dark:text-slate-100">Các Loại Dịch Vụ Thiết Kế Phần Mềm Chúng Tôi Cung Cấp</h3>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="group p-8 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 reveal dark:border-slate-700 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-2">
+                <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <span class="material-symbols-outlined text-3xl">business</span>
+                </div>
+                <h4 class="font-black text-lg text-slate-900 dark:text-slate-100 mb-3">Website Doanh nghiệp</h4>
+                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Thiết kế website chuyên nghiệp, hiện đại phản ánh đúng giá trị thương hiệu của bạn.</p>
+            </div>
+            <div class="group p-8 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 reveal dark:border-slate-700 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-2">
+                <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <span class="material-symbols-outlined text-3xl">shopping_cart</span>
+                </div>
+                <h4 class="font-black text-lg text-slate-900 dark:text-slate-100 mb-3">Thương mại điện tử</h4>
+                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Xây dựng hệ thống mua sắm trực tuyến mạnh mẽ, tối ưu chuyển đổi và trải nghiệm mua hàng.</p>
+            </div>
+            <div class="group p-8 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 reveal dark:border-slate-700 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-2">
+                <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <span class="material-symbols-outlined text-3xl">dashboard</span>
+                </div>
+                <h4 class="font-black text-lg text-slate-900 dark:text-slate-100 mb-3">Hệ thống quản lý</h4>
+                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Phát triển ERP, CRM và các hệ thống nội bộ tối ưu hóa vận hành doanh nghiệp.</p>
+            </div>
+            <div class="group p-8 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 reveal dark:border-slate-700 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-2">
+                <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                    <span class="material-symbols-outlined text-3xl">phone_iphone</span>
+                </div>
+                <h4 class="font-black text-lg text-slate-900 dark:text-slate-100 mb-3">Ứng dụng di động</h4>
+                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Phát triển app iOS & Android tốc độ cao, giao diện đẹp, trải nghiệm người dùng xuất sắc.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ===== END SERVICES SECTION ===== -->
+
+<!-- ===== FEATURED PROJECTS ===== -->
+<section class="py-24 px-6 bg-white dark:bg-slate-900" id="du-an">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 reveal">
+            <div class="max-w-2xl">
+                <h2 class="text-primary font-bold tracking-widest uppercase text-sm mb-4">Dự án tiêu biểu</h2>
+                <h3 class="text-3xl lg:text-4xl font-black text-slate-900 dark:text-slate-100">Những dự án phần mềm chúng tôi đã thực hiện</h3>
+            </div>
+            <a href="{% url 'portfolio:portfolio' %}" class="text-primary font-bold flex items-center gap-2 hover:gap-3 transition-all text-lg">
+                Xem tất cả dự án <span class="material-symbols-outlined font-bold">arrow_forward</span>
+            </a>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="group relative rounded-2xl overflow-hidden aspect-[4/5] shadow-lg reveal reveal--scale">
+                <img alt="Hệ thống ngân hàng số" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuByRQGbxYBDiLBzPBtMepcuf-49RTfDG8RTSPkf5dhypSPOEFEOHALSWzi7wb9fzij2xRL_YTIzQoO-VhxOQFjxCN0Hkjn9XPmLNjsoC-5fp0q-AJd3qV8qaEaty4mIsQgM6F2qZvVgxb6cq49J3NmNdCgkeR4ZPmZDSrULJetrYxzU_lPpAP4KsV_yVEGx4LH8c8-2-rMq2yKIrZtKBz5jAaiUkjbnEWl8eu4viOB0cOc1v3FuImZxdL8zvGt8j4SSXVQzJx4jqfQ" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                    <span class="text-primary font-bold text-sm uppercase tracking-widest mb-2">Fintech</span>
+                    <h4 class="text-white text-2xl font-bold mb-4">Hệ thống ngân hàng số</h4>
+                    <button class="w-12 h-12 rounded-full bg-white text-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined">north_east</span>
+                    </button>
+                </div>
+            </div>
+            <div class="group relative rounded-2xl overflow-hidden aspect-[4/5] shadow-lg reveal reveal--scale">
+                <img alt="Sàn thương mại điện tử" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3pH5Qj3XeSATwqflLAIDsP_Drshnzg5u-WjDR2luJYsGY-IJJqFMyWj7oF8oIdVaXEE-ilh_fIfl5AZqmQgKMwiP45p1IdE3hVPs6OW5VwLvVGnDjD_u8gWKCmiIer7Hv4Y9CVkS6HzUJeRm-I3WOwelWWhm0Zwpu_R9n6UAfongTzUr0IAOihU46l0eC8KXnEDoQoe3QkD6xNMGmVs1TUFm-zXuAbCFs4aU_jrYJvARF5XuuC47wwQk0jMzmnzgLXUV34ZeSoHg" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                    <span class="text-primary font-bold text-sm uppercase tracking-widest mb-2">E-commerce</span>
+                    <h4 class="text-white text-2xl font-bold mb-4">Sàn thương mại điện tử</h4>
+                    <button class="w-12 h-12 rounded-full bg-white text-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined">north_east</span>
+                    </button>
+                </div>
+            </div>
+            <div class="group relative rounded-2xl overflow-hidden aspect-[4/5] shadow-lg reveal reveal--scale">
+                <img alt="Quản lý dự án ERP" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRNXqG3hs7rLH_FsrhPeTJSP8vhyAVVBNVOyfbiBe0DYv6HP1Vtn4KGvX_tqO0bNXehkQDK8tz8T3OH-ah_vpKn4ma84dYpcbLQ3Ics7nQ1TA93PhbTFn4uIvuFnHPks6-JAI25X-WS3qkFkcxcBytbwk2l9evfvhiEczOXpo106hx4pWSu1hEdFDPo_OHxhRpitXW0Pr0t7C1_sgd7XWNE3OtRvCTrgt9t7KeY0ZKuJUshxYLpEB4GDNbA2cSEIRiqAExpGyM9Mw" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                    <span class="text-primary font-bold text-sm uppercase tracking-widest mb-2">SaaS</span>
+                    <h4 class="text-white text-2xl font-bold mb-4">Quản lý dự án ERP</h4>
+                    <button class="w-12 h-12 rounded-full bg-white text-primary flex items-center justify-center">
+                        <span class="material-symbols-outlined">north_east</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ===== END FEATURED PROJECTS ===== -->
+
+
+<section class="py-24 px-6 reveal reveal-scale">
+    <div class="max-w-7xl mx-auto rounded-3xl bg-primary p-12 lg:p-20 text-center relative overflow-hidden shadow-2xl shadow-primary/40">
+        <div class="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <h2 class="text-white text-4xl lg:text-6xl font-black mb-6 relative z-10">Sẵn sàng tối ưu hóa<br />doanh nghiệp của bạn?</h2>
+        <p class="text-white/80 text-lg lg:text-xl max-w-2xl mx-auto mb-10 relative z-10">
+            Tham gia cùng hàng trăm doanh nghiệp đã thành công với các giải pháp phần mềm từ IPSystem.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 relative z-10">
+            <a href="{% url 'contact:contact' %}" class="bg-white text-primary px-10 py-5 rounded-2xl text-xl font-black hover:bg-slate-50 transition-all shadow-xl">
+                Bắt đầu dự án ngay
+            </a>
+        </div>
+    </div>
+</section>
+<!-- ===== END CTA ===== -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const carousel = document.getElementById('carousel');
+    const dots = document.querySelectorAll('.dot');
+    const total = 3;
+    let current = 0;
+    let autoTimer;
+
+    function goTo(index) {
+        current = (index + total) % total;
+        carousel.scrollLeft = carousel.offsetWidth * current;
+        dots.forEach((d, i) => {
+            d.classList.toggle('active', i === current);
+        });
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => { goTo(current - 1); resetAuto(); });
+    document.getElementById('nextBtn').addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+    dots.forEach(dot => dot.addEventListener('click', () => { goTo(parseInt(dot.dataset.index)); resetAuto(); }));
+
+    function startAuto() { autoTimer = setInterval(() => goTo(current + 1), 5000); }
+    function resetAuto() { clearInterval(autoTimer); startAuto(); }
+    startAuto();
+</script>
+{% endblock %}

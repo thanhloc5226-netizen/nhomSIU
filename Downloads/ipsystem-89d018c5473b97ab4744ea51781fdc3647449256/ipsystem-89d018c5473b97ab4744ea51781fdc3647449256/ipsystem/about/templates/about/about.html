@@ -1,0 +1,190 @@
+{% extends 'ipsystemapp/base.html' %}
+{% load static %}
+
+{% block title %}Giới thiệu về IPSystem{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-pattern {
+        background-color: #d41132;
+        background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+        background-size: 32px 32px;
+    }
+    .hero-clip { clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%); }
+    @media (max-width: 768px) { .hero-clip { clip-path: none; } }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ===== ABOUT HERO ===== -->
+<section class="relative w-full min-h-[600px] flex flex-col md:flex-row overflow-hidden bg-primary">
+    <div class="relative w-full md:w-1/2 flex items-center justify-center px-8 md:px-20 lg:px-32 py-20 z-10 hero-pattern">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+                <path d="M0 100 L100 0 L100 100 Z" fill="white"></path>
+            </svg>
+        </div>
+        <div class="max-w-xl relative">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold tracking-widest uppercase mb-6">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                </span>
+                Giới thiệu công ty
+            </div>
+            <h1 class="text-white text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
+                Về <span class="text-white/80">IPSystem</span>
+            </h1>
+            <p class="text-white/90 text-lg md:text-xl font-medium mb-10 leading-relaxed max-w-lg border-l-4 border-white/30 pl-6">
+                Đối tác tin cậy trong hành trình chuyển đổi số của bạn. Chúng tôi kiến tạo những giải pháp phần mềm đột phá giúp doanh nghiệp bứt phá trong kỷ nguyên số.
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <a href="{% url 'contact:contact' %}" class="group flex items-center gap-3 bg-white text-primary px-10 py-4 rounded-full font-black text-lg hover:bg-slate-100 transition-all shadow-2xl hover:translate-y-[-2px]">
+                    Khám phá ngay
+                    <span class="material-symbols-outlined font-bold group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="relative w-full md:w-1/2 h-[400px] md:h-auto overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/40 to-transparent z-10"></div>
+        <img alt="Modern team collaboration" class="w-full h-full object-cover grayscale-[20%] contrast-[1.1]"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCakEI32N0uF0F67qls3slQufBQPlztGG4HAMSWYyLdhJ2BBsDVWo7Wk4I4lYv198ysY7rj8EwWnMRDl6OY9oz5AC5kP62t1DoYTMYr9Tm-BYWkd7b_DFrRvkbX6iaoEKWWyMZjPx6KwOxBBE36d_C9_F3mKNVGUuuxryi0EHQdJlYDgB-rtKizbaV2XL7uVpRKD-FPX3DATLOPVYSZtr42TYVJGquHnkPEpmeiIrX5nTiSuTynKN9itEYpnxL_HwQ8gMVqzSfF7-Q" />
+        <div class="absolute bottom-0 right-0 p-12 z-20 hidden lg:block">
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl max-w-xs">
+                <p class="text-white text-3xl font-black mb-2">100+</p>
+                <p class="text-white/70 text-sm font-bold uppercase tracking-widest">Dự án đã triển khai thành công trên toàn quốc</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ===== END ABOUT HERO ===== -->
+
+<!-- ===== VALUES ===== -->
+<section class="px-4 md:px-20 lg:px-40 py-24">
+    <div class="mb-16 text-center reveal">
+        <h2 class="text-slate-900 dark:text-slate-100 text-4xl font-black mb-4 tracking-tight">Giá trị chúng tôi mang lại</h2>
+        <div class="w-24 h-1.5 bg-primary mx-auto rounded-full"></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for value in values %}
+        <div class="group flex flex-col gap-5 p-8 rounded-2xl border border-slate-100 bg-white dark:bg-background-dark/30 reveal hover:shadow-2xl hover:shadow-primary/5 transition-all hover:-translate-y-1">
+            <div class="w-14 h-14 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary transition-colors">
+                <span class="material-symbols-outlined text-primary text-3xl group-hover:text-white">{{ value.icon }}</span>
+            </div>
+            <div>
+                <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-2">{{ value.title }}</h3>
+                <p class="text-slate-500 dark:text-slate-400 text-base leading-relaxed">{{ value.description }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <!-- Static fallback cards -->
+        <div class="group flex flex-col gap-5 p-8 rounded-2xl border border-slate-100 bg-white dark:bg-background-dark/30 reveal hover:shadow-2xl hover:shadow-primary/5 transition-all hover:-translate-y-1">
+            <div class="w-14 h-14 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary transition-colors">
+                <span class="material-symbols-outlined text-primary text-3xl group-hover:text-white">dashboard_customize</span>
+            </div>
+            <div>
+                <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-2">Giao diện chuyên nghiệp</h3>
+                <p class="text-slate-500 dark:text-slate-400 text-base leading-relaxed">Thiết kế hiện đại, tinh tế, cá nhân hóa theo nhận diện thương hiệu của bạn.</p>
+            </div>
+        </div>
+        <div class="group flex flex-col gap-5 p-8 rounded-2xl border border-slate-100 bg-white dark:bg-background-dark/30 reveal hover:shadow-2xl hover:shadow-primary/5 transition-all hover:-translate-y-1">
+            <div class="w-14 h-14 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary transition-colors">
+                <span class="material-symbols-outlined text-primary text-3xl group-hover:text-white">settings_suggest</span>
+            </div>
+            <div>
+                <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-2">Giải pháp tối ưu</h3>
+                <p class="text-slate-500 dark:text-slate-400 text-base leading-relaxed">Tối ưu hóa quy trình vận hành và nâng cao hiệu quả kinh doanh thực tế.</p>
+            </div>
+        </div>
+        <div class="group flex flex-col gap-5 p-8 rounded-2xl border border-slate-100 bg-white dark:bg-background-dark/30 reveal hover:shadow-2xl hover:shadow-primary/5 transition-all hover:-translate-y-1">
+            <div class="w-14 h-14 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary transition-colors">
+                <span class="material-symbols-outlined text-primary text-3xl group-hover:text-white">ads_click</span>
+            </div>
+            <div>
+                <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-2">Thao tác dễ dàng</h3>
+                <p class="text-slate-500 dark:text-slate-400 text-base leading-relaxed">Trải nghiệm người dùng thân thiện, tinh giản hóa các quy trình phức tạp.</p>
+            </div>
+        </div>
+        <div class="group flex flex-col gap-5 p-8 rounded-2xl border border-slate-100 bg-white dark:bg-background-dark/30 reveal hover:shadow-2xl hover:shadow-primary/5 transition-all hover:-translate-y-1">
+            <div class="w-14 h-14 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary transition-colors">
+                <span class="material-symbols-outlined text-primary text-3xl group-hover:text-white">trending_up</span>
+            </div>
+            <div>
+                <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-2">Nâng cấp vượt trội</h3>
+                <p class="text-slate-500 dark:text-slate-400 text-base leading-relaxed">Hệ thống linh hoạt, dễ dàng mở rộng và tích hợp thêm các tính năng mới.</p>
+            </div>
+        </div>
+        <div class="group flex flex-col gap-5 p-8 rounded-2xl border border-slate-100 bg-white dark:bg-background-dark/30 reveal hover:shadow-2xl hover:shadow-primary/5 transition-all hover:-translate-y-1">
+            <div class="w-14 h-14 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary transition-colors">
+                <span class="material-symbols-outlined text-primary text-3xl group-hover:text-white">admin_panel_settings</span>
+            </div>
+            <div>
+                <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-2">Bảo mật cao cấp</h3>
+                <p class="text-slate-500 dark:text-slate-400 text-base leading-relaxed">Hệ thống bảo mật nhiều lớp, đảm bảo an toàn dữ liệu tuyệt đối cho doanh nghiệp.</p>
+            </div>
+        </div>
+        <div class="group flex flex-col gap-5 p-8 rounded-2xl border border-slate-100 bg-white dark:bg-background-dark/30 reveal hover:shadow-2xl hover:shadow-primary/5 transition-all hover:-translate-y-1">
+            <div class="w-14 h-14 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary transition-colors">
+                <span class="material-symbols-outlined text-primary text-3xl group-hover:text-white">support_agent</span>
+            </div>
+            <div>
+                <h3 class="text-slate-900 dark:text-slate-100 text-xl font-bold mb-2">Hỗ trợ 24/7</h3>
+                <p class="text-slate-500 dark:text-slate-400 text-base leading-relaxed">Đội ngũ kỹ thuật luôn sẵn sàng hỗ trợ bạn mọi lúc, mọi nơi.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+<!-- ===== END VALUES ===== -->
+
+<!-- ===== TEAM ===== -->
+<section class="px-4 md:px-20 lg:px-40 py-24">
+    <div class="mb-16 text-center reveal">
+        <h2 class="text-slate-900 dark:text-slate-100 text-4xl font-black mb-4">Nhân sự nòng cốt</h2>
+        <p class="text-slate-500 dark:text-slate-400 text-lg mb-6">Đội ngũ chuyên gia tận tâm và giàu kinh nghiệm</p>
+        <div class="w-24 h-1.5 bg-primary mx-auto rounded-full"></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div class="group flex flex-col items-center p-8 rounded-3xl bg-white dark:bg-background-dark/30 border border-slate-100 reveal reveal--scale hover:border-primary/30 transition-all hover:shadow-xl">
+            <div class="w-36 h-36 rounded-full overflow-hidden mb-6 ring-4 ring-primary/5 ring-offset-4 ring-offset-white dark:ring-offset-background-dark group-hover:ring-primary/20 transition-all">
+                <img alt="Đặng Hoàng Bảo" class="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr2tjcaV05kRitXS_BnJse4eE9RS-IKbZ04D9SuEkwmmYd3vJnHp3Mqpg_Gp5_YNoCNSPfyvLKw0xGt9rSFLnmX1UePlQvetuGedhpfmy4cY8CM-oYsU2ZtPjP8Hy8keh44zCW9N18_FUr_bZL6LjT-vDbbOq20Lpii7jeIoTrDcvli8pVf-S-F5srtsL7Bm5IiC8CEYmr2sO8bk7-iYGPmkZ3586jD74Hy0l3jGA7WOSIV4yS9dYgcR33tUVm43fsU7rXMs7ZzlQ" />
+            </div>
+            <h4 class="text-slate-900 dark:text-slate-100 font-black text-xl mb-1">Đặng Hoàng Bảo</h4>
+            <p class="text-primary font-bold text-sm mb-4 uppercase tracking-widest">CEO</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed text-center">Quản lý chiến lược, điều hành doanh nghiệp và phát triển quan hệ đối tác.</p>
+        </div>
+        <div class="group flex flex-col items-center p-8 rounded-3xl bg-white dark:bg-background-dark/30 border border-slate-100 reveal reveal--scale hover:border-primary/30 transition-all hover:shadow-xl">
+            <div class="w-36 h-36 rounded-full overflow-hidden mb-6 ring-4 ring-primary/5 ring-offset-4 ring-offset-white dark:ring-offset-background-dark group-hover:ring-primary/20 transition-all">
+                <img alt="Nguyễn Huy Hoàng" class="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJHQ3L-GCEYaeZKp-JmFVKixoDrVmvlnkEA3B72e4ghbeM4n75wQtrP7Hja1hVB-tPKfBolU-oiujNPNaMENojFBKCoesSb94WIsCWQ8fcmOCXbQ63NaFZSMrPskUhnvS7_js57qMPX4ZoZNQSHhwdU4nUkKsH6Fk6E2oouRdP5sh2Uw9FWWAUNkJInv18wdJD_IbP8OdRVa-iGE0WQPtbdUlTn51IVrlvh01CcX6GcMVXp3SbwOhMRf9MtuOiz17zdtq_wTJ9hGc" />
+            </div>
+            <h4 class="text-slate-900 dark:text-slate-100 font-black text-xl mb-1">Nguyễn Huy Hoàng</h4>
+            <p class="text-primary font-bold text-sm mb-4 uppercase tracking-widest">Team Leader</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed text-center">Dẫn dắt đội ngũ kỹ thuật, quản lý tiến độ và chất lượng dự án.</p>
+        </div>
+        <div class="group flex flex-col items-center p-8 rounded-3xl bg-white dark:bg-background-dark/30 border border-slate-100 reveal reveal--scale hover:border-primary/30 transition-all hover:shadow-xl">
+            <div class="w-36 h-36 rounded-full overflow-hidden mb-6 ring-4 ring-primary/5 ring-offset-4 ring-offset-white dark:ring-offset-background-dark group-hover:ring-primary/20 transition-all">
+                <img alt="Đỗ Nguyễn Thành Lộc" class="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuALdZzW3Ci98IUpQlsBtWxMWsXZFQra_Lm9w14s9IhmQa3PLGm8qGchvxoCfGEH9Ar8l4Bto76y6rVH0MocZMPQv7DWcAl0vcYuZpjAcVFCMlilq6OXsQ2WnNJ3sftGsh9zJ3Krg3qMtc1faB78O3MsExjAX7n-hbD8mREOAxRupRh14bI2ZZd-iSfYcdzaF4PNYnEMFxiTZR2riMiffsXrHwtlVp1usuXtH91iRR3_on-oPHQusRmclTghoSh9hjviLK1_8rCUrJI" />
+            </div>
+            <h4 class="text-slate-900 dark:text-slate-100 font-black text-xl mb-1">Đỗ Nguyễn Thành Lộc</h4>
+            <p class="text-primary font-bold text-sm mb-4 uppercase tracking-widest">Backend Developer</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed text-center">Xây dựng cấu trúc hệ thống, quản trị cơ sở dữ liệu và API.</p>
+        </div>
+        <div class="group flex flex-col items-center p-8 rounded-3xl bg-white dark:bg-background-dark/30 border border-slate-100 reveal reveal--scale hover:border-primary/30 transition-all hover:shadow-xl">
+            <div class="w-36 h-36 rounded-full overflow-hidden mb-6 ring-4 ring-primary/5 ring-offset-4 ring-offset-white dark:ring-offset-background-dark group-hover:ring-primary/20 transition-all">
+                <img alt="Lê Tuấn Khang" class="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC29uSAU9fzFhf0lpCoMXp5vwTIRIPry0nRCo5dPRJIpr8zrkc3h2Mci6R0EmQOyCmVHOtlg1MVM9jBE6X0Q_9Io3jbGLD9muOdZ7XHayKWJ_92hfaTbEZ6yNudPsZV3V74Qqsu9PG1YDnd0p_3k8xpDBNvgtcGH_OrtOdl-Uivm-AQWqTHw544Av09OQzykqNcC4bQIo-rbYKFk18KPKwV6LHSfEr37BGRQsNOZaUx1WAQrRBbxM5DuPiMEjzOwdnSF6iZ0nmL_Jc" />
+            </div>
+            <h4 class="text-slate-900 dark:text-slate-100 font-black text-xl mb-1">Lê Tuấn Khang</h4>
+            <p class="text-primary font-bold text-sm mb-4 uppercase tracking-widest">Frontend Developer</p>
+            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed text-center">Phát triển giao diện người dùng, tối ưu hóa trải nghiệm và tương tác.</p>
+        </div>
+    </div>
+</section>
+<!-- ===== END TEAM ===== -->
+
+{% endblock %}

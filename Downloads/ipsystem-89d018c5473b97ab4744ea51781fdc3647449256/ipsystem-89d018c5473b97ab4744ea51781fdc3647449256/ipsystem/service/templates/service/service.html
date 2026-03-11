@@ -1,0 +1,244 @@
+{% extends 'ipsystemapp/base.html' %}
+{% load static %}
+
+{% block title %}Dịch vụ &amp; Quy trình | IPSystem{% endblock %}
+
+{% block extra_css %}
+<style>
+    .pricing-card { transition: all 0.3s ease; }
+    .pricing-card:hover { transform: translateY(-8px); }
+    .workflow-step:nth-child(even) { flex-direction: row-reverse; }
+    @media (max-width: 768px) { .workflow-step:nth-child(even) { flex-direction: column; } }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ===== SERVICE HERO ===== -->
+<header class="bg-primary pt-24 pb-48 text-center text-white px-4 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10 pointer-events-none">
+        <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+            <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white"></path>
+        </svg>
+    </div>
+    <div class="relative z-10 max-w-4xl mx-auto">
+        <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-6 font-serif">Dịch vụ &amp; Quy trình</h1>
+        <p class="text-white/90 text-lg md:text-xl font-light italic max-w-2xl mx-auto">
+            Kiến tạo giải pháp số đẳng cấp, tối ưu hóa quy trình kinh doanh cho doanh nghiệp hiện đại.
+        </p>
+    </div>
+</header>
+<!-- ===== END SERVICE HERO ===== -->
+
+<div class="max-w-7xl mx-auto px-4 -mt-32 mb-32 space-y-40">
+
+    <!-- ===== PRICING ===== -->
+    <section id="pricing">
+        <div class="text-center mb-16">
+            <span class="text-white/80 font-bold tracking-[0.3em] uppercase text-xs mb-4 block">Gói giải pháp</span>
+            <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-2">Bảng Giá Dịch Vụ</h2>
+            <div class="w-20 h-1 bg-white/30 mx-auto rounded-full"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+            <!-- Basic -->
+            <div class="pricing-card bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-xl border border-slate-100 reveal dark:border-slate-800 flex flex-col">
+                <div class="mb-8">
+                    <h3 class="text-primary font-bold tracking-widest uppercase text-sm mb-4">BASIC</h3>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-4xl font-bold">5 Triệu</span>
+                    </div>
+                    <p class="mt-4 text-slate-500 text-sm">Phù hợp cho cá nhân hoặc doanh nghiệp mới khởi nghiệp.</p>
+                </div>
+                <ul class="space-y-4 mb-10 flex-grow">
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> Miễn phí tên miền &amp; Hosting 1 năm
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> Tối ưu tốc độ &amp; Bảo mật SSL
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> Tích hợp Mạng xã hội
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-400 line-through text-sm">
+                        <span class="material-symbols-outlined text-slate-300 text-xl">cancel</span> Viết bài &amp; Nội dung
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-400 line-through text-sm">
+                        <span class="material-symbols-outlined text-slate-300 text-xl">cancel</span> Thiết kế UI/UX riêng biệt
+                    </li>
+                </ul>
+                <a href="{% url 'contact:contact' %}" class="w-full py-4 px-6 rounded-2xl border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-colors duration-300 uppercase tracking-wide text-sm text-center block">
+                    Chọn Basic
+                </a>
+            </div>
+
+            <!-- Standard -->
+            <div class="pricing-card bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-2xl border-2 border-primary relative transform scale-105 z-20 flex flex-col reveal reveal--scale">
+                <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-bold py-1.5 px-4 rounded-full tracking-[0.2em] uppercase whitespace-nowrap shadow-lg">
+                    Phổ biến nhất
+                </div>
+                <div class="mb-8">
+                    <h3 class="text-primary font-bold tracking-widest uppercase text-sm mb-4">STANDARD</h3>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-4xl font-bold">8 - 12 Triệu</span>
+                    </div>
+                    <p class="mt-4 text-slate-500 text-sm">Giải pháp hoàn hảo cho doanh nghiệp vừa và nhỏ.</p>
+                </div>
+                <ul class="space-y-4 mb-10 flex-grow">
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> Mọi tính năng gói Basic
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm font-semibold">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> Viết bài &amp; Nội dung cơ bản
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm font-semibold">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> Thiết kế UI/UX tùy chỉnh
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm font-semibold">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> Bàn giao mã nguồn sạch
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-400 line-through text-sm">
+                        <span class="material-symbols-outlined text-slate-300 text-xl">cancel</span> Đăng ký Bộ Công Thương
+                    </li>
+                </ul>
+                <a href="{% url 'contact:contact' %}" class="w-full py-4 px-6 rounded-2xl bg-primary text-white font-bold hover:bg-secondary transition-colors duration-300 uppercase tracking-wide text-sm shadow-xl shadow-primary/30 text-center block">
+                    Chọn Standard
+                </a>
+            </div>
+
+            <!-- Premium -->
+            <div class="pricing-card bg-white dark:bg-slate-900 p-8 rounded-3xl shadow-2xl border-2 border-primary relative transform scale-105 z-20 flex flex-col reveal reveal--scale">
+                <div class="absolute -top-5 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-bold py-1.5 px-4 rounded-full tracking-[0.2em] uppercase whitespace-nowrap shadow-lg">
+                    Cao cấp
+                </div>
+                <div class="mb-8">
+                    <h3 class="text-primary font-bold tracking-widest uppercase text-sm mb-4">PREMIUM</h3>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-4xl font-bold">12 - 20 Triệu</span>
+                    </div>
+                    <p class="mt-4 text-slate-500 text-sm">Trải nghiệm cao cấp và hỗ trợ pháp lý toàn diện.</p>
+                </div>
+                <ul class="space-y-4 mb-10 flex-grow">
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> Mọi tính năng gói Standard
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm font-semibold">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> Đăng ký Bộ Công Thương
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm font-semibold">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> SEO nâng cao &amp; Analytics
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm font-semibold">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> Bảo trì 12 tháng miễn phí
+                    </li>
+                    <li class="flex items-center gap-3 text-slate-600 dark:text-slate-300 text-sm font-semibold">
+                        <span class="material-symbols-outlined text-primary text-xl">check_circle</span> Hỗ trợ 24/7
+                    </li>
+                </ul>
+                <a href="{% url 'contact:contact' %}" class="w-full py-4 px-6 rounded-2xl bg-primary text-white font-bold hover:bg-secondary transition-colors duration-300 uppercase tracking-wide text-sm shadow-xl shadow-primary/30 text-center block">
+                    Chọn Premium
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- ===== END PRICING ===== -->
+
+    <!-- ===== WORKFLOW ===== -->
+    <section id="workflow">
+        <div class="text-center mb-20">
+            <span class="text-primary font-bold tracking-[0.3em] uppercase text-xs mb-4 block">Quy trình doanh nghiệp</span>
+            <h2 class="text-4xl md:text-5xl font-serif font-bold text-slate-900 dark:text-white mb-6">Quy trình làm việc</h2>
+            <p class="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-lg font-light leading-relaxed">
+                Từng bước thực hiện đều được chuẩn hóa để mang lại giá trị bền vững và trải nghiệm vượt mong đợi cho khách hàng.
+            </p>
+        </div>
+        <div class="relative space-y-20 md:space-y-32">
+            <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-slate-200 dark:bg-slate-800 -translate-x-1/2"></div>
+
+            {% for step in workflow_steps %}
+            <div class="workflow-step flex flex-col md:flex-row items-center gap-8 md:gap-20 reveal">
+                <div class="flex-1 text-center md:text-right">
+                    <h3 class="text-2xl font-bold mb-3 text-slate-800 dark:text-white">{{ step.title }}</h3>
+                    <p class="text-slate-500 dark:text-slate-400 leading-relaxed max-w-md ml-auto">{{ step.description }}</p>
+                </div>
+                <div class="relative z-10">
+                    <div class="w-20 h-20 rounded-full bg-primary text-white flex items-center justify-center shadow-2xl shadow-primary/40 border-[6px] border-white dark:border-slate-900">
+                        <span class="material-symbols-outlined text-4xl">{{ step.icon }}</span>
+                    </div>
+                    <span class="absolute -top-4 -right-4 font-serif italic text-6xl text-primary/10 select-none">{{ forloop.counter|stringformat:"02d" }}</span>
+                </div>
+                <div class="flex-1 hidden md:block"></div>
+            </div>
+            {% empty %}
+            <!-- Static fallback -->
+            <div class="workflow-step flex flex-col md:flex-row items-center gap-8 md:gap-20 reveal">
+                <div class="flex-1 text-center md:text-right">
+                    <h3 class="text-2xl font-bold mb-3 text-slate-800 dark:text-white">Tiếp nhận yêu cầu</h3>
+                    <p class="text-slate-500 dark:text-slate-400 leading-relaxed max-w-md ml-auto">Chúng tôi lắng nghe câu chuyện thương hiệu và những mong muốn cụ thể để xác định bài toán cần giải quyết.</p>
+                </div>
+                <div class="relative z-10">
+                    <div class="w-20 h-20 rounded-full bg-primary text-white flex items-center justify-center shadow-2xl shadow-primary/40 border-[6px] border-white dark:border-slate-900">
+                        <span class="material-symbols-outlined text-4xl">contact_support</span>
+                    </div>
+                    <span class="absolute -top-4 -right-4 font-serif italic text-6xl text-primary/10 select-none">01</span>
+                </div>
+                <div class="flex-1 hidden md:block"></div>
+            </div>
+            <div class="workflow-step flex flex-col md:flex-row items-center gap-8 md:gap-20 reveal">
+                <div class="flex-1 text-center md:text-right">
+                    <h3 class="text-2xl font-bold mb-3 text-slate-800 dark:text-white">Phân tích &amp; Tư vấn</h3>
+                    <p class="text-slate-500 dark:text-slate-400 leading-relaxed max-w-md ml-auto">Nghiên cứu thị trường và đối thủ, từ đó đề xuất cấu trúc website và chiến lược nội dung tối ưu nhất.</p>
+                </div>
+                <div class="relative z-10">
+                    <div class="w-20 h-20 rounded-full bg-primary text-white flex items-center justify-center shadow-2xl shadow-primary/40 border-[6px] border-white dark:border-slate-900">
+                        <span class="material-symbols-outlined text-4xl">psychology</span>
+                    </div>
+                    <span class="absolute -top-4 -right-4 font-serif italic text-6xl text-primary/10 select-none">02</span>
+                </div>
+                <div class="flex-1 hidden md:block"></div>
+            </div>
+            <div class="workflow-step flex flex-col md:flex-row items-center gap-8 md:gap-20 reveal">
+                <div class="flex-1 text-center md:text-right">
+                    <h3 class="text-2xl font-bold mb-3 text-slate-800 dark:text-white">Thiết kế UI/UX</h3>
+                    <p class="text-slate-500 dark:text-slate-400 leading-relaxed max-w-md ml-auto">Tạo dựng giao diện mang đậm bản sắc thương hiệu, chú trọng vào tính thẩm mỹ và sự tiện dụng trên mọi thiết bị.</p>
+                </div>
+                <div class="relative z-10">
+                    <div class="w-20 h-20 rounded-full bg-primary text-white flex items-center justify-center shadow-2xl shadow-primary/40 border-[6px] border-white dark:border-slate-900">
+                        <span class="material-symbols-outlined text-4xl">brush</span>
+                    </div>
+                    <span class="absolute -top-4 -right-4 font-serif italic text-6xl text-primary/10 select-none">03</span>
+                </div>
+                <div class="flex-1 hidden md:block"></div>
+            </div>
+            <div class="workflow-step flex flex-col md:flex-row items-center gap-8 md:gap-20 reveal">
+                <div class="flex-1 text-center md:text-right">
+                    <h3 class="text-2xl font-bold mb-3 text-slate-800 dark:text-white">Lập trình &amp; Phát triển</h3>
+                    <p class="text-slate-500 dark:text-slate-400 leading-relaxed max-w-md ml-auto">Chuyển hóa bản thiết kế thành mã nguồn chuẩn SEO, đảm bảo tốc độ tải trang nhanh và vận hành ổn định.</p>
+                </div>
+                <div class="relative z-10">
+                    <div class="w-20 h-20 rounded-full bg-primary text-white flex items-center justify-center shadow-2xl shadow-primary/40 border-[6px] border-white dark:border-slate-900">
+                        <span class="material-symbols-outlined text-4xl">code</span>
+                    </div>
+                    <span class="absolute -top-4 -right-4 font-serif italic text-6xl text-primary/10 select-none">04</span>
+                </div>
+                <div class="flex-1 hidden md:block"></div>
+            </div>
+            <div class="workflow-step flex flex-col md:flex-row items-center gap-8 md:gap-20 reveal">
+                <div class="flex-1 text-center md:text-right">
+                    <h3 class="text-2xl font-bold mb-3 text-slate-800 dark:text-white">Kiểm thử &amp; Bàn giao</h3>
+                    <p class="text-slate-500 dark:text-slate-400 leading-relaxed max-w-md ml-auto">Kiểm tra nghiêm ngặt trước khi chính thức đưa vào vận hành, hỗ trợ khách hàng quản trị nội dung dễ dàng.</p>
+                </div>
+                <div class="relative z-10">
+                    <div class="w-20 h-20 rounded-full bg-primary text-white flex items-center justify-center shadow-2xl shadow-primary/40 border-[6px] border-white dark:border-slate-900">
+                        <span class="material-symbols-outlined text-4xl">verified</span>
+                    </div>
+                    <span class="absolute -top-4 -right-4 font-serif italic text-6xl text-primary/10 select-none">05</span>
+                </div>
+                <div class="flex-1 hidden md:block"></div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    <!-- ===== END WORKFLOW ===== -->
+
+</div>
+{% endblock %}
